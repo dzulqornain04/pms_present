@@ -6,671 +6,865 @@
 <title>IT Division — Provices Group PMS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 /* ── TOKENS ── */
-:root{
-  --ink:   #030B15;
-  --deep:  #060F1C;
-  --card:  #0A1828;
-  --rim:   #102030;
-  --gold:  #C8A94A;
-  --gold-l:#F0DC8E;
-  --gold-d:#9A7D2A;
-  --white: #FFFFFF;
-  --fog:   #A8C0D4;
-  --dim:   #4E6E88;
-  --blue:  #3B7FFF;
-  --teal:  #0CB8B2;
-  --green: #1DB97E;
-  --red:   #F04444;
-  --amber: #F5A623;
-  --purple:#7C5CFF;
-  --r-go:  rgba(200,169,74,.07);
-  --r-go-b:rgba(200,169,74,.22);
-  --cb:    linear-gradient(160deg,rgba(255,255,255,.055) 0%,rgba(255,255,255,.018) 100%);
-  --cr:    rgba(255,255,255,.09);
-  --cs:    0 1px 0 rgba(255,255,255,.07) inset, 0 6px 28px rgba(0,0,0,.35);
-  --gg:    linear-gradient(150deg,#C0962C 0%,#F0DC8E 45%,#C8A94A 100%);
+:root {
+  --bg:      #F5F3EF;
+  --bg2:     #ECEAE4;
+  --surface: #FFFFFF;
+  --border:  #E2DDD6;
+  --border2: #D0C9BF;
+  --ink:     #1A1612;
+  --ink2:    #3D3630;
+  --muted:   #7A7268;
+  --dim:     #A39D96;
+  --gold:    #B8912C;
+  --gold-l:  #D4A93C;
+  --gold-d:  #8A6A1A;
+  --gold-bg: #FBF7EE;
+  --blue:    #2B5BE8;
+  --teal:    #0A9E9A;
+  --green:   #1A9E6A;
+  --red:     #C8393A;
+  --amber:   #D4820A;
+  --purple:  #6B4ED4;
+  --navy:    #0F1E35;
+
+  --sh-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --sh-md: 0 4px 16px rgba(0,0,0,.08), 0 1px 4px rgba(0,0,0,.04);
+  --sh-lg: 0 8px 32px rgba(0,0,0,.1), 0 2px 8px rgba(0,0,0,.05);
+  --gg: linear-gradient(135deg, #8A6A1A 0%, #D4A93C 45%, #B8912C 100%);
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{
-  width:100%;height:100%;overflow:hidden;
-  background:var(--ink);font-family:'Inter',sans-serif;color:var(--white);
-  -webkit-font-smoothing:antialiased;
-}
-body::after{
-  content:'';position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:.028;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size:220px 220px;
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: var(--bg);
+  font-family: 'Inter', sans-serif;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
 }
 
 /* ── ENGINE ── */
-#deck{width:100vw;height:100vh;position:relative;overflow:hidden;}
-.slide{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
-  padding:44px 68px;
-  visibility:hidden;opacity:0;pointer-events:none;overflow:hidden;
-  transition:opacity .45s cubic-bezier(.4,0,.2,1);
+#deck { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+
+.slide {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+  padding: 52px 80px;
+  visibility: hidden; opacity: 0; pointer-events: none;
+  transition: opacity .4s cubic-bezier(.4,0,.2,1);
+  overflow: hidden;
 }
-.slide.active{visibility:visible;opacity:1;pointer-events:all;}
-.slide.c{align-items:center;text-align:center;}
+.slide.active { visibility: visible; opacity: 1; pointer-events: all; }
+.slide.center { align-items: center; text-align: center; }
 
 /* ── HUD ── */
-#bar{position:fixed;bottom:0;left:0;height:2px;background:linear-gradient(90deg,var(--gold-d),var(--gold),var(--gold-l));transition:width .5s cubic-bezier(.4,0,.2,1);z-index:99;box-shadow:0 0 10px rgba(200,169,74,.5),0 0 20px rgba(200,169,74,.2);}
-#num{position:fixed;bottom:14px;right:22px;font-size:.55rem;font-weight:700;letter-spacing:.22em;color:rgba(200,169,74,.3);z-index:99;}
-.nav{position:fixed;bottom:10px;background:none;border:none;cursor:pointer;color:rgba(200,169,74,.25);font-size:1rem;z-index:99;padding:9px;transition:color .25s ease;}
-.nav:hover{color:rgba(200,169,74,.8);}
-#pp{right:88px;}#pn{right:46px;}
-
-/* ── KEYFRAMES ── */
-@keyframes up   {from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
-@keyframes lft  {from{opacity:0;transform:translateX(-22px)}to{opacity:1;transform:none}}
-@keyframes rgt  {from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:none}}
-@keyframes fin  {from{opacity:0}to{opacity:1}}
-@keyframes scl  {from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
-@keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(200,169,74,.3)}50%{box-shadow:0 0 0 16px rgba(200,169,74,0)}}
-@keyframes glow {0%,100%{opacity:.18}50%{opacity:.5}}
-@keyframes spin {from{transform:rotate(0)}to{transform:rotate(360deg)}}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-@keyframes numUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-
-.slide.active .au  {animation:up   .7s  cubic-bezier(.16,1,.3,1) both;}
-.slide.active .al  {animation:lft  .65s cubic-bezier(.16,1,.3,1) both;}
-.slide.active .ar  {animation:rgt  .65s cubic-bezier(.16,1,.3,1) both;}
-.slide.active .af  {animation:fin  .65s ease both;}
-.slide.active .as  {animation:scl  .65s cubic-bezier(.16,1,.3,1) both;}
-.slide.active .agx {animation:growX .85s cubic-bezier(.16,1,.3,1) both;transform-origin:left;}
-.slide.active .anum{animation:numUp .75s cubic-bezier(.16,1,.3,1) both;}
-.slide.active .bar-fill{animation:growX 1s cubic-bezier(.16,1,.3,1) both;}
-.slide.active .s3-cat-fill{animation:growX 1s cubic-bezier(.16,1,.3,1) both;}
-
-.d0{animation-delay:.05s}.d1{animation-delay:.12s}.d2{animation-delay:.20s}
-.d3{animation-delay:.28s}.d4{animation-delay:.36s}.d5{animation-delay:.44s}
-.d6{animation-delay:.52s}.d7{animation-delay:.60s}.d8{animation-delay:.68s}
-.d9{animation-delay:.76s}.d10{animation-delay:.84s}.d11{animation-delay:.94s}
-.d12{animation-delay:1.04s}.d13{animation-delay:1.14s}.d14{animation-delay:1.24s}
-.d15{animation-delay:1.34s}.d35{animation-delay:.32s}
-
-/* ── SHARED ── */
-.lbl{font-size:.56rem;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:10px;margin-bottom:14px;filter:drop-shadow(0 0 8px rgba(200,169,74,.25));}
-.lbl::before{content:'';display:block;width:20px;height:1.5px;background:linear-gradient(90deg,var(--gold),var(--gold-l));border-radius:1px;flex-shrink:0;}
-.w{width:100%;max-width:1160px;}
-.gold-line{height:2px;width:44px;background:linear-gradient(90deg,var(--gold),var(--gold-l),transparent);border-radius:1px;margin:14px 0;transform-origin:left;}
-.divider{width:100%;height:1px;background:rgba(255,255,255,.05);margin:16px 0;}
-.badge{display:inline-flex;align-items:center;gap:5px;font-size:.56rem;font-weight:700;padding:3px 10px;border-radius:10px;letter-spacing:.07em;text-transform:uppercase;}
-.badge.ok {background:rgba(29,185,126,.1);color:#6EE7B7;border:1px solid rgba(29,185,126,.2);}
-.badge.act{background:rgba(200,169,74,.1);color:var(--gold-l);border:1px solid rgba(200,169,74,.25);}
-.badge.pl {background:rgba(255,255,255,.04);color:var(--dim);border:1px solid rgba(255,255,255,.08);}
-.badge.bl {background:rgba(59,127,255,.1);color:#93C5FD;border:1px solid rgba(59,127,255,.2);}
-/* card shorthand */
-.c0{border-radius:12px;background:var(--cb);border:1px solid var(--cr);box-shadow:var(--cs);}
-/* bar chart */
-.bt{height:5px;border-radius:3px;background:rgba(255,255,255,.06);overflow:hidden;}
-.bf{height:100%;border-radius:3px;}
-/* gold gradient text */
-.gn{background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.ico{display:flex;align-items:center;justify-content:center;border-radius:9px;flex-shrink:0;}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   SLIDE 1 — OPENING: MY ROLE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-#s1{background:radial-gradient(ellipse at 20% 60%,#071828 0%,var(--ink) 60%);}
-.s1-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(200,169,74,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(200,169,74,.025) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse at 30% 50%,rgba(0,0,0,.6) 0%,transparent 70%);}
-.s1-glow{position:absolute;top:-10%;right:-8%;width:680px;height:680px;border-radius:50%;background:radial-gradient(circle,rgba(200,169,74,.09) 0%,transparent 60%);animation:glow 7s ease-in-out infinite;pointer-events:none;}
-.s1-line{position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--gold) 0%,rgba(200,169,74,.15) 45%,transparent 80%);pointer-events:none;}
-.s1-co{display:flex;align-items:center;gap:10px;font-size:.55rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(200,169,74,.55);margin-bottom:30px;}
-.s1-co::before{content:'';width:15px;height:15px;border:1.5px solid rgba(200,169,74,.4);border-radius:4px;display:block;flex-shrink:0;}
-.s1-name{font-size:.78rem;font-weight:800;color:var(--white);letter-spacing:.04em;margin-bottom:8px;opacity:.55;}
-.s1-h{font-family:'Syne',sans-serif;font-size:4rem;font-weight:800;line-height:1.04;color:var(--white);max-width:660px;margin-bottom:6px;letter-spacing:-.02em;}
-.s1-h em{color:var(--gold-l);font-style:normal;text-shadow:0 0 48px rgba(200,169,74,.25);}
-.s1-sub{font-size:.9rem;color:var(--fog);line-height:1.8;max-width:520px;margin:18px 0 30px;}
-/* 4 role pills */
-.s1-roles{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px;}
-.s1-role{
-  display:flex;align-items:center;gap:9px;padding:9px 16px;border-radius:8px;
-  border:1px solid rgba(255,255,255,.08);background:var(--cb);box-shadow:var(--cs);
-  font-size:.75rem;font-weight:700;color:var(--white);
+#bar {
+  position: fixed; bottom: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--gold-d), var(--gold-l));
+  transition: width .5s cubic-bezier(.4,0,.2,1); z-index: 99;
 }
-.s1-role i{font-size:.85rem;}
-.s1-role.r1 i{color:#7EB3FF;}
-.s1-role.r2 i{color:var(--gold-l);}
-.s1-role.r3 i{color:#6EE7B7;}
-.s1-role.r4 i{color:#C4B5FD;}
-/* right side icon */
-.s1-icon{position:absolute;right:7%;top:50%;transform:translateY(-50%);z-index:2;}
-.s1-ring{width:190px;height:190px;border-radius:50%;border:1px solid rgba(200,169,74,.22);display:flex;align-items:center;justify-content:center;position:relative;background:radial-gradient(circle,rgba(200,169,74,.06) 0%,transparent 70%);box-shadow:0 0 0 20px rgba(200,169,74,.03),0 0 80px rgba(200,169,74,.14);animation:float 5.5s ease-in-out infinite;}
-.s1-ring::before{content:'';position:absolute;inset:-14px;border-radius:50%;border:1px solid rgba(200,169,74,.07);}
-.s1-ring::after{content:'';position:absolute;inset:-28px;border-radius:50%;border:1px solid rgba(200,169,74,.04);}
-.s1-ring i{font-size:3.4rem;color:var(--gold);filter:drop-shadow(0 0 16px rgba(200,169,74,.3));}
-/* stat row */
-.s1-stats{display:flex;gap:0;}
-.s1-st{padding:0 24px;border-right:1px solid rgba(255,255,255,.07);}
-.s1-st:first-child{padding-left:0;}
-.s1-st:last-child{border-right:none;}
-.s1-st .n{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;line-height:1;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.s1-st .l{font-size:.56rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:4px;}
+#num {
+  position: fixed; bottom: 14px; right: 22px;
+  font-size: .55rem; font-weight: 600; letter-spacing: .18em;
+  color: var(--dim); z-index: 99;
+}
+.nav {
+  position: fixed; bottom: 9px; background: none; border: none;
+  cursor: pointer; color: var(--border2); font-size: 1rem; z-index: 99;
+  padding: 9px; transition: color .2s;
+}
+.nav:hover { color: var(--gold); }
+#pp { right: 90px; } #pn { right: 48px; }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+/* ── ANIMATIONS ── */
+@keyframes up  { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:none } }
+@keyframes lft { from { opacity:0; transform:translateX(-20px) } to { opacity:1; transform:none } }
+@keyframes rgt { from { opacity:0; transform:translateX(20px) } to { opacity:1; transform:none } }
+@keyframes fin { from { opacity:0 } to { opacity:1 } }
+@keyframes scl { from { opacity:0; transform:scale(.93) } to { opacity:1; transform:scale(1) } }
+@keyframes gx  { from { transform:scaleX(0) } to { transform:scaleX(1) } }
+@keyframes flt { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+@keyframes glw { 0%,100%{opacity:.6} 50%{opacity:1} }
+
+.slide.active .au  { animation: up  .6s cubic-bezier(.16,1,.3,1) both }
+.slide.active .al  { animation: lft .6s cubic-bezier(.16,1,.3,1) both }
+.slide.active .ar  { animation: rgt .6s cubic-bezier(.16,1,.3,1) both }
+.slide.active .af  { animation: fin .6s ease both }
+.slide.active .as  { animation: scl .6s cubic-bezier(.16,1,.3,1) both }
+.slide.active .agx { animation: gx  .8s cubic-bezier(.16,1,.3,1) both; transform-origin:left }
+
+.d0{animation-delay:.04s} .d1{animation-delay:.1s}  .d2{animation-delay:.18s}
+.d3{animation-delay:.26s} .d4{animation-delay:.34s} .d5{animation-delay:.42s}
+.d6{animation-delay:.50s} .d7{animation-delay:.58s} .d8{animation-delay:.66s}
+.d9{animation-delay:.74s} .d10{animation-delay:.82s} .d11{animation-delay:.90s}
+.d12{animation-delay:.98s} .d13{animation-delay:1.06s} .d14{animation-delay:1.14s}
+.d15{animation-delay:1.22s}
+
+/* ── SHARED COMPONENTS ── */
+.w { width: 100%; max-width: 1160px; }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: .6rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 14px;
+}
+.eyebrow::before {
+  content: ''; display: block; width: 18px; height: 1.5px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-l));
+  border-radius: 1px; flex-shrink: 0;
+}
+
+.gold-rule {
+  height: 2px; width: 48px; margin: 14px 0;
+  background: linear-gradient(90deg, var(--gold), var(--gold-l), transparent);
+  border-radius: 1px; transform-origin: left;
+}
+
+.h1 { font-family: 'Playfair Display', serif; font-size: 3.8rem; font-weight: 800; line-height: 1.06; letter-spacing: -.02em; color: var(--ink); }
+.h2 { font-family: 'Playfair Display', serif; font-size: 2.6rem; font-weight: 800; line-height: 1.1; letter-spacing: -.02em; color: var(--ink); }
+.h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--ink); }
+
+.lead { font-size: .95rem; color: var(--muted); line-height: 1.8; }
+.body-sm { font-size: .78rem; color: var(--muted); line-height: 1.7; }
+.body-xs { font-size: .68rem; color: var(--dim); line-height: 1.55; }
+
+/* card */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; box-shadow: var(--sh-md);
+}
+.card-sm { border-radius: 10px; box-shadow: var(--sh-sm); }
+
+/* stat number */
+.stat-n {
+  font-family: 'Playfair Display', serif; font-size: 2.2rem;
+  font-weight: 800; line-height: 1;
+  background: var(--gg); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.stat-n.lg { font-size: 4.4rem; letter-spacing: -.04em; }
+.stat-l { font-size: .56rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); margin-top: 4px; }
+
+/* badge */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: .57rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 20px; border: 1px solid;
+}
+.badge.ok { background: #EDF7F2; color: #1A7A4E; border-color: #B2DEC9; }
+.badge.act { background: var(--gold-bg); color: var(--gold-d); border-color: #DCC07E; }
+.badge.pl { background: var(--bg); color: var(--dim); border-color: var(--border); }
+.badge.nxt { background: #EEF3FE; color: var(--blue); border-color: #BFCFFA; }
+
+/* icon circle */
+.ico {
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; border-radius: 10px;
+}
+.ico.sm { width: 32px; height: 32px; font-size: .78rem; }
+.ico.md { width: 42px; height: 42px; font-size: .95rem; }
+.ico.lg { width: 54px; height: 54px; font-size: 1.15rem; }
+.ico.blue   { background: #EEF3FE; color: var(--blue); }
+.ico.gold   { background: var(--gold-bg); color: var(--gold); }
+.ico.green  { background: #EDF7F2; color: var(--green); }
+.ico.purple { background: #F3F0FD; color: var(--purple); }
+.ico.red    { background: #FEF2F2; color: var(--red); }
+.ico.amber  { background: #FEF9EE; color: var(--amber); }
+.ico.teal   { background: #EDFAFA; color: var(--teal); }
+.ico.navy   { background: var(--navy); color: #FFFFFF; }
+
+/* bullet row */
+.bullet { display: flex; align-items: flex-start; gap: 10px; }
+.bullet::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin-top: 7px; flex-shrink: 0; }
+
+/* divider */
+.hr { width: 100%; height: 1px; background: var(--border); margin: 14px 0; }
+
+/* ══════════════════════════════
+   SLIDE 1 — OPENING
+══════════════════════════════ */
+#s1 { background: var(--surface); }
+.s1-deco {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 42%;
+  background: var(--bg); border-left: 1px solid var(--border);
+  pointer-events: none;
+}
+.s1-deco-lines {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 47px, var(--border) 47px, var(--border) 48px),
+    repeating-linear-gradient(90deg, transparent, transparent 47px, var(--border) 47px, var(--border) 48px);
+  opacity: .5;
+}
+.s1-left { width: 52%; position: relative; z-index: 2; }
+.s1-tag {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-size: .62rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 28px;
+}
+.s1-tag span {
+  display: inline-block; width: 8px; height: 8px; border-radius: 2px;
+  background: var(--gold);
+}
+.s1-roles { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 28px; }
+.s1-role {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 16px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--surface);
+  box-shadow: var(--sh-sm);
+  font-size: .75rem; font-weight: 600; color: var(--ink2);
+}
+.s1-role i { font-size: .78rem; }
+.s1-role.r1 i { color: var(--blue); }
+.s1-role.r2 i { color: var(--gold); }
+.s1-role.r3 i { color: var(--green); }
+.s1-role.r4 i { color: var(--purple); }
+
+.s1-stats { display: flex; gap: 0; }
+.s1-st { padding: 0 24px; border-right: 1px solid var(--border); }
+.s1-st:first-child { padding-left: 0; }
+.s1-st:last-child { border: none; }
+
+.s1-right {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 42%;
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; padding: 52px 48px; z-index: 2;
+}
+.s1-circle {
+  width: 200px; height: 200px; border-radius: 50%;
+  border: 1.5px solid var(--border2);
+  background: var(--surface); box-shadow: var(--sh-lg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; margin-bottom: 36px;
+  animation: flt 5s ease-in-out infinite;
+}
+.s1-circle i { font-size: 2.8rem; color: var(--gold); }
+.s1-circle span { font-size: .58rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--dim); }
+.s1-steps { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+.s1-step {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px; border-radius: 10px;
+  background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-sm);
+}
+.s1-step i { font-size: .85rem; width: 18px; text-align: center; }
+.s1-step span { font-size: .74rem; font-weight: 600; color: var(--ink2); }
+
+/* ══════════════════════════════
    SLIDE 2 — 4 ROLES OVERVIEW
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-#s2{background:radial-gradient(ellipse at 80% 20%,#0A1E34 0%,var(--deep) 55%);}
-.s2-h{font-family:'Syne',sans-serif;font-size:2.6rem;font-weight:800;color:var(--white);letter-spacing:-.02em;}
-.s2-sub{font-size:.88rem;color:var(--fog);line-height:1.75;max-width:560px;margin-top:8px;}
-.roles-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px;width:100%;}
-.role-card{
-  border-radius:14px;padding:22px 20px;
-  background:var(--cb);border:1px solid var(--cr);box-shadow:var(--cs);
-  display:flex;flex-direction:column;gap:14px;
-  transition:all .3s ease;cursor:default;
-  position:relative;overflow:hidden;
+══════════════════════════════ */
+#s2 { background: var(--bg); }
+.roles-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 16px; margin-top: 28px; width: 100%;
 }
-.role-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  border-radius:14px 14px 0 0;
+.role-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; box-shadow: var(--sh-md);
+  padding: 24px 20px; display: flex; flex-direction: column; gap: 12px;
+  position: relative; overflow: hidden; transition: transform .25s, box-shadow .25s;
 }
-.role-card.dev::before{background:linear-gradient(90deg,var(--blue),transparent);}
-.role-card.imp::before{background:linear-gradient(90deg,var(--gold),transparent);}
-.role-card.mnt::before{background:linear-gradient(90deg,var(--green),transparent);}
-.role-card.inv::before{background:linear-gradient(90deg,var(--purple),transparent);}
-.role-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.14);}
-.rc-ico{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.05rem;flex-shrink:0;}
-.role-card.dev .rc-ico{background:rgba(59,127,255,.1);color:#7EB3FF;}
-.role-card.imp .rc-ico{background:rgba(200,169,74,.1);color:var(--gold-l);}
-.role-card.mnt .rc-ico{background:rgba(29,185,126,.1);color:#6EE7B7;}
-.role-card.inv .rc-ico{background:rgba(124,92,255,.1);color:#C4B5FD;}
-.rc-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--white);}
-.rc-desc{font-size:.74rem;color:var(--fog);line-height:1.65;}
-.rc-tags{display:flex;flex-direction:column;gap:5px;margin-top:auto;}
-.rc-tag{font-size:.64rem;color:var(--dim);display:flex;align-items:center;gap:7px;}
-.rc-tag::before{content:'';width:4px;height:4px;border-radius:50%;background:currentColor;flex-shrink:0;}
-.rc-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;margin-top:auto;line-height:1;}
-.role-card.dev .rc-num{background:linear-gradient(150deg,#3B7FFF,#93C5FD);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.role-card.imp .rc-num{background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.role-card.mnt .rc-num{background:linear-gradient(150deg,#1DB97E,#6EE7B7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.role-card.inv .rc-num{background:linear-gradient(150deg,#7C5CFF,#C4B5FD);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.rc-num-lbl{font-size:.55rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-top:3px;}
+.role-card:hover { transform: translateY(-3px); box-shadow: var(--sh-lg); }
+.role-card::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  border-radius: 0 0 14px 14px;
+}
+.role-card.dev::after { background: linear-gradient(90deg, var(--blue), transparent); }
+.role-card.imp::after { background: linear-gradient(90deg, var(--gold), transparent); }
+.role-card.mnt::after { background: linear-gradient(90deg, var(--green), transparent); }
+.role-card.inv::after { background: linear-gradient(90deg, var(--purple), transparent); }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   SLIDE 3 — ROLE: DEVELOPER
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-#s3{background:radial-gradient(ellipse at 15% 70%,#071A30 0%,var(--ink) 55%);}
-.s3-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:20px;background:rgba(59,127,255,.08);border:1px solid rgba(59,127,255,.2);color:#93C5FD;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;}
-.s3-h{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--white);letter-spacing:-.02em;}
-.s3-body{display:grid;grid-template-columns:1.1fr 1.6fr;gap:44px;align-items:start;margin-top:22px;width:100%;}
-/* Left: what I do */
-.s3-left p{font-size:.86rem;color:var(--fog);line-height:1.8;margin-bottom:20px;}
-.dev-acts{display:flex;flex-direction:column;gap:8px;}
-.dev-act{display:flex;align-items:flex-start;gap:12px;border-radius:9px;padding:11px 13px;background:var(--cb);border:1px solid var(--cr);box-shadow:var(--cs);}
-.dev-act .ico{width:32px;height:32px;border-radius:7px;background:rgba(59,127,255,.1);color:#7EB3FF;font-size:.78rem;flex-shrink:0;}
-.dev-act h4{font-size:.78rem;font-weight:700;color:var(--white);margin-bottom:2px;}
-.dev-act p{font-size:.67rem;color:var(--dim);line-height:1.4;}
-/* Right: modules grid */
-.mod-label{font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:10px;}
-.mod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
-.mod{border-radius:9px;padding:10px 10px;border:1px solid var(--cr);background:var(--cb);box-shadow:var(--cs);display:flex;align-items:center;gap:8px;transition:all .25s ease;}
-.mod:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.14);}
-.m-ico{width:32px;height:32px;flex-shrink:0;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.8rem;}
-.m-name{font-size:.7rem;font-weight:700;color:var(--white);line-height:1.2;}
-.m-cat{font-size:.55rem;color:var(--dim);margin-top:1px;}
-.mod.fo .m-ico{background:rgba(59,127,255,.1);color:#7EB3FF;}
-.mod.fi .m-ico{background:rgba(200,169,74,.1);color:var(--gold-l);}
-.mod.op .m-ico{background:rgba(12,184,178,.1);color:#5EEAD4;}
-.mod.ad .m-ico{background:rgba(124,92,255,.1);color:#C4B5FD;}
-.mod.cs .m-ico{background:rgba(29,185,126,.1);color:#6EE7B7;}
-.mod.wide{grid-column:span 2;}
-.mod-total{margin-top:8px;border-radius:9px;padding:10px 14px;background:rgba(200,169,74,.06);border:1px solid rgba(200,169,74,.2);display:flex;align-items:center;justify-content:space-between;}
-.mod-total .n{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.mod-total .l{font-size:.6rem;color:var(--dim);font-weight:600;letter-spacing:.1em;text-transform:uppercase;}
+.rc-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--ink); }
+.rc-tags { display: flex; flex-direction: column; gap: 5px; margin-top: 4px; }
+.rc-tag { font-size: .67rem; color: var(--muted); display: flex; align-items: center; gap: 7px; }
+.rc-tag::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--border2); flex-shrink: 0; }
+.rc-big { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); }
+.rc-big .n {
+  font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 800; line-height: 1;
+  background: var(--gg); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.rc-big .l { font-size: .54rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; color: var(--dim); margin-top: 3px; }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   SLIDE 4 — ROLE: IMPLEMENTATOR
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-#s4{background:radial-gradient(ellipse at 85% 80%,#0F1E10 0%,var(--deep) 55%);}
-.s4-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:20px;background:rgba(200,169,74,.07);border:1px solid rgba(200,169,74,.25);color:var(--gold-l);font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;}
-.s4-h{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--white);letter-spacing:-.02em;}
-.s4-body{display:grid;grid-template-columns:1fr 1.5fr;gap:44px;align-items:start;margin-top:22px;width:100%;}
-/* Left: process flow */
-.impl-flow{display:flex;flex-direction:column;}
-.if-item{display:flex;gap:14px;align-items:stretch;}
-.if-spine{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:34px;}
-.if-dot{width:34px;height:34px;border-radius:50%;flex-shrink:0;border:1.5px solid;display:flex;align-items:center;justify-content:center;font-size:.78rem;z-index:1;}
-.if-dot.done{border-color:rgba(29,185,126,.5);background:rgba(29,185,126,.08);color:#6EE7B7;box-shadow:0 0 12px rgba(29,185,126,.15);}
-.if-dot.act{border-color:var(--gold);background:rgba(200,169,74,.08);color:var(--gold-l);box-shadow:0 0 16px rgba(200,169,74,.2);animation:pulse 2.8s ease-in-out infinite;}
-.if-vl{flex:1;width:1px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));margin:3px 0;}
-.if-body{padding:4px 0 15px;}
-.if-body h4{font-size:.8rem;font-weight:700;color:var(--white);margin-bottom:2px;}
-.if-body p{font-size:.68rem;color:var(--dim);line-height:1.5;}
-.if-tag{display:inline-block;font-size:.52rem;font-weight:700;padding:2px 8px;border-radius:8px;margin-top:4px;background:rgba(200,169,74,.08);color:var(--gold-l);border:1px solid rgba(200,169,74,.18);}
-/* Right: sites + stats */
-.impl-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
-.impl-stat{border-radius:10px;padding:13px 14px;background:var(--cb);border:1px solid var(--cr);box-shadow:var(--cs);text-align:center;}
-.impl-stat .n{font-family:'Syne',sans-serif;font-size:1.9rem;font-weight:800;line-height:1;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.impl-stat .l{font-size:.55rem;color:var(--dim);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-top:4px;}
-.site-label{font-size:.55rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
-.site-label span{color:var(--green);display:flex;align-items:center;gap:5px;}
-.site-label span::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 5px rgba(29,185,126,.5);}
-.site-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
-.site{border-radius:7px;padding:9px 5px;text-align:center;background:var(--cb);border:1px solid rgba(29,185,126,.18);box-shadow:var(--cs);cursor:default;}
-.site i{font-size:.78rem;color:var(--green);display:block;margin-bottom:3px;filter:drop-shadow(0 0 4px rgba(29,185,126,.4));}
-.site .sn{font-size:.6rem;font-weight:700;color:var(--white);display:block;}
-.next-row{margin-top:5px;display:flex;justify-content:center;}
-.site-next{width:calc(100%/7 - 4px);border-radius:7px;padding:9px 5px;text-align:center;border:1px solid rgba(200,169,74,.35);background:rgba(200,169,74,.06);box-shadow:0 0 24px rgba(200,169,74,.12);animation:pulse 3s ease-in-out infinite;}
-.site-next i{font-size:.78rem;color:var(--gold-l);display:block;margin-bottom:3px;filter:drop-shadow(0 0 5px rgba(200,169,74,.4));}
-.site-next .sn{font-size:.6rem;font-weight:700;color:var(--white);}
-.site-next .nb{display:block;font-size:.44rem;font-weight:800;background:linear-gradient(90deg,var(--gold),var(--gold-l));color:var(--ink);padding:2px 5px;border-radius:2px;margin-top:3px;text-transform:uppercase;}
+/* ══════════════════════════════
+   SLIDE 3 — DEVELOPER
+══════════════════════════════ */
+#s3 { background: var(--surface); }
+.s3-body { display: grid; grid-template-columns: 1fr 1.6fr; gap: 52px; margin-top: 20px; width: 100%; align-items: start; }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   SLIDE 5 — ROLE: MAINTAINER
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-#s5{background:radial-gradient(ellipse at 20% 30%,#071525 0%,var(--ink) 55%);}
-.s5-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:20px;background:rgba(29,185,126,.07);border:1px solid rgba(29,185,126,.2);color:#6EE7B7;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;}
-.s5-h{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--white);letter-spacing:-.02em;}
-.s5-body{display:grid;grid-template-columns:1.1fr 1fr;gap:44px;align-items:start;margin-top:22px;width:100%;}
-/* Left: server panel */
-.srv{border-radius:14px;overflow:hidden;background:var(--cb);border:1px solid var(--cr);box-shadow:var(--cs);}
-.srv-top{background:rgba(255,255,255,.03);padding:11px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.07);}
-.srv-top span{font-size:.65rem;font-weight:700;color:var(--white);}
-.srv-live{display:flex;align-items:center;gap:6px;font-size:.57rem;color:#6EE7B7;font-weight:700;}
-.srv-live::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(29,185,126,.6);}
-.srv-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.04);}
-.sn_{padding:14px 10px;background:var(--cb);text-align:center;}
-.sn_ .n{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;}
-.sn_ .l{font-size:.53rem;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-top:3px;}
-.sn_ .n.b{color:#7EB3FF;text-shadow:0 0 14px rgba(59,127,255,.25);}
-.sn_ .n.g{background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.sn_ .n.gr{color:#6EE7B7;text-shadow:0 0 14px rgba(29,185,126,.25);}
-.srv-bars{padding:13px 14px;display:flex;flex-direction:column;gap:10px;}
-.sbi{display:flex;align-items:center;gap:10px;}
-.sbi-ico{width:28px;height:28px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.72rem;}
-.sbi-info{flex:1;}
-.sbi-info h5{font-size:.7rem;font-weight:700;color:var(--white);margin-bottom:5px;}
-.sbi-val{font-size:.6rem;color:var(--dim);flex-shrink:0;font-weight:600;min-width:28px;text-align:right;}
-.sbi .bt{margin-top:0;}
-/* Right: daily tasks */
-.mnt-tasks{display:flex;flex-direction:column;gap:7px;}
-.mt{border-radius:10px;padding:11px 13px;background:var(--cb);border:1px solid var(--cr);box-shadow:var(--cs);display:flex;align-items:center;gap:11px;transition:all .25s ease;}
-.mt:hover{border-color:rgba(255,255,255,.13);transform:translateX(2px);}
-.mt .ico{width:34px;height:34px;border-radius:8px;font-size:.82rem;}
-.mt h4{font-size:.77rem;font-weight:700;color:var(--white);flex:1;}
-.mt p{font-size:.62rem;color:var(--dim);margin-top:1px;}
+.dev-act-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+.dev-act {
+  display: flex; align-items: flex-start; gap: 13px;
+  padding: 13px 15px; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--bg); box-shadow: var(--sh-sm);
+}
+.dev-act h4 { font-size: .78rem; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.dev-act p { font-size: .67rem; color: var(--muted); line-height: 1.5; }
+
+/* modules */
+.mod-label { font-size: .56rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--dim); margin-bottom: 10px; }
+.mod-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+.mod {
+  border-radius: 9px; padding: 10px 10px;
+  border: 1px solid var(--border); background: var(--surface); box-shadow: var(--sh-sm);
+  display: flex; align-items: center; gap: 8px;
+  transition: transform .2s, box-shadow .2s;
+}
+.mod:hover { transform: translateY(-2px); box-shadow: var(--sh-md); }
+.mod.wide { grid-column: span 2; }
+.m-name { font-size: .7rem; font-weight: 600; color: var(--ink2); line-height: 1.2; }
+.m-cat { font-size: .55rem; color: var(--dim); margin-top: 1px; }
+
+.mod-total {
+  margin-top: 9px; padding: 12px 16px; border-radius: 10px;
+  background: var(--gold-bg); border: 1px solid #DCC07E;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.mod-total .n {
+  font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 800;
+  background: var(--gg); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.mod-total .l { font-size: .58rem; color: var(--gold-d); font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+
+/* ══════════════════════════════
+   SLIDE 4 — IMPLEMENTATOR
+══════════════════════════════ */
+#s4 { background: var(--bg); }
+.s4-body { display: grid; grid-template-columns: 1fr 1.55fr; gap: 52px; margin-top: 20px; width: 100%; align-items: start; }
+
+/* flow */
+.impl-flow { display: flex; flex-direction: column; }
+.if-item { display: flex; gap: 14px; }
+.if-spine { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 32px; }
+.if-dot {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; border: 1.5px solid;
+  display: flex; align-items: center; justify-content: center; font-size: .7rem;
+}
+.if-dot.done { border-color: #B2DEC9; background: #EDF7F2; color: var(--green); }
+.if-dot.act  { border-color: #DCC07E; background: var(--gold-bg); color: var(--gold); }
+.if-vl { flex: 1; width: 1px; background: var(--border); margin: 3px 0; }
+.if-body { padding: 5px 0 14px; }
+.if-body h4 { font-size: .78rem; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.if-body p  { font-size: .66rem; color: var(--muted); line-height: 1.5; }
+.if-tag {
+  display: inline-block; font-size: .52rem; font-weight: 700; padding: 2px 9px;
+  border-radius: 8px; margin-top: 4px;
+  background: var(--gold-bg); color: var(--gold-d); border: 1px solid #DCC07E;
+}
+
+/* stats + sites */
+.impl-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+.impl-stat {
+  border-radius: 10px; padding: 14px 12px; text-align: center;
+  background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-sm);
+}
+
+.site-section-lbl {
+  font-size: .56rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--dim); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
+}
+.site-lbl-ok { display: flex; align-items: center; gap: 5px; color: var(--green); }
+.site-lbl-ok::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
+
+.site-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; }
+.site {
+  border-radius: 8px; padding: 10px 5px; text-align: center;
+  background: var(--surface); border: 1px solid #B2DEC9; box-shadow: var(--sh-sm);
+}
+.site i { font-size: .8rem; color: var(--green); display: block; margin-bottom: 4px; }
+.site .sn { font-size: .62rem; font-weight: 600; color: var(--ink2); display: block; }
+
+.site-next {
+  border-radius: 8px; padding: 10px 5px; text-align: center;
+  border: 1.5px dashed #DCC07E; background: var(--gold-bg);
+}
+.site-next i { font-size: .8rem; color: var(--gold); display: block; margin-bottom: 4px; }
+.site-next .sn { font-size: .6rem; font-weight: 600; color: var(--ink2); }
+.site-next .nb { display: block; font-size: .5rem; font-weight: 700; color: var(--gold-d); margin-top: 3px; text-transform: uppercase; letter-spacing: .06em; }
+
+/* ══════════════════════════════
+   SLIDE 5 — MAINTAINER
+══════════════════════════════ */
+#s5 { background: var(--surface); }
+.s5-body { display: grid; grid-template-columns: 1.1fr 1fr; gap: 52px; margin-top: 20px; width: 100%; align-items: start; }
+
+/* server panel */
+.srv {
+  border-radius: 12px; border: 1px solid var(--border); overflow: hidden;
+  box-shadow: var(--sh-md);
+}
+.srv-top {
+  background: var(--navy); padding: 12px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.srv-top span { font-size: .68rem; font-weight: 600; color: #FFFFFF; }
+.srv-live { display: flex; align-items: center; gap: 6px; font-size: .57rem; color: #6EE7B7; font-weight: 700; }
+.srv-live::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #1DB97E; }
+.srv-nums { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--surface); }
+.sn_ { padding: 14px 10px; text-align: center; border-right: 1px solid var(--border); }
+.sn_:last-child { border: none; }
+.sn_ .n { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 800; line-height: 1; }
+.sn_ .l { font-size: .52rem; color: var(--dim); font-weight: 600; text-transform: uppercase; letter-spacing: .1em; margin-top: 4px; }
+.sn_ .n.b  { color: var(--blue); }
+.sn_ .n.g  { background: var(--gg); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.sn_ .n.gr { color: var(--green); }
+.srv-bars { padding: 13px 14px; display: flex; flex-direction: column; gap: 11px; background: var(--bg); }
+.sbi { display: flex; align-items: center; gap: 10px; }
+.sbi-info { flex: 1; }
+.sbi-info h5 { font-size: .68rem; font-weight: 600; color: var(--ink2); margin-bottom: 5px; }
+.bt { height: 5px; border-radius: 3px; background: var(--border); overflow: hidden; }
+.bf { height: 100%; border-radius: 3px; }
+.sbi-val { font-size: .62rem; color: var(--muted); font-weight: 700; min-width: 30px; text-align: right; }
+
 /* ticket summary */
-.tkt-row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px;}
-.tkt-mini{border-radius:9px;padding:10px 10px;background:var(--cb);border:1px solid var(--cr);box-shadow:var(--cs);text-align:center;}
-.tkt-mini .n{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;line-height:1;}
-.tkt-mini .l{font-size:.52rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-top:3px;font-weight:600;}
-.n.ro{color:#FCA5A5;} .n.ya{color:#FCD34D;} .n.gr2{color:#6EE7B7;} .n.go2{background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.tkt-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin-bottom: 10px; margin-top: 12px; }
+.tkt-mini {
+  border-radius: 9px; padding: 11px 10px; text-align: center;
+  background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-sm);
+}
+.tkt-mini .n { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 800; line-height: 1; }
+.tkt-mini .l { font-size: .52rem; color: var(--dim); text-transform: uppercase; letter-spacing: .08em; margin-top: 3px; font-weight: 600; }
+.n.ro  { color: var(--red); }
+.n.ya  { color: var(--amber); }
+.n.gr2 { color: var(--green); }
+.n.go2 { background: var(--gg); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   SLIDE 6 — ROLE: INNOVATOR
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-#s6{background:radial-gradient(ellipse at 75% 25%,#0E0A2A 0%,var(--deep) 55%);}
-.s6-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:20px;background:rgba(124,92,255,.07);border:1px solid rgba(124,92,255,.22);color:#C4B5FD;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px;}
-.s6-h{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--white);letter-spacing:-.02em;}
-.s6-body{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:start;margin-top:22px;width:100%;}
-/* Left: PVI chat mockup */
-.chat-mock{border-radius:14px;overflow:hidden;background:var(--cb);border:1px solid var(--cr);box-shadow:var(--cs);}
-.cm-top{background:rgba(255,255,255,.03);padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.07);}
-.cm-dot{width:7px;height:7px;border-radius:50%;}
-.cm-title{font-size:.72rem;font-weight:700;color:var(--white);flex:1;}
-.cm-badge{font-size:.53rem;font-weight:700;background:linear-gradient(90deg,var(--gold),var(--gold-l));color:var(--ink);padding:2px 8px;border-radius:10px;}
-.cm-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.04);}
-.cs_{padding:11px;text-align:center;background:var(--cb);}
-.cs_ .n{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;line-height:1;}
-.cs_ .l{font-size:.5rem;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-top:3px;}
-.tk-list{padding:9px;display:flex;flex-direction:column;gap:5px;}
-.tk{border-radius:7px;padding:9px 11px;background:rgba(255,255,255,.025);border-left:2px solid;}
-.tk.r{border-color:var(--red);} .tk.y{border-color:var(--amber);} .tk.g{border-color:var(--green);}
-.tk-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;}
-.tk-id{font-size:.57rem;font-weight:700;color:var(--dim);letter-spacing:.07em;}
-.tk-st{font-size:.5rem;font-weight:700;padding:2px 7px;border-radius:8px;text-transform:uppercase;border:1px solid;}
-.tk-st.op{background:rgba(240,68,68,.1);color:#FCA5A5;border-color:rgba(240,68,68,.2);}
-.tk-st.pr{background:rgba(245,166,35,.1);color:#FCD34D;border-color:rgba(245,166,35,.2);}
-.tk-st.dn{background:rgba(29,185,126,.1);color:#6EE7B7;border-color:rgba(29,185,126,.2);}
-.tk-title{font-size:.72rem;font-weight:600;color:var(--white);}
-.tk-meta{font-size:.58rem;color:var(--dim);margin-top:1px;}
-.cm-inp{margin:0 9px 9px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:7px 11px;font-size:.67rem;color:var(--dim);display:flex;justify-content:space-between;}
-.cm-inp i{color:var(--gold);}
-/* Right: features + roadmap */
-.inv-kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
-.ik{border-radius:10px;padding:12px 14px;text-align:center;background:var(--cb);border:1px solid var(--cr);box-shadow:var(--cs);}
-.ik .n{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;line-height:1;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.ik .l{font-size:.54rem;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-top:3px;}
-.inv-feats{display:flex;flex-direction:column;gap:7px;}
-.inv-f{border-radius:9px;padding:10px 12px;background:var(--cb);border:1px solid var(--cr);box-shadow:var(--cs);display:flex;align-items:center;gap:10px;}
-.inv-f .ico{width:30px;height:30px;border-radius:7px;background:rgba(124,92,255,.1);color:#C4B5FD;font-size:.76rem;}
-.inv-f h4{font-size:.76rem;font-weight:700;color:var(--white);}
-.inv-f p{font-size:.64rem;color:var(--dim);margin-top:1px;}
-.cat-pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;}
-.cp{font-size:.57rem;font-weight:700;padding:3px 10px;border-radius:10px;border:1px solid;letter-spacing:.04em;}
-.cp.bug{border-color:rgba(240,68,68,.3);color:#FCA5A5;background:rgba(240,68,68,.06);}
-.cp.dat{border-color:rgba(59,127,255,.3);color:#93C5FD;background:rgba(59,127,255,.06);}
-.cp.enh{border-color:rgba(200,169,74,.3);color:var(--gold-l);background:rgba(200,169,74,.06);}
-.cp.sup{border-color:rgba(12,184,178,.3);color:#5EEAD4;background:rgba(12,184,178,.06);}
-.cp.unp{border-color:rgba(124,92,255,.3);color:#C4B5FD;background:rgba(124,92,255,.06);}
+/* mnt tasks */
+.mnt-tasks { display: flex; flex-direction: column; gap: 8px; }
+.mt {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; border-radius: 10px;
+  background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-sm);
+  transition: transform .2s;
+}
+.mt:hover { transform: translateX(3px); }
+.mt h4 { font-size: .76rem; font-weight: 700; color: var(--ink); }
+.mt p  { font-size: .64rem; color: var(--muted); margin-top: 1px; }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+/* ══════════════════════════════
+   SLIDE 6 — INNOVATOR
+══════════════════════════════ */
+#s6 { background: var(--bg); }
+.s6-body { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; margin-top: 20px; width: 100%; align-items: start; }
+
+/* chat mock */
+.chat-mock {
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid var(--border); box-shadow: var(--sh-lg); background: var(--surface);
+}
+.cm-top {
+  background: var(--navy); padding: 10px 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.cm-dot { width: 9px; height: 9px; border-radius: 50%; }
+.cm-title { font-size: .72rem; font-weight: 600; color: #FFFFFF; flex: 1; margin-left: 4px; }
+.cm-live { font-size: .55rem; font-weight: 700; background: #1DB97E; color: #FFF; padding: 2px 8px; border-radius: 8px; }
+.cm-stats { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--surface); border-bottom: 1px solid var(--border); }
+.cs_ { padding: 11px; text-align: center; border-right: 1px solid var(--border); }
+.cs_:last-child { border: none; }
+.cs_ .n { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 800; line-height: 1; }
+.cs_ .l { font-size: .5rem; color: var(--dim); text-transform: uppercase; letter-spacing: .07em; margin-top: 3px; font-weight: 600; }
+.tk-list { padding: 9px; display: flex; flex-direction: column; gap: 5px; background: var(--bg); }
+.tk { border-radius: 7px; padding: 9px 11px; background: var(--surface); border-left: 2.5px solid; }
+.tk.r { border-color: var(--red); } .tk.y { border-color: var(--amber); } .tk.g { border-color: var(--green); }
+.tk-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
+.tk-id { font-size: .57rem; font-weight: 700; color: var(--dim); letter-spacing: .07em; }
+.tk-st { font-size: .5rem; font-weight: 700; padding: 2px 7px; border-radius: 8px; text-transform: uppercase; border: 1px solid; }
+.tk-st.op { background: #FEF2F2; color: var(--red); border-color: #FECACA; }
+.tk-st.pr { background: #FEF9EE; color: var(--amber); border-color: #FDE68A; }
+.tk-st.dn { background: #EDF7F2; color: var(--green); border-color: #B2DEC9; }
+.tk-title { font-size: .72rem; font-weight: 600; color: var(--ink); }
+.tk-meta  { font-size: .58rem; color: var(--dim); margin-top: 1px; }
+.cm-inp {
+  margin: 0 9px 9px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; padding: 7px 11px; font-size: .67rem; color: var(--dim);
+  display: flex; justify-content: space-between;
+}
+.cm-inp i { color: var(--gold); }
+
+/* right: features */
+.inv-kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.ik { border-radius: 10px; padding: 13px 14px; text-align: center; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-sm); }
+.inv-feats { display: flex; flex-direction: column; gap: 8px; }
+.inv-f {
+  border-radius: 9px; padding: 10px 12px; background: var(--surface);
+  border: 1px solid var(--border); box-shadow: var(--sh-sm);
+  display: flex; align-items: center; gap: 11px;
+  transition: transform .2s;
+}
+.inv-f:hover { transform: translateX(3px); }
+.inv-f h4 { font-size: .76rem; font-weight: 700; color: var(--ink); }
+.inv-f p  { font-size: .64rem; color: var(--muted); margin-top: 1px; }
+.cat-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+.cp { font-size: .57rem; font-weight: 700; padding: 3px 10px; border-radius: 10px; border: 1px solid; letter-spacing: .03em; }
+.cp.bug { border-color: #FECACA; color: var(--red);    background: #FEF2F2; }
+.cp.dat { border-color: #BFCFFA; color: var(--blue);   background: #EEF3FE; }
+.cp.enh { border-color: #DCC07E; color: var(--gold-d); background: var(--gold-bg); }
+.cp.sup { border-color: #99DDD9; color: var(--teal);   background: #EDFAFA; }
+.cp.unp { border-color: #C4B5FD; color: var(--purple); background: #F3F0FD; }
+
+/* ══════════════════════════════
    SLIDE 7 — REAL IMPLEMENTATION
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-#s7{background:radial-gradient(ellipse at 80% 50%,#0A1E34 0%,var(--deep) 55%);}
-.s7-h{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--white);letter-spacing:-.02em;}
-.s7-body{display:grid;grid-template-columns:1fr 1.8fr;gap:44px;align-items:start;margin-top:20px;width:100%;}
-/* Left: big stat + breakdown */
-.s7-big{margin-bottom:14px;}
-.s7-big .n{font-family:'Syne',sans-serif;font-size:5.5rem;font-weight:800;line-height:1;letter-spacing:-.05em;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.s7-big .l{font-size:.65rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-top:6px;}
-.s7-mini{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px;}
-.s7-ms{border-radius:9px;padding:11px 13px;background:var(--cb);border:1px solid var(--cr);box-shadow:var(--cs);text-align:center;}
-.s7-ms .n{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;line-height:1;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.s7-ms .l{font-size:.54rem;color:var(--dim);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-top:3px;}
-/* Right: site grid */
-.s7-site-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
-.s7-site-header span{font-size:.54rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);}
-.site-grid-lg{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
-.sitelg{border-radius:8px;padding:11px 7px;text-align:center;background:var(--cb);border:1px solid rgba(29,185,126,.18);box-shadow:var(--cs);cursor:default;transition:all .25s ease;}
-.sitelg:hover{transform:translateY(-2px);border-color:rgba(29,185,126,.3);}
-.sitelg i{font-size:.85rem;color:var(--green);display:block;margin-bottom:4px;filter:drop-shadow(0 0 4px rgba(29,185,126,.4));}
-.sitelg .sn{font-size:.66rem;font-weight:700;color:var(--white);display:block;}
-.sitelg .ss{font-size:.53rem;color:var(--dim);display:block;margin-top:1px;}
-.next-row-lg{margin-top:6px;display:flex;justify-content:center;}
-.site-next-lg{width:calc(20% - 5px);border-radius:8px;padding:11px 7px;text-align:center;border:1px solid rgba(200,169,74,.35);background:rgba(200,169,74,.06);box-shadow:0 0 30px rgba(200,169,74,.12),0 1px 0 rgba(200,169,74,.1) inset;animation:pulse 3s ease-in-out infinite;}
-.site-next-lg i{font-size:.85rem;color:var(--gold-l);display:block;margin-bottom:4px;filter:drop-shadow(0 0 5px rgba(200,169,74,.4));}
-.site-next-lg .sn{font-size:.66rem;font-weight:700;color:var(--white);}
-.site-next-lg .nb{display:inline-block;font-size:.46rem;font-weight:800;background:linear-gradient(90deg,var(--gold),var(--gold-l));color:var(--ink);padding:2px 8px;border-radius:3px;margin-top:4px;text-transform:uppercase;}
+══════════════════════════════ */
+#s7 { background: var(--surface); }
+.s7-body { display: grid; grid-template-columns: 1fr 1.8fr; gap: 52px; margin-top: 18px; width: 100%; align-items: start; }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.s7-big { margin-bottom: 20px; }
+.s7-big .label { font-size: .6rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--dim); margin-bottom: 6px; }
+.s7-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.s7-ms { border-radius: 10px; padding: 12px 13px; text-align: center; background: var(--bg); border: 1px solid var(--border); box-shadow: var(--sh-sm); }
+.s7-ms .n { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 800; line-height: 1; background: var(--gg); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.s7-ms .l { font-size: .52rem; color: var(--dim); font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-top: 4px; }
+
+.s7-site-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.s7-site-hdr span { font-size: .56rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); }
+.s7-site-ok { display: flex; align-items: center; gap: 5px; color: var(--green) !important; }
+.s7-site-ok::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
+.site-grid-lg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+.sitelg {
+  border-radius: 10px; padding: 12px 8px; text-align: center;
+  background: var(--surface); border: 1px solid #B2DEC9; box-shadow: var(--sh-sm);
+  transition: transform .2s, box-shadow .2s;
+}
+.sitelg:hover { transform: translateY(-2px); box-shadow: var(--sh-md); }
+.sitelg i { font-size: .85rem; color: var(--green); display: block; margin-bottom: 5px; }
+.sitelg .sn { font-size: .68rem; font-weight: 700; color: var(--ink2); }
+.sitelg .ss { font-size: .54rem; color: var(--dim); margin-top: 2px; }
+.site-next-lg {
+  border-radius: 10px; padding: 12px 8px; text-align: center;
+  border: 1.5px dashed #DCC07E; background: var(--gold-bg); box-shadow: var(--sh-sm);
+  grid-column: span 2;
+}
+.site-next-lg i { font-size: .85rem; color: var(--gold); display: block; margin-bottom: 5px; }
+.site-next-lg .sn { font-size: .68rem; font-weight: 700; color: var(--ink2); }
+.site-next-lg .nb { display: inline-block; font-size: .54rem; font-weight: 700; color: var(--gold-d); background: #DCC07E40; padding: 2px 8px; border-radius: 4px; margin-top: 4px; text-transform: uppercase; letter-spacing: .08em; }
+
+/* ══════════════════════════════
    SLIDE 8 — WHAT'S NEXT: BAKRIE TOWER
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-#s8{background:radial-gradient(ellipse at 30% 60%,#071525 0%,var(--ink) 55%);overflow:hidden;}
-.s8-sil{position:absolute;right:0;bottom:0;display:flex;align-items:flex-end;gap:6px;padding:0 48px;height:100%;pointer-events:none;}
-.s8b{border-radius:2px 2px 0 0;border:1px solid rgba(255,255,255,.04);border-bottom:none;}
-.s8b.mn{width:110px;height:80%;background:rgba(200,169,74,.03);border-color:rgba(200,169,74,.08);}
-.s8b.l1{width:72px;height:56%;background:rgba(255,255,255,.015);}
-.s8b.l2{width:55px;height:40%;background:rgba(255,255,255,.01);}
-.s8b.r1{width:68px;height:48%;background:rgba(255,255,255,.015);}
-.s8b.r2{width:45px;height:32%;background:rgba(255,255,255,.01);}
-.s8-wrap{width:52%;position:relative;z-index:2;}
-.s8-h{font-family:'Syne',sans-serif;font-size:2.6rem;font-weight:800;color:var(--white);letter-spacing:-.02em;}
-.s8-h em{color:var(--gold-l);font-style:normal;text-shadow:0 0 40px rgba(200,169,74,.2);}
-.s8-sub{font-size:.87rem;color:var(--fog);margin-top:10px;max-width:440px;line-height:1.75;}
-.s8-prev{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0;}
-.s8-pi{border-radius:10px;padding:11px;text-align:center;background:var(--cb);border:1px solid var(--cr);box-shadow:var(--cs);}
-.s8-pi .n{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;line-height:1;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.s8-pi .l{font-size:.53rem;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;font-weight:600;margin-top:4px;}
-.cl{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
-.cli{display:flex;align-items:center;gap:8px;font-size:.71rem;color:var(--fog);padding:7px 10px;border-radius:6px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);}
-.cli i{color:var(--green);font-size:.68rem;flex-shrink:0;filter:drop-shadow(0 0 4px rgba(29,185,126,.4));}
-.s8-badge{position:absolute;right:13%;top:50%;transform:translateY(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:16px;}
-.s8-circle{width:172px;height:172px;border-radius:50%;border:1px solid rgba(200,169,74,.35);background:rgba(200,169,74,.05);box-shadow:0 0 0 16px rgba(200,169,74,.03),0 0 60px rgba(200,169,74,.12),inset 0 1px 0 rgba(200,169,74,.1);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;animation:pulse 3.2s ease-in-out infinite,float 6s ease-in-out infinite;}
-.s8-circle i{font-size:1.9rem;color:var(--gold);margin-bottom:9px;filter:drop-shadow(0 0 12px rgba(200,169,74,.4));}
-.s8-circle .sc-l{font-size:.49rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(200,169,74,.55);margin-bottom:4px;}
-.s8-circle .sc-t{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--white);line-height:1.2;}
-.s8-q{font-size:.7rem;color:var(--gold-l);font-style:italic;text-align:center;max-width:190px;line-height:1.7;opacity:.75;}
+══════════════════════════════ */
+#s8 { background: var(--bg); }
+.s8-body { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; margin-top: 22px; width: 100%; align-items: start; }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   SLIDE 9 — WHAT'S NEXT: ROADMAP
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-#s9{background:radial-gradient(ellipse at 20% 20%,#0A1E34 0%,var(--deep) 55%);}
-.s9-h{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--white);letter-spacing:-.02em;}
-.s9-sub{font-size:.88rem;color:var(--fog);line-height:1.75;max-width:560px;margin-top:8px;}
-.s9-body{display:grid;grid-template-columns:1.2fr 1fr;gap:44px;align-items:start;margin-top:24px;width:100%;}
-/* Left: roadmap */
-.road{display:flex;flex-direction:column;}
-.ri{display:flex;gap:16px;align-items:stretch;}
-.ri-spine{display:flex;flex-direction:column;align-items:center;width:36px;flex-shrink:0;}
-.ri-dot{width:36px;height:36px;border-radius:50%;flex-shrink:0;border:1.5px solid;display:flex;align-items:center;justify-content:center;font-size:.85rem;}
-.ri-dot.done{border-color:rgba(29,185,126,.5);background:rgba(29,185,126,.08);color:#6EE7B7;box-shadow:0 0 14px rgba(29,185,126,.15);}
-.ri-dot.act{border-color:var(--gold);background:rgba(200,169,74,.08);color:var(--gold-l);box-shadow:0 0 18px rgba(200,169,74,.2);animation:pulse 2.8s ease-in-out infinite;}
-.ri-dot.nxt{border-color:rgba(255,255,255,.1);background:var(--cb);color:var(--dim);}
-.ri-vl{flex:1;width:1px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));margin:3px 0;}
-.ri-body{padding:4px 0 18px;}
-.ri-body h4{font-size:.82rem;font-weight:700;color:var(--white);margin-bottom:3px;}
-.ri-body p{font-size:.7rem;color:var(--dim);line-height:1.55;}
-/* Right: pillars of improvement */
-.s9-pillars{display:flex;flex-direction:column;gap:9px;}
-.s9-p{border-radius:10px;padding:14px 16px;background:var(--cb);border:1px solid var(--cr);box-shadow:var(--cs);display:flex;align-items:flex-start;gap:13px;transition:all .25s ease;position:relative;overflow:hidden;}
-.s9-p::before{content:'';position:absolute;top:0;left:0;bottom:0;width:2px;border-radius:2px;}
-.s9-p.p1::before{background:linear-gradient(180deg,var(--red),transparent);}
-.s9-p.p2::before{background:linear-gradient(180deg,var(--amber),transparent);}
-.s9-p.p3::before{background:linear-gradient(180deg,var(--blue),transparent);}
-.s9-p.p4::before{background:linear-gradient(180deg,var(--purple),transparent);}
-.s9-p:hover{border-color:rgba(255,255,255,.13);transform:translateX(3px);}
-.s9-p .ico{width:36px;height:36px;border-radius:9px;flex-shrink:0;font-size:.84rem;}
-.s9-p h4{font-size:.78rem;font-weight:700;color:var(--white);margin-bottom:2px;}
-.s9-p p{font-size:.68rem;color:var(--dim);line-height:1.5;}
+.s8-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+.s8-kp { border-radius: 10px; padding: 13px 12px; text-align: center; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-sm); }
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+.checklist { display: flex; flex-direction: column; gap: 8px; }
+.cli {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 8px;
+  background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-sm);
+  font-size: .74rem; color: var(--ink2); font-weight: 500;
+}
+.cli i { color: var(--green); font-size: .72rem; width: 14px; text-align: center; flex-shrink: 0; }
+
+.s8-right-content { display: flex; flex-direction: column; align-items: center; gap: 24px; padding-top: 8px; }
+.s8-tower {
+  width: 220px; height: 220px; border-radius: 50%;
+  border: 1.5px solid var(--border2);
+  background: var(--surface); box-shadow: var(--sh-lg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; animation: flt 5s ease-in-out infinite;
+}
+.s8-tower i { font-size: 3rem; color: var(--gold); }
+.s8-tower .sc-l { font-size: .56rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--dim); }
+.s8-tower .sc-t { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--ink); text-align: center; }
+
+.s8-reason { font-size: .8rem; color: var(--muted); line-height: 1.7; text-align: center; max-width: 300px; }
+.s8-reason strong { color: var(--gold-d); font-weight: 700; font-style: italic; }
+
+/* ══════════════════════════════
+   SLIDE 9 — TECH ROADMAP
+══════════════════════════════ */
+#s9 { background: var(--surface); }
+.s9-body { display: grid; grid-template-columns: 1.2fr 1fr; gap: 52px; margin-top: 22px; width: 100%; align-items: start; }
+
+/* roadmap */
+.road { display: flex; flex-direction: column; }
+.ri { display: flex; gap: 16px; }
+.ri-spine { display: flex; flex-direction: column; align-items: center; width: 36px; flex-shrink: 0; }
+.ri-dot { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; border: 1.5px solid; display: flex; align-items: center; justify-content: center; font-size: .8rem; }
+.ri-dot.done { border-color: #B2DEC9; background: #EDF7F2; color: var(--green); }
+.ri-dot.act  { border-color: #DCC07E; background: var(--gold-bg); color: var(--gold); }
+.ri-dot.nxt  { border-color: var(--border2); background: var(--bg); color: var(--dim); }
+.ri-vl { flex: 1; width: 1px; background: var(--border); margin: 3px 0; }
+.ri-body { padding: 4px 0 18px; }
+.ri-body h4 { font-size: .8rem; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+.ri-body p  { font-size: .68rem; color: var(--muted); line-height: 1.55; }
+
+/* pillars */
+.s9-pillars { display: flex; flex-direction: column; gap: 9px; }
+.s9-p {
+  border-radius: 10px; padding: 14px 16px;
+  background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-sm);
+  display: flex; align-items: flex-start; gap: 13px;
+  position: relative; overflow: hidden;
+  transition: transform .2s;
+}
+.s9-p:hover { transform: translateX(3px); }
+.s9-p::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 2px 0 0 2px; }
+.s9-p.p1::before { background: var(--red); }
+.s9-p.p2::before { background: var(--amber); }
+.s9-p.p3::before { background: var(--blue); }
+.s9-p.p4::before { background: var(--purple); }
+.s9-p h4 { font-size: .78rem; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+.s9-p p  { font-size: .67rem; color: var(--muted); line-height: 1.5; }
+
+/* ══════════════════════════════
    SLIDE 10 — CLOSING
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-#s10{background:var(--ink);}
-.s10-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(200,169,74,.07) 0%,transparent 55%);animation:glow 7s ease-in-out infinite;pointer-events:none;}
-.s10-r{position:absolute;border-radius:50%;border:1px solid rgba(200,169,74,.035);pointer-events:none;}
-.s10-r1{width:480px;height:480px;top:50%;left:50%;margin:-240px 0 0 -240px;animation:spin 32s linear infinite;}
-.s10-r2{width:700px;height:700px;top:50%;left:50%;margin:-350px 0 0 -350px;animation:spin 48s linear infinite reverse;}
-.s10-content{position:relative;z-index:2;width:100%;max-width:1040px;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;}
-.s10-hl{font-family:'Syne',sans-serif;font-size:3.8rem;font-weight:800;color:var(--white);line-height:1.03;margin-bottom:18px;letter-spacing:-.03em;}
-.s10-hl em{color:var(--gold-l);font-style:normal;text-shadow:0 0 50px rgba(200,169,74,.22);}
-.s10-msg{font-size:.87rem;color:var(--fog);line-height:1.82;max-width:440px;margin-bottom:28px;}
-.s10-pills{display:flex;flex-direction:column;gap:9px;}
-.s10-pill{display:flex;align-items:center;gap:13px;padding-left:14px;border-left:2px solid var(--gold);}
-.s10-pill i{color:var(--gold);font-size:.8rem;width:16px;text-align:center;filter:drop-shadow(0 0 4px rgba(200,169,74,.3));}
-.s10-pill span{font-size:.84rem;font-weight:700;color:var(--white);}
-.s10-stats{display:flex;flex-direction:column;gap:9px;}
-.s10-st{border-radius:12px;padding:16px 20px;background:var(--cb);border:1px solid var(--cr);box-shadow:var(--cs);display:flex;align-items:center;gap:16px;transition:all .3s ease;}
-.s10-st:hover{border-color:rgba(200,169,74,.22);transform:translateX(3px);}
-.s10-n{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;line-height:1;flex-shrink:0;min-width:72px;letter-spacing:-.03em;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.s10-t h4{font-size:.79rem;font-weight:700;color:var(--white);margin-bottom:2px;}
-.s10-t p{font-size:.67rem;color:var(--dim);}
-.s10-foot{position:absolute;bottom:18px;left:68px;right:68px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.04);padding-top:12px;z-index:2;}
-.s10-fl{font-size:.56rem;color:rgba(255,255,255,.18);letter-spacing:.18em;text-transform:uppercase;}
-.s10-fr{font-size:.56rem;color:var(--gold);opacity:.4;letter-spacing:.12em;}
+══════════════════════════════ */
+#s10 { background: var(--navy); }
+.s10-deco {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 55px, rgba(255,255,255,.03) 55px, rgba(255,255,255,.03) 56px),
+    repeating-linear-gradient(90deg, transparent, transparent 55px, rgba(255,255,255,.03) 55px, rgba(255,255,255,.03) 56px);
+}
+.s10-content {
+  position: relative; z-index: 2; width: 100%; max-width: 1140px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+.s10-h {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.6rem; font-weight: 900; line-height: 1.05; letter-spacing: -.03em;
+  color: #FFFFFF; margin-bottom: 20px;
+}
+.s10-h em { color: var(--gold-l); font-style: italic; }
+.s10-msg { font-size: .88rem; color: rgba(255,255,255,.55); line-height: 1.8; max-width: 440px; margin-bottom: 28px; }
+.s10-pills { display: flex; flex-direction: column; gap: 9px; }
+.s10-pill { display: flex; align-items: center; gap: 12px; }
+.s10-pill-dot { width: 3px; height: 32px; border-radius: 2px; background: var(--gold); flex-shrink: 0; }
+.s10-pill span { font-size: .82rem; font-weight: 600; color: rgba(255,255,255,.8); }
+
+.s10-stats { display: flex; flex-direction: column; gap: 10px; }
+.s10-st {
+  border-radius: 12px; padding: 16px 20px;
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+  display: flex; align-items: center; gap: 18px;
+  transition: background .25s;
+}
+.s10-st:hover { background: rgba(255,255,255,.08); }
+.s10-n {
+  font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 800;
+  line-height: 1; min-width: 72px; letter-spacing: -.03em;
+  background: var(--gg); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.s10-t h4 { font-size: .78rem; font-weight: 700; color: rgba(255,255,255,.9); margin-bottom: 2px; }
+.s10-t p  { font-size: .65rem; color: rgba(255,255,255,.4); }
+.s10-foot {
+  position: absolute; bottom: 18px; left: 80px; right: 80px; z-index: 3;
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid rgba(255,255,255,.07); padding-top: 12px;
+}
+.s10-fl { font-size: .54rem; color: rgba(255,255,255,.2); letter-spacing: .16em; text-transform: uppercase; }
+.s10-fr { font-size: .54rem; color: rgba(200,169,74,.4); letter-spacing: .12em; }
 </style>
 </head>
 <body>
 <div id="deck">
 
-<!-- ══ SLIDE 1 — OPENING: MY ROLE ══ -->
+<!-- ══ SLIDE 1 — OPENING ══ -->
 <div class="slide" id="s1">
-  <div class="s1-grid"></div>
-  <div class="s1-glow"></div>
-  <div class="s1-line"></div>
-  <div style="position:relative;z-index:2;width:100%;max-width:1140px;">
-    <div class="s1-co al d1">Provices Group · IT Division</div>
-    <div class="s1-name au d2">IT Developer & Implementator</div>
-    <h1 class="s1-h au d3">Saya yang membangun,<br>memasang, menjaga, dan<br>mengembangkan <em>PMS Provices.</em></h1>
-    <p class="s1-sub af d5">Satu peran yang mencakup seluruh lifecycle sistem — dari kode pertama, hingga ratusan user di 13 unit operasional berjalan setiap hari.</p>
+  <div class="s1-deco">
+    <div class="s1-deco-lines"></div>
+  </div>
+  <div class="s1-left">
+    <div class="s1-tag au d0"><span></span>Provices Group · IT Division</div>
+    <div class="eyebrow al d1">Property Management System</div>
+    <h1 class="h1 au d2" style="font-size:3.2rem;max-width:540px;line-height:1.08;">Saya yang membangun, memasang, menjaga, dan mengembangkan <em style="font-style:italic;color:var(--gold)">PMS Provices.</em></h1>
+    <div class="gold-rule agx d3"></div>
+    <p class="lead af d4" style="max-width:460px;margin-bottom:22px;">Satu peran yang mencakup seluruh lifecycle sistem — dari kode pertama, hingga 50 user aktif di 12 unit operasional berjalan setiap hari.</p>
     <div class="s1-roles">
-      <div class="s1-role r1 as d6"><i class="fa-solid fa-code"></i> Developer</div>
-      <div class="s1-role r2 as d7"><i class="fa-solid fa-rocket"></i> Implementator</div>
-      <div class="s1-role r3 as d8"><i class="fa-solid fa-server"></i> System Maintainer</div>
-      <div class="s1-role r4 as d9"><i class="fa-solid fa-lightbulb"></i> Innovator</div>
+      <div class="s1-role r1 as d5"><i class="fa-solid fa-code"></i> Developer</div>
+      <div class="s1-role r2 as d6"><i class="fa-solid fa-rocket"></i> Implementator</div>
+      <div class="s1-role r3 as d7"><i class="fa-solid fa-server"></i> Maintainer</div>
+      <div class="s1-role r4 as d8"><i class="fa-solid fa-lightbulb"></i> Innovator</div>
     </div>
-    <div class="s1-stats">
-      <div class="s1-st anum d10"><div class="n">13</div><div class="l">Sites Live</div></div>
-      <div class="s1-st anum d11"><div class="n">11</div><div class="l">Modules Built</div></div>
-      <div class="s1-st anum d12"><div class="n">200+</div><div class="l">Active Users</div></div>
-      <div class="s1-st anum d13"><div class="n">500+</div><div class="l">Tickets Resolved</div></div>
+    <div class="s1-stats af d9">
+      <div class="s1-st"><div class="stat-n">12</div><div class="stat-l">Sites Live</div></div>
+      <div class="s1-st"><div class="stat-n">11</div><div class="stat-l">Modules Built</div></div>
+      <div class="s1-st"><div class="stat-n">50</div><div class="stat-l">Active Users</div></div>
+      <div class="s1-st"><div class="stat-n">500+</div><div class="stat-l">Tickets Resolved</div></div>
     </div>
   </div>
-  <div class="s1-icon as d4">
-    <div class="s1-ring"><i class="fa-solid fa-laptop-code"></i></div>
+  <div class="s1-right as d3">
+    <div class="s1-circle">
+      <i class="fa-solid fa-laptop-code"></i>
+      <span>IT Developer</span>
+    </div>
+    <div class="s1-steps" style="width:100%">
+      <div class="s1-step"><i class="fa-solid fa-code" style="color:var(--blue)"></i><span>Membangun sistem & fitur</span></div>
+      <div class="s1-step"><i class="fa-solid fa-rocket" style="color:var(--gold)"></i><span>Implementasi ke 12 unit</span></div>
+      <div class="s1-step"><i class="fa-solid fa-server" style="color:var(--green)"></i><span>Menjaga & support harian</span></div>
+      <div class="s1-step"><i class="fa-solid fa-lightbulb" style="color:var(--purple)"></i><span>Mengembangkan solusi baru</span></div>
+    </div>
   </div>
 </div>
 
-<!-- ══ SLIDE 2 — 4 ROLES OVERVIEW ══ -->
+<!-- ══ SLIDE 2 — 4 ROLES ══ -->
 <div class="slide" id="s2">
   <div class="w">
-    <div class="lbl al d1">Scope of Role</div>
-    <h2 class="s2-h au d2">Satu orang. Empat peran. Semua berjalan.</h2>
-    <p class="s2-sub af d3">Tidak ada vendor eksternal yang mengelola PMS — saya yang mengerjakan semuanya, dari ujung ke ujung.</p>
+    <div class="eyebrow al d1">Scope of Role</div>
+    <h2 class="h2 au d2">Satu orang. Empat peran. Semua berjalan.</h2>
+    <p class="lead af d3" style="max-width:580px;margin-top:6px;">Tidak ada vendor eksternal yang mengelola PMS — saya yang mengerjakan dari ujung ke ujung.</p>
     <div class="roles-grid">
       <div class="role-card dev as d4">
-        <div class="rc-ico"><i class="fa-solid fa-code"></i></div>
-        <div>
-          <div class="rc-title">Developer</div>
-          <div class="rc-desc">Membangun dan mengembangkan seluruh fitur sistem PMS dari nol.</div>
-        </div>
+        <div class="ico md blue"><i class="fa-solid fa-code"></i></div>
+        <div class="rc-title">Developer</div>
+        <p class="body-sm">Membangun dan mengembangkan seluruh fitur PMS dari nol.</p>
         <div class="rc-tags">
           <div class="rc-tag">11 modul dibangun</div>
           <div class="rc-tag">Frontend & backend</div>
           <div class="rc-tag">Custom per kebutuhan unit</div>
         </div>
-        <div>
-          <div class="rc-num">11</div>
-          <div class="rc-num-lbl">Modules Built</div>
+        <div class="rc-big">
+          <div class="n">11</div>
+          <div class="l">Modules Built</div>
         </div>
       </div>
       <div class="role-card imp as d5">
-        <div class="rc-ico"><i class="fa-solid fa-rocket"></i></div>
-        <div>
-          <div class="rc-title">Implementator</div>
-          <div class="rc-desc">Memasang sistem di setiap unit — dari setup hingga go-live.</div>
-        </div>
+        <div class="ico md gold"><i class="fa-solid fa-rocket"></i></div>
+        <div class="rc-title">Implementator</div>
+        <p class="body-sm">Memasang sistem di setiap unit — dari setup hingga go-live.</p>
         <div class="rc-tags">
-          <div class="rc-tag">Analisis kebutuhan tiap site</div>
+          <div class="rc-tag">Analisis kebutuhan per site</div>
           <div class="rc-tag">Setup entity & master data</div>
           <div class="rc-tag">Training & pendampingan</div>
         </div>
-        <div>
-          <div class="rc-num">13</div>
-          <div class="rc-num-lbl">Sites Implemented</div>
+        <div class="rc-big">
+          <div class="n">12</div>
+          <div class="l">Sites Implemented</div>
         </div>
       </div>
       <div class="role-card mnt as d6">
-        <div class="rc-ico"><i class="fa-solid fa-server"></i></div>
-        <div>
-          <div class="rc-title">Maintainer</div>
-          <div class="rc-desc">Menjaga server, database, dan sistem tetap berjalan setiap hari.</div>
-        </div>
+        <div class="ico md green"><i class="fa-solid fa-server"></i></div>
+        <div class="rc-title">Maintainer</div>
+        <p class="body-sm">Menjaga server, database, dan sistem tetap berjalan setiap hari.</p>
         <div class="rc-tags">
           <div class="rc-tag">VPS cloud management</div>
           <div class="rc-tag">Daily support & monitoring</div>
           <div class="rc-tag">Data validation</div>
         </div>
-        <div>
-          <div class="rc-num">99.9%</div>
-          <div class="rc-num-lbl">Uptime Target</div>
+        <div class="rc-big">
+          <div class="n">99.9%</div>
+          <div class="l">Uptime Target</div>
         </div>
       </div>
       <div class="role-card inv as d7">
-        <div class="rc-ico"><i class="fa-solid fa-lightbulb"></i></div>
-        <div>
-          <div class="rc-title">Innovator</div>
-          <div class="rc-desc">Mengembangkan solusi baru yang tidak ada sebelumnya.</div>
-        </div>
+        <div class="ico md purple"><i class="fa-solid fa-lightbulb"></i></div>
+        <div class="rc-title">Innovator</div>
+        <p class="body-sm">Mengembangkan solusi baru yang tidak ada sebelumnya.</p>
         <div class="rc-tags">
           <div class="rc-tag">PVI Support Chat (in-house)</div>
           <div class="rc-tag">Upgrade teknologi stack</div>
           <div class="rc-tag">Continuous improvement</div>
         </div>
-        <div>
-          <div class="rc-num">500+</div>
-          <div class="rc-num-lbl">Tickets Handled</div>
+        <div class="rc-big">
+          <div class="n">500+</div>
+          <div class="l">Tickets Handled</div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ SLIDE 3 — ROLE: DEVELOPER ══ -->
+<!-- ══ SLIDE 3 — DEVELOPER ══ -->
 <div class="slide" id="s3">
   <div class="w">
-    <div class="s3-badge al d1"><i class="fa-solid fa-code"></i> Role 1 of 4</div>
-    <h2 class="s3-h au d2">Developer — Saya yang membangun sistemnya.</h2>
-    <div class="gold-line agx d3"></div>
+    <div class="badge nxt al d1"><i class="fa-solid fa-code"></i> Role 1 of 4</div>
+    <h2 class="h2 au d2" style="margin-top:10px;">Developer — Saya yang membangun sistemnya.</h2>
+    <div class="gold-rule agx d3"></div>
     <div class="s3-body">
-      <div class="s3-left">
-        <p class="af d3">PMS dibangun sepenuhnya in-house. Setiap modul, setiap fitur, setiap laporan — saya yang kode dan konfigurasi sesuai kebutuhan operasional masing-masing unit.</p>
-        <div class="dev-acts">
+      <div>
+        <p class="body-sm af d3" style="margin-bottom:16px;">PMS dibangun sepenuhnya in-house. Setiap modul, setiap fitur — dikode dan dikonfigurasi sesuai kebutuhan operasional masing-masing unit.</p>
+        <div class="dev-act-list">
           <div class="dev-act al d4">
-            <div class="ico"><i class="fa-solid fa-layer-group"></i></div>
-            <div><h4>Bangun modul dari kebutuhan bisnis</h4><p>Setiap modul dirancang sesuai alur operasional properti, bukan template generik.</p></div>
+            <div class="ico sm blue"><i class="fa-solid fa-layer-group"></i></div>
+            <div><h4>Bangun modul dari kebutuhan bisnis</h4><p>Dirancang sesuai alur operasional properti, bukan template generik.</p></div>
           </div>
           <div class="dev-act al d5">
-            <div class="ico"><i class="fa-solid fa-file-code"></i></div>
-            <div><h4>Custom report & output</h4><p>Laporan disesuaikan dengan format yang dibutuhkan manajemen dan tim finance.</p></div>
+            <div class="ico sm gold"><i class="fa-solid fa-file-code"></i></div>
+            <div><h4>Custom report & output</h4><p>Format laporan disesuaikan kebutuhan manajemen dan tim finance.</p></div>
           </div>
           <div class="dev-act al d6">
-            <div class="ico"><i class="fa-solid fa-sliders"></i></div>
-            <div><h4>Konfigurasi per unit</h4><p>Setiap site punya setup berbeda — billing, entitas, workflow disesuaikan.</p></div>
+            <div class="ico sm green"><i class="fa-solid fa-sliders"></i></div>
+            <div><h4>Konfigurasi per unit</h4><p>Setiap site punya setup berbeda — billing, entitas, workflow.</p></div>
           </div>
           <div class="dev-act al d7">
-            <div class="ico"><i class="fa-solid fa-arrows-rotate"></i></div>
+            <div class="ico sm purple"><i class="fa-solid fa-arrows-rotate"></i></div>
             <div><h4>Iterasi & perbaikan berkelanjutan</h4><p>Sistem terus diperbarui berdasarkan feedback pengguna di lapangan.</p></div>
           </div>
         </div>
       </div>
       <div>
-        <div class="mod-label ar d3">11 Modul yang Sudah Dibangun</div>
-        <div class="mod-grid ar d3">
-          <div class="mod fo as d3"><div class="m-ico"><i class="fa-solid fa-user-tie"></i></div><div><div class="m-name">Tenant Mgmt</div><div class="m-cat">Front Office</div></div></div>
-          <div class="mod fo as d4"><div class="m-ico"><i class="fa-solid fa-building-user"></i></div><div><div class="m-name">Owner Mgmt</div><div class="m-cat">Front Office</div></div></div>
-          <div class="mod fo as d5"><div class="m-ico"><i class="fa-solid fa-bolt"></i></div><div><div class="m-name">Utility Mgmt</div><div class="m-cat">Front Office</div></div></div>
-          <div class="mod ad as d6"><div class="m-ico"><i class="fa-solid fa-users-cog"></i></div><div><div class="m-name">User Mgmt</div><div class="m-cat">Admin</div></div></div>
-          <div class="mod fi as d6"><div class="m-ico"><i class="fa-solid fa-file-invoice-dollar"></i></div><div><div class="m-name">AR Mgmt</div><div class="m-cat">Finance</div></div></div>
-          <div class="mod fi as d7"><div class="m-ico"><i class="fa-solid fa-receipt"></i></div><div><div class="m-name">AP Mgmt</div><div class="m-cat">Finance</div></div></div>
-          <div class="mod fi as d8"><div class="m-ico"><i class="fa-solid fa-wallet"></i></div><div><div class="m-name">Cash & Bank</div><div class="m-cat">Finance</div></div></div>
-          <div class="mod fi as d9"><div class="m-ico"><i class="fa-solid fa-book-open"></i></div><div><div class="m-name">General Ledger</div><div class="m-cat">Accounting</div></div></div>
-          <div class="mod op as d10"><div class="m-ico"><i class="fa-solid fa-boxes-stacked"></i></div><div><div class="m-name">Inventory</div><div class="m-cat">Back Office</div></div></div>
-          <div class="mod op as d11"><div class="m-ico"><i class="fa-solid fa-cart-shopping"></i></div><div><div class="m-name">Purchasing</div><div class="m-cat">Back Office</div></div></div>
-          <div class="mod cs wide as d12"><div class="m-ico"><i class="fa-solid fa-comments"></i></div><div><div class="m-name">PVI Support Chat</div><div class="m-cat">Support · In-House · WA Notif</div></div></div>
+        <div class="mod-label ar d2">11 Modul yang Dibangun</div>
+        <div class="mod-grid">
+          <div class="mod as d3"><div class="ico sm blue"><i class="fa-solid fa-user-tie"></i></div><div><div class="m-name">Tenant Mgmt</div><div class="m-cat">Front Office</div></div></div>
+          <div class="mod as d4"><div class="ico sm blue"><i class="fa-solid fa-building-user"></i></div><div><div class="m-name">Owner Mgmt</div><div class="m-cat">Front Office</div></div></div>
+          <div class="mod as d4"><div class="ico sm blue"><i class="fa-solid fa-bolt"></i></div><div><div class="m-name">Utility Mgmt</div><div class="m-cat">Front Office</div></div></div>
+          <div class="mod as d5"><div class="ico sm purple"><i class="fa-solid fa-users-cog"></i></div><div><div class="m-name">User Mgmt</div><div class="m-cat">Admin</div></div></div>
+          <div class="mod as d5"><div class="ico sm gold"><i class="fa-solid fa-file-invoice-dollar"></i></div><div><div class="m-name">AR Mgmt</div><div class="m-cat">Finance</div></div></div>
+          <div class="mod as d6"><div class="ico sm gold"><i class="fa-solid fa-receipt"></i></div><div><div class="m-name">AP Mgmt</div><div class="m-cat">Finance</div></div></div>
+          <div class="mod as d6"><div class="ico sm gold"><i class="fa-solid fa-wallet"></i></div><div><div class="m-name">Cash &amp; Bank</div><div class="m-cat">Finance</div></div></div>
+          <div class="mod as d7"><div class="ico sm gold"><i class="fa-solid fa-book-open"></i></div><div><div class="m-name">General Ledger</div><div class="m-cat">Accounting</div></div></div>
+          <div class="mod as d7"><div class="ico sm teal"><i class="fa-solid fa-boxes-stacked"></i></div><div><div class="m-name">Inventory</div><div class="m-cat">Back Office</div></div></div>
+          <div class="mod as d8"><div class="ico sm teal"><i class="fa-solid fa-cart-shopping"></i></div><div><div class="m-name">Purchasing</div><div class="m-cat">Back Office</div></div></div>
+          <div class="mod wide as d9"><div class="ico sm green"><i class="fa-solid fa-comments"></i></div><div><div class="m-name">PVI Support Chat</div><div class="m-cat">Support · In-House · WA Notification</div></div></div>
         </div>
-        <div class="mod-total af d13">
+        <div class="mod-total af d10">
           <div><div class="n">11</div><div class="l">Total Modules</div></div>
-          <div style="font-size:.72rem;color:var(--fog);text-align:right;line-height:1.6;">Seluruhnya dikembangkan<br>dan di-maintain sendiri</div>
+          <p class="body-xs" style="text-align:right;line-height:1.6;">Seluruhnya dikembangkan<br>dan di-maintain secara mandiri</p>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ SLIDE 4 — ROLE: IMPLEMENTATOR ══ -->
+<!-- ══ SLIDE 4 — IMPLEMENTATOR ══ -->
 <div class="slide" id="s4">
   <div class="w">
-    <div class="s4-badge al d1"><i class="fa-solid fa-rocket"></i> Role 2 of 4</div>
-    <h2 class="s4-h au d2">Implementator — Saya yang pasang di lapangan.</h2>
-    <div class="gold-line agx d3"></div>
+    <div class="badge act al d1"><i class="fa-solid fa-rocket"></i> Role 2 of 4</div>
+    <h2 class="h2 au d2" style="margin-top:10px;">Implementator — Saya yang pasang di lapangan.</h2>
+    <div class="gold-rule agx d3"></div>
     <div class="s4-body">
       <div>
         <div class="impl-flow">
           <div class="if-item al d3">
             <div class="if-spine"><div class="if-dot done"><i class="fa-solid fa-magnifying-glass"></i></div><div class="if-vl"></div></div>
-            <div class="if-body"><h4>Analisis Kebutuhan Site</h4><p>Pahami proses bisnis, alur billing, & entitas yang perlu disiapkan.</p><span class="if-tag">per unit beda-beda</span></div>
+            <div class="if-body"><h4>Analisis Kebutuhan Site</h4><p>Pahami proses bisnis, alur billing, dan entitas yang perlu disiapkan.</p><span class="if-tag">per unit berbeda</span></div>
           </div>
           <div class="if-item al d4">
             <div class="if-spine"><div class="if-dot done"><i class="fa-solid fa-database"></i></div><div class="if-vl"></div></div>
-            <div class="if-body"><h4>Setup Entity & Master Data</h4><p>Konfigurasi project, entitas, COA, item, dan parameter billing.</p><span class="if-tag">~3–5 hari</span></div>
+            <div class="if-body"><h4>Setup Entity &amp; Master Data</h4><p>Konfigurasi project, entitas, COA, item, dan parameter billing.</p><span class="if-tag">~3–5 hari</span></div>
           </div>
           <div class="if-item al d5">
             <div class="if-spine"><div class="if-dot done"><i class="fa-solid fa-users"></i></div><div class="if-vl"></div></div>
-            <div class="if-body"><h4>Setup User & Hak Akses</h4><p>Buat user, assign role, dan mapping akses per divisi.</p><span class="if-tag">per departemen</span></div>
+            <div class="if-body"><h4>Setup User &amp; Hak Akses</h4><p>Buat user, assign role, dan mapping akses per divisi.</p><span class="if-tag">per departemen</span></div>
           </div>
           <div class="if-item al d6">
             <div class="if-spine"><div class="if-dot done"><i class="fa-solid fa-flask"></i></div><div class="if-vl"></div></div>
-            <div class="if-body"><h4>Testing & Validasi Data</h4><p>Uji billing, invoice, payment, dan output laporan.</p><span class="if-tag">~2–3 hari</span></div>
+            <div class="if-body"><h4>Testing &amp; Validasi Data</h4><p>Uji billing, invoice, payment, dan output laporan.</p><span class="if-tag">~2–3 hari</span></div>
           </div>
           <div class="if-item al d7">
             <div class="if-spine"><div class="if-dot done"><i class="fa-solid fa-chalkboard-user"></i></div><div class="if-vl"></div></div>
-            <div class="if-body"><h4>Training User</h4><p>Pendampingan tim lapangan sampai bisa mandiri.</p><span class="if-tag">hands-on</span></div>
+            <div class="if-body"><h4>Training User</h4><p>Pendampingan tim lapangan sampai mandiri.</p><span class="if-tag">hands-on</span></div>
           </div>
           <div class="if-item al d8">
             <div class="if-spine"><div class="if-dot act"><i class="fa-solid fa-flag-checkered"></i></div></div>
-            <div class="if-body"><h4>Go-Live & Post-Live Monitoring</h4><p>Sistem aktif, monitoring intensif 1–2 minggu pertama.</p><span class="if-tag">≤ 14 hari total</span></div>
+            <div class="if-body"><h4>Go-Live &amp; Post-Live Monitoring</h4><p>Sistem aktif, monitoring intensif 1–2 minggu pertama.</p><span class="if-tag">≤ 14 hari total</span></div>
           </div>
         </div>
       </div>
       <div>
         <div class="impl-stats">
-          <div class="impl-stat as d3"><div class="n">13</div><div class="l">Sites Live</div></div>
-          <div class="impl-stat as d5"><div class="n">≤14</div><div class="l">Days / Site</div></div>
-          <div class="impl-stat as d7"><div class="n">0</div><div class="l">Failed</div></div>
+          <div class="impl-stat as d3"><div class="stat-n">12</div><div class="stat-l">Sites Live</div></div>
+          <div class="impl-stat as d5"><div class="stat-n">≤14</div><div class="stat-l">Days / Site</div></div>
+          <div class="impl-stat as d7"><div class="stat-n">0</div><div class="stat-l">Failed</div></div>
         </div>
-        <div class="site-label af d3">
-          <span>Live & Operational</span>
-          <span>All Green</span>
+        <div class="site-section-lbl af d4">
+          <span>Live &amp; Operational</span>
+          <span class="site-lbl-ok">All Green</span>
         </div>
         <div class="site-grid">
           <div class="site"><i class="fa-solid fa-building"></i><span class="sn">WB1</span></div>
@@ -683,87 +877,86 @@ body::after{
           <div class="site"><i class="fa-solid fa-building"></i><span class="sn">PPM</span></div>
           <div class="site"><i class="fa-solid fa-building"></i><span class="sn">NWU</span></div>
           <div class="site"><i class="fa-solid fa-building"></i><span class="sn">JEM</span></div>
-          <div class="site"><i class="fa-solid fa-gem"></i><span class="sn">Masterpiece</span></div>
-          <div class="site"><i class="fa-solid fa-star"></i><span class="sn">Empyreal</span></div>
+          <div class="site" style="grid-column:span 2"><i class="fa-solid fa-gem"></i><span class="sn">Masterpiece &amp; Empyreal</span></div>
           <div class="site"><i class="fa-solid fa-building-columns"></i><span class="sn">HO</span></div>
         </div>
-        <div class="next-row">
-          <div class="site-next"><i class="fa-solid fa-tower-observation"></i><span class="sn">Bakrie Tower</span><span class="nb">Next →</span></div>
+        <div style="margin-top:6px;">
+          <div class="site-next"><i class="fa-solid fa-tower-observation"></i><span class="sn">Bakrie Tower</span><span class="nb">Next Implementation →</span></div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ SLIDE 5 — ROLE: MAINTAINER ══ -->
+<!-- ══ SLIDE 5 — MAINTAINER ══ -->
 <div class="slide" id="s5">
   <div class="w">
-    <div class="s5-badge al d1"><i class="fa-solid fa-server"></i> Role 3 of 4</div>
-    <h2 class="s5-h au d2">Maintainer — Saya yang jaga sistem tetap hidup.</h2>
-    <div class="gold-line agx d3"></div>
+    <div class="badge ok al d1"><i class="fa-solid fa-server"></i> Role 3 of 4</div>
+    <h2 class="h2 au d2" style="margin-top:10px;">Maintainer — Saya yang jaga sistem tetap hidup.</h2>
+    <div class="gold-rule agx d3"></div>
     <div class="s5-body">
       <div class="al d3">
         <div class="srv">
-          <div class="srv-top"><span>VPS Cloud Server</span><div class="srv-live">Online · All Systems Go</div></div>
+          <div class="srv-top"><span>VPS Cloud Server</span><div class="srv-live">Online — All Systems Go</div></div>
           <div class="srv-nums">
-            <div class="sn_"><div class="n b">42%</div><div class="l">CPU</div></div>
+            <div class="sn_"><div class="n b">42%</div><div class="l">CPU Usage</div></div>
             <div class="sn_"><div class="n g">61%</div><div class="l">Memory</div></div>
             <div class="sn_"><div class="n gr">99.9%</div><div class="l">Uptime</div></div>
           </div>
           <div class="srv-bars">
             <div class="sbi">
-              <div class="sbi-ico" style="background:rgba(59,127,255,.1);color:#7EB3FF"><i class="fa-solid fa-microchip"></i></div>
-              <div class="sbi-info"><h5>CPU</h5><div class="bt"><div class="bf d5" style="width:42%;background:#3B7FFF"></div></div></div>
+              <div class="ico sm blue"><i class="fa-solid fa-microchip"></i></div>
+              <div class="sbi-info"><h5>CPU</h5><div class="bt"><div class="bf" style="width:42%;background:var(--blue)"></div></div></div>
               <span class="sbi-val">42%</span>
             </div>
             <div class="sbi">
-              <div class="sbi-ico" style="background:rgba(200,169,74,.1);color:var(--gold-l)"><i class="fa-solid fa-memory"></i></div>
-              <div class="sbi-info"><h5>Memory</h5><div class="bt"><div class="bf d7" style="width:61%;background:var(--gold)"></div></div></div>
+              <div class="ico sm gold"><i class="fa-solid fa-memory"></i></div>
+              <div class="sbi-info"><h5>Memory</h5><div class="bt"><div class="bf" style="width:61%;background:var(--gold)"></div></div></div>
               <span class="sbi-val">61%</span>
             </div>
             <div class="sbi">
-              <div class="sbi-ico" style="background:rgba(12,184,178,.1);color:#5EEAD4"><i class="fa-solid fa-hard-drive"></i></div>
-              <div class="sbi-info"><h5>Disk</h5><div class="bt"><div class="bf d9" style="width:55%;background:var(--teal)"></div></div></div>
+              <div class="ico sm teal"><i class="fa-solid fa-hard-drive"></i></div>
+              <div class="sbi-info"><h5>Disk</h5><div class="bt"><div class="bf" style="width:55%;background:var(--teal)"></div></div></div>
               <span class="sbi-val">55%</span>
             </div>
           </div>
         </div>
-        <div style="margin-top:10px;">
-          <div style="font-size:.55rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;">Daily Support — PVI Chat</div>
+        <div>
+          <div class="mod-label" style="margin-top:14px;margin-bottom:8px;">Support Tickets — PVI Chat</div>
           <div class="tkt-row">
             <div class="tkt-mini"><div class="n ro">12</div><div class="l">Open</div></div>
-            <div class="tkt-mini"><div class="n ya">7</div><div class="l">Progress</div></div>
-            <div class="tkt-mini"><div class="n gr2">481</div><div class="l">Done</div></div>
+            <div class="tkt-mini"><div class="n ya">7</div><div class="l">In Progress</div></div>
+            <div class="tkt-mini"><div class="n gr2">481</div><div class="l">Resolved</div></div>
             <div class="tkt-mini"><div class="n go2">500+</div><div class="l">Total</div></div>
           </div>
         </div>
       </div>
       <div>
-        <div style="font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:10px;" class="af d3">Yang saya tangani setiap hari</div>
+        <div class="mod-label af d3" style="margin-bottom:10px;">Yang ditangani setiap hari</div>
         <div class="mnt-tasks">
           <div class="mt ar d3">
-            <div class="ico" style="background:rgba(59,127,255,.1);color:#7EB3FF"><i class="fa-solid fa-cloud"></i></div>
-            <div><h4>VPS Cloud Server</h4><p>Provisioning, konfigurasi, patch, dan monitoring</p></div>
+            <div class="ico sm blue"><i class="fa-solid fa-cloud"></i></div>
+            <div style="flex:1"><h4>VPS Cloud Server</h4><p>Provisioning, konfigurasi, patch, dan monitoring</p></div>
             <span class="badge ok">Active</span>
           </div>
           <div class="mt ar d4">
-            <div class="ico" style="background:rgba(200,169,74,.1);color:var(--gold-l)"><i class="fa-solid fa-database"></i></div>
-            <div><h4>Database Management</h4><p>Performa, integritas data, dan optimasi query</p></div>
+            <div class="ico sm gold"><i class="fa-solid fa-database"></i></div>
+            <div style="flex:1"><h4>Database Management</h4><p>Performa, integritas data, dan optimasi query</p></div>
             <span class="badge ok">Healthy</span>
           </div>
           <div class="mt ar d5">
-            <div class="ico" style="background:rgba(29,185,126,.1);color:#6EE7B7"><i class="fa-solid fa-hard-drive"></i></div>
-            <div><h4>Backup & Recovery</h4><p>Backup terjadwal dan prosedur pemulihan data</p></div>
+            <div class="ico sm green"><i class="fa-solid fa-hard-drive"></i></div>
+            <div style="flex:1"><h4>Backup &amp; Recovery</h4><p>Backup terjadwal dan prosedur pemulihan data</p></div>
             <span class="badge ok">Running</span>
           </div>
           <div class="mt ar d6">
-            <div class="ico" style="background:rgba(124,92,255,.1);color:#C4B5FD"><i class="fa-solid fa-lock"></i></div>
-            <div><h4>Security & Access Control</h4><p>Firewall, hak akses user, dan patch keamanan</p></div>
+            <div class="ico sm purple"><i class="fa-solid fa-lock"></i></div>
+            <div style="flex:1"><h4>Security &amp; Access Control</h4><p>Firewall, hak akses user, dan patch keamanan</p></div>
             <span class="badge act">Active</span>
           </div>
           <div class="mt ar d7">
-            <div class="ico" style="background:rgba(12,184,178,.1);color:#5EEAD4"><i class="fa-solid fa-headset"></i></div>
-            <div><h4>Daily Support via PVI Chat</h4><p>Tangani tiket kendala dari seluruh unit setiap hari</p></div>
+            <div class="ico sm teal"><i class="fa-solid fa-headset"></i></div>
+            <div style="flex:1"><h4>Daily Support via PVI Chat</h4><p>Tangani tiket kendala dari seluruh unit setiap hari</p></div>
             <span class="badge act">Active</span>
           </div>
         </div>
@@ -772,45 +965,57 @@ body::after{
   </div>
 </div>
 
-<!-- ══ SLIDE 6 — ROLE: INNOVATOR ══ -->
+<!-- ══ SLIDE 6 — INNOVATOR ══ -->
 <div class="slide" id="s6">
   <div class="w">
-    <div class="s6-badge al d1"><i class="fa-solid fa-lightbulb"></i> Role 4 of 4</div>
-    <h2 class="s6-h au d2">Innovator — Saya yang ciptakan solusi baru.</h2>
-    <div class="gold-line agx d3"></div>
+    <div class="badge pl al d1" style="background:#F3F0FD;color:var(--purple);border-color:#C4B5FD;"><i class="fa-solid fa-lightbulb"></i> Role 4 of 4</div>
+    <h2 class="h2 au d2" style="margin-top:10px;">Innovator — Saya yang ciptakan solusi baru.</h2>
+    <div class="gold-rule agx d3"></div>
     <div class="s6-body">
       <div class="chat-mock al d3">
         <div class="cm-top">
-          <div class="cm-dot" style="background:var(--green)"></div>
-          <div class="cm-dot" style="background:var(--amber)"></div>
-          <div class="cm-dot" style="background:var(--red)"></div>
-          <div class="cm-title" style="margin-left:6px;">PVI Support Chat — Dibangun In-House</div>
-          <div class="cm-badge">Live</div>
+          <div class="cm-dot" style="background:#FF5F57"></div>
+          <div class="cm-dot" style="background:#FEBC2E"></div>
+          <div class="cm-dot" style="background:#28C840"></div>
+          <div class="cm-title">PVI Support Chat — Dibangun In-House</div>
+          <div class="cm-live">Live</div>
         </div>
         <div class="cm-stats">
           <div class="cs_"><div class="n ro">12</div><div class="l">Open</div></div>
           <div class="cs_"><div class="n ya">7</div><div class="l">Progress</div></div>
           <div class="cs_"><div class="n gr2">481</div><div class="l">Resolved</div></div>
-          <div class="cs_"><div class="n" style="background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">500+</div><div class="l">Total</div></div>
+          <div class="cs_"><div class="n go2">500+</div><div class="l">Total</div></div>
         </div>
         <div class="tk-list">
-          <div class="tk r"><div class="tk-top"><span class="tk-id">#TKT-0241</span><span class="tk-st op">Open</span></div><div class="tk-title">Tagihan air tidak muncul di invoice</div><div class="tk-meta">Bug / Error · WB1 · 2h ago</div></div>
-          <div class="tk y"><div class="tk-top"><span class="tk-id">#TKT-0238</span><span class="tk-st pr">In Progress</span></div><div class="tk-title">Penyesuaian format laporan AR</div><div class="tk-meta">Enhancement · GIC · 5h ago</div></div>
-          <div class="tk g"><div class="tk-top"><span class="tk-id">#TKT-0235</span><span class="tk-st dn">Resolved</span></div><div class="tk-title">Unpost transaksi jurnal salah input</div><div class="tk-meta">Unpost · ROP · Yesterday</div></div>
+          <div class="tk r">
+            <div class="tk-top"><span class="tk-id">#TKT-0241</span><span class="tk-st op">Open</span></div>
+            <div class="tk-title">Tagihan air tidak muncul di invoice</div>
+            <div class="tk-meta">Bug / Error · WB1 · 2 jam yang lalu</div>
+          </div>
+          <div class="tk y">
+            <div class="tk-top"><span class="tk-id">#TKT-0238</span><span class="tk-st pr">In Progress</span></div>
+            <div class="tk-title">Penyesuaian format laporan AR</div>
+            <div class="tk-meta">Enhancement · GIC · 5 jam yang lalu</div>
+          </div>
+          <div class="tk g">
+            <div class="tk-top"><span class="tk-id">#TKT-0235</span><span class="tk-st dn">Resolved</span></div>
+            <div class="tk-title">Unpost transaksi jurnal salah input</div>
+            <div class="tk-meta">Unpost · ROP · Kemarin</div>
+          </div>
         </div>
         <div class="cm-inp"><span>Tulis pesan atau upload file...</span><i class="fa-solid fa-paper-plane"></i></div>
       </div>
       <div>
         <div class="inv-kpis af d3">
-          <div class="ik as d3"><div class="n">96%</div><div class="l">Resolution Rate</div></div>
-          <div class="ik as d4"><div class="n">100%</div><div class="l">In-House Built</div></div>
+          <div class="ik as d3"><div class="stat-n" style="font-size:2rem">96%</div><div class="stat-l">Resolution Rate</div></div>
+          <div class="ik as d4"><div class="stat-n" style="font-size:2rem">100%</div><div class="stat-l">In-House Built</div></div>
         </div>
-        <div style="font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:9px;" class="af d4">Fitur PVI Support Chat</div>
+        <div class="mod-label" style="margin-bottom:9px;">Fitur PVI Support Chat</div>
         <div class="inv-feats">
-          <div class="inv-f ar d4"><div class="ico"><i class="fa-solid fa-ticket"></i></div><div><h4>Nomor Tiket Unik per Kendala</h4><p>Semua masalah terlacak, tidak ada yang jatuh di celah.</p></div></div>
-          <div class="inv-f ar d5"><div class="ico"><i class="fa-solid fa-bell"></i></div><div><h4>Notifikasi WhatsApp Otomatis</h4><p>User dapat update status tiket langsung via WA.</p></div></div>
-          <div class="inv-f ar d6"><div class="ico"><i class="fa-solid fa-paperclip"></i></div><div><h4>Attachment & Riwayat Lengkap</h4><p>Semua file dan percakapan tersimpan per tiket.</p></div></div>
-          <div class="inv-f ar d7"><div class="ico"><i class="fa-solid fa-circle-check"></i></div><div><h4>Konfirmasi Selesai oleh User</h4><p>Tiket closed hanya setelah user mengkonfirmasi.</p></div></div>
+          <div class="inv-f ar d4"><div class="ico sm purple"><i class="fa-solid fa-ticket"></i></div><div><h4>Nomor Tiket Unik per Kendala</h4><p>Semua masalah terlacak, tidak ada yang jatuh di celah.</p></div></div>
+          <div class="inv-f ar d5"><div class="ico sm green"><i class="fa-brands fa-whatsapp"></i></div><div><h4>Notifikasi WhatsApp Otomatis</h4><p>User dapat update status tiket langsung via WA.</p></div></div>
+          <div class="inv-f ar d6"><div class="ico sm blue"><i class="fa-solid fa-paperclip"></i></div><div><h4>Attachment &amp; Riwayat Lengkap</h4><p>Semua file dan percakapan tersimpan per tiket.</p></div></div>
+          <div class="inv-f ar d7"><div class="ico sm gold"><i class="fa-solid fa-circle-check"></i></div><div><h4>Konfirmasi Selesai oleh User</h4><p>Tiket closed hanya setelah user mengkonfirmasi.</p></div></div>
         </div>
         <div class="cat-pills af d8">
           <div class="cp bug">Bug / Error</div>
@@ -827,33 +1032,34 @@ body::after{
 <!-- ══ SLIDE 7 — REAL IMPLEMENTATION ══ -->
 <div class="slide" id="s7">
   <div class="w">
-    <div class="lbl al d1">Real Implementation</div>
-    <h2 class="s7-h au d2">Bukan teori. 13 unit sudah berjalan.</h2>
-    <div class="gold-line agx d3"></div>
+    <div class="eyebrow al d1">Real Implementation</div>
+    <h2 class="h2 au d2">Bukan teori. 12 unit sudah berjalan.</h2>
+    <div class="gold-rule agx d3"></div>
     <div class="s7-body">
       <div class="al d3">
-        <div class="s7-big anum d3">
-          <div class="n">13</div>
-          <div class="l">Units Live & Operational</div>
+        <div class="s7-big">
+          <div class="label">Sites Live</div>
+          <div class="stat-n lg">12</div>
+          <p class="body-sm" style="margin-top:8px;">Units Live &amp; Operational</p>
         </div>
-        <div class="divider"></div>
-        <div style="font-size:.78rem;color:var(--fog);line-height:1.75;margin-bottom:14px;">Dari WB1 hingga Empyreal — setiap implementasi memperkuat template, mempercepat proses, dan meningkatkan standar.</div>
+        <div class="hr"></div>
+        <p class="body-sm af d4" style="margin-bottom:14px;">Dari WB1 hingga HO — setiap implementasi memperkuat template, mempercepat proses, dan meningkatkan standar.</p>
         <div class="s7-mini">
           <div class="s7-ms as d5"><div class="n">11</div><div class="l">Modules/Site</div></div>
-          <div class="s7-ms as d6"><div class="n">200+</div><div class="l">Active Users</div></div>
-          <div class="s7-ms as d7"><div class="n">≤14</div><div class="l">Days / Impl.</div></div>
-          <div class="s7-ms as d8"><div class="n">0</div><div class="l">Failed Impl.</div></div>
+          <div class="s7-ms as d6"><div class="n">50</div><div class="l">Active Users</div></div>
+          <div class="s7-ms as d7"><div class="n">≤14d</div><div class="l">Per Impl.</div></div>
+          <div class="s7-ms as d8"><div class="n">0</div><div class="l">Failed</div></div>
         </div>
       </div>
       <div class="ar d4">
-        <div class="s7-site-header">
-          <span>Live Sites</span>
-          <span style="color:var(--green);display:flex;align-items:center;gap:5px;"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 5px rgba(29,185,126,.5)"></span>All Operational</span>
+        <div class="s7-site-hdr">
+          <span>Live Sites — All Operational</span>
+          <span class="s7-site-ok">All Green</span>
         </div>
         <div class="site-grid-lg">
           <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">WB1</span><span class="ss">Wisma Barito 1</span></div>
           <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">WB2</span><span class="ss">Wisma Barito 2</span></div>
-          <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">ROP</span><span class="ss">Rasuna</span></div>
+          <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">ROP</span><span class="ss">Rasuna Office Park</span></div>
           <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">TWS</span><span class="ss">TWS</span></div>
           <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">BAP</span><span class="ss">BAP</span></div>
           <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">Epiwalk</span><span class="ss">Epiwalk</span></div>
@@ -861,103 +1067,106 @@ body::after{
           <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">PPM</span><span class="ss">PPM</span></div>
           <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">NWU</span><span class="ss">NWU</span></div>
           <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">JEM</span><span class="ss">JEM</span></div>
-          <div class="sitelg"><i class="fa-solid fa-gem"></i><span class="sn">Masterpiece</span><span class="ss">Masterpiece</span></div>
-          <div class="sitelg"><i class="fa-solid fa-star"></i><span class="sn">Empyreal</span><span class="ss">Empyreal</span></div>
+          <div class="site-next-lg"><i class="fa-solid fa-gem"></i><span class="sn">Masterpiece &amp; Empyreal</span><div class="nb">1 Unit · 2 Tower</div></div>
           <div class="sitelg"><i class="fa-solid fa-building-columns"></i><span class="sn">HO</span><span class="ss">Head Office</span></div>
         </div>
-        <div class="next-row-lg">
-          <div class="site-next-lg"><i class="fa-solid fa-tower-observation"></i><span class="sn">Bakrie Tower</span><div class="nb">Up Next →</div></div>
+        <div style="margin-top:7px;">
+          <div class="site-next-lg" style="display:flex;align-items:center;gap:12px;text-align:left;padding:10px 14px;grid-column:span 4">
+            <i class="fa-solid fa-tower-observation" style="font-size:.95rem"></i>
+            <div><span class="sn" style="display:block">Bakrie Tower</span><div class="nb" style="display:inline-block;margin-top:0">Next Implementation →</div></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ SLIDE 8 — WHAT'S NEXT: BAKRIE TOWER ══ -->
+<!-- ══ SLIDE 8 — BAKRIE TOWER ══ -->
 <div class="slide" id="s8">
-  <div class="s8-sil">
-    <div class="s8b r2"></div>
-    <div class="s8b l2"></div>
-    <div class="s8b l1"></div>
-    <div class="s8b mn"></div>
-    <div class="s8b r1"></div>
-  </div>
-  <div class="s8-wrap">
-    <div class="lbl al d1">What's Next · Implementasi</div>
-    <h2 class="s8-h au d2">Bakrie Tower —<br><em>implementasi ke-14.</em></h2>
-    <div class="gold-line agx d3"></div>
-    <p class="s8-sub af d35">13 implementasi sebelumnya menghasilkan template yang solid. Bakrie Tower akan lebih cepat, lebih terstruktur, dan lebih terdokumentasi.</p>
-    <div class="s8-prev">
-      <div class="s8-pi as d4"><div class="n">13</div><div class="l">Sites Done</div></div>
-      <div class="s8-pi as d5"><div class="n">≤14</div><div class="l">Days/Site</div></div>
-      <div class="s8-pi as d6"><div class="n">0</div><div class="l">Failed</div></div>
+  <div class="w">
+    <div class="eyebrow al d1">What's Next · Implementasi</div>
+    <h2 class="h2 au d2">Bakrie Tower — Implementasi ke-13.</h2>
+    <div class="gold-rule agx d3"></div>
+    <div class="s8-body">
+      <div>
+        <div class="s8-kpis">
+          <div class="s8-kp as d3"><div class="stat-n" style="font-size:1.7rem;">12</div><div class="stat-l">Sites Done</div></div>
+          <div class="s8-kp as d4"><div class="stat-n" style="font-size:1.7rem;">≤14</div><div class="stat-l">Days/Site</div></div>
+          <div class="s8-kp as d5"><div class="stat-n" style="font-size:1.7rem;">0</div><div class="stat-l">Failed</div></div>
+        </div>
+        <p class="body-sm af d4" style="margin-bottom:14px;">12 implementasi sebelumnya menghasilkan template yang solid. Bakrie Tower akan lebih cepat, lebih terstruktur, dan lebih terdokumentasi.</p>
+        <div class="checklist">
+          <div class="cli al d5"><i class="fa-solid fa-circle-check"></i> Analisis kebutuhan &amp; mapping unit</div>
+          <div class="cli al d6"><i class="fa-solid fa-circle-check"></i> Setup project, entity &amp; master data</div>
+          <div class="cli al d7"><i class="fa-solid fa-circle-check"></i> Setup user &amp; hak akses per divisi</div>
+          <div class="cli al d8"><i class="fa-solid fa-circle-check"></i> Testing billing, invoice &amp; payment</div>
+          <div class="cli al d9"><i class="fa-solid fa-circle-check"></i> Validasi laporan &amp; print output</div>
+          <div class="cli al d10"><i class="fa-solid fa-circle-check"></i> Training user &amp; pendampingan</div>
+          <div class="cli al d11"><i class="fa-solid fa-circle-check"></i> Pendampingan go-live</div>
+          <div class="cli al d12"><i class="fa-solid fa-circle-check"></i> Post-live monitoring 2 minggu</div>
+        </div>
+      </div>
+      <div class="s8-right-content as d4">
+        <div class="s8-tower">
+          <i class="fa-solid fa-tower-observation"></i>
+          <div class="sc-l">Next Implementation</div>
+          <div class="sc-t">Bakrie Tower</div>
+        </div>
+        <p class="s8-reason"><strong>"Lebih siap. Lebih cepat.<br>Lebih terstruktur."</strong><br><br>Template dari 12 implementasi sebelumnya menjadi panduan yang teruji dan terdokumentasi.</p>
+      </div>
     </div>
-    <div class="cl">
-      <div class="cli al d5"><i class="fa-solid fa-circle-check"></i> Validasi master data & entitas</div>
-      <div class="cli al d6"><i class="fa-solid fa-circle-check"></i> Setup project & konfigurasi</div>
-      <div class="cli al d7"><i class="fa-solid fa-circle-check"></i> Setup user & hak akses</div>
-      <div class="cli al d8"><i class="fa-solid fa-circle-check"></i> Testing billing & invoice</div>
-      <div class="cli al d9"><i class="fa-solid fa-circle-check"></i> Validasi laporan & print out</div>
-      <div class="cli al d10"><i class="fa-solid fa-circle-check"></i> Training user</div>
-      <div class="cli al d11"><i class="fa-solid fa-circle-check"></i> Pendampingan go-live</div>
-      <div class="cli al d12"><i class="fa-solid fa-circle-check"></i> Post-live monitoring</div>
-    </div>
-  </div>
-  <div class="s8-badge as d5">
-    <div class="s8-circle"><i class="fa-solid fa-tower-observation"></i><div class="sc-l">Next Implementation</div><div class="sc-t">Bakrie Tower</div></div>
-    <p class="s8-q">"Lebih siap. Lebih cepat. Lebih terstruktur."</p>
   </div>
 </div>
 
-<!-- ══ SLIDE 9 — WHAT'S NEXT: ROADMAP ══ -->
+<!-- ══ SLIDE 9 — TECH ROADMAP ══ -->
 <div class="slide" id="s9">
   <div class="w">
-    <div class="lbl al d1">What's Next · Pengembangan</div>
-    <h2 class="s9-h au d2">Sistem tidak berhenti berkembang.</h2>
-    <p class="s9-sub af d3">Setelah 13 site berjalan, fokus berikutnya adalah modernisasi teknologi, keamanan, dan pengalaman pengguna yang lebih baik.</p>
+    <div class="eyebrow al d1">What's Next · Pengembangan</div>
+    <h2 class="h2 au d2">Sistem tidak berhenti berkembang.</h2>
+    <p class="lead af d3" style="max-width:580px;margin-top:6px;">Setelah 12 site berjalan, fokus berikutnya adalah modernisasi teknologi, keamanan, dan pengalaman pengguna yang lebih baik.</p>
     <div class="s9-body">
       <div class="al d3">
         <div class="road">
           <div class="ri">
             <div class="ri-spine"><div class="ri-dot done"><i class="fa-solid fa-check"></i></div><div class="ri-vl"></div></div>
-            <div class="ri-body"><span class="badge ok" style="margin-bottom:6px">Completed</span><h4>Migrasi ke VPS Cloud</h4><p>Sistem lebih stabil, skalabel, dan mudah di-manage dari cloud.</p></div>
+            <div class="ri-body"><span class="badge ok" style="margin-bottom:6px">Completed</span><h4>Migrasi ke VPS Cloud</h4><p>Sistem lebih stabil, skalabel, dan mudah dikelola.</p></div>
           </div>
           <div class="ri">
             <div class="ri-spine"><div class="ri-dot done"><i class="fa-solid fa-check"></i></div><div class="ri-vl"></div></div>
-            <div class="ri-body"><span class="badge ok" style="margin-bottom:6px">Completed</span><h4>PVI Support Chat</h4><p>Sistem ticketing support internal berhasil dibangun dan berjalan.</p></div>
-          </div>
-          <div class="ri">
-            <div class="ri-spine"><div class="ri-dot done"><i class="fa-solid fa-check"></i></div><div class="ri-vl"></div></div>
-            <div class="ri-body"><span class="badge ok" style="margin-bottom:6px">Completed</span><h4>Bakrie Tower Implementation</h4><p>Site ke-14 — target implementasi berikutnya.</p></div>
+            <div class="ri-body"><span class="badge ok" style="margin-bottom:6px">Completed</span><h4>PVI Support Chat</h4><p>Sistem ticketing support internal berhasil berjalan.</p></div>
           </div>
           <div class="ri">
             <div class="ri-spine"><div class="ri-dot act"><i class="fa-solid fa-arrows-rotate"></i></div><div class="ri-vl"></div></div>
-            <div class="ri-body"><span class="badge act" style="margin-bottom:6px">On Going</span><h4>Upgrade Stack Teknologi</h4><p>Modernisasi framework untuk keamanan dan performa lebih baik.</p></div>
+            <div class="ri-body"><span class="badge act" style="margin-bottom:6px">In Progress</span><h4>Bakrie Tower Implementation</h4><p>Implementasi site ke-13 — target berikutnya.</p></div>
+          </div>
+          <div class="ri">
+            <div class="ri-spine"><div class="ri-dot nxt"><i class="fa-solid fa-clock"></i></div><div class="ri-vl"></div></div>
+            <div class="ri-body"><span class="badge pl" style="margin-bottom:6px">Planned</span><h4>Upgrade Stack Teknologi</h4><p>Modernisasi framework untuk keamanan dan performa lebih baik.</p></div>
           </div>
           <div class="ri">
             <div class="ri-spine"><div class="ri-dot nxt"><i class="fa-solid fa-clock"></i></div></div>
-            <div class="ri-body"><span class="badge pl" style="margin-bottom:6px">Planned</span><h4>UI/UX Modern & Mobile Ready</h4><p>Tampilan baru, lebih intuitif, responsif di berbagai perangkat.</p></div>
+            <div class="ri-body"><span class="badge pl" style="margin-bottom:6px">Planned</span><h4>UI/UX Modern &amp; Mobile Ready</h4><p>Tampilan baru, responsif, lebih intuitif di semua perangkat.</p></div>
           </div>
         </div>
       </div>
       <div>
-        <div style="font-size:.55rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:10px;" class="af d3">Mengapa ini penting</div>
+        <div class="mod-label" style="margin-bottom:10px;">Mengapa ini penting</div>
         <div class="s9-pillars">
           <div class="s9-p p1 ar d3">
-            <div class="ico" style="background:rgba(240,68,68,.1);color:#FCA5A5"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="ico sm red"><i class="fa-solid fa-shield-halved"></i></div>
             <div><h4>Keamanan Data</h4><p>Teknologi lama rentan terhadap celah yang terus berkembang. Data perusahaan harus selalu terlindungi.</p></div>
           </div>
           <div class="s9-p p2 ar d5">
-            <div class="ico" style="background:rgba(245,166,35,.1);color:#FCD34D"><i class="fa-solid fa-bolt"></i></div>
-            <div><h4>Performa Sistem</h4><p>Stack terbaru memberikan response time lebih cepat dan efisiensi lebih tinggi untuk semua user.</p></div>
+            <div class="ico sm amber"><i class="fa-solid fa-bolt"></i></div>
+            <div><h4>Performa Sistem</h4><p>Stack terbaru memberikan response time lebih cepat untuk semua pengguna.</p></div>
           </div>
           <div class="s9-p p3 ar d7">
-            <div class="ico" style="background:rgba(59,127,255,.1);color:#93C5FD"><i class="fa-solid fa-arrow-up-right-dots"></i></div>
-            <div><h4>Skalabilitas</h4><p>Semakin banyak site dan user, sistem harus siap tumbuh tanpa hambatan teknis.</p></div>
+            <div class="ico sm blue"><i class="fa-solid fa-arrow-up-right-dots"></i></div>
+            <div><h4>Skalabilitas</h4><p>Semakin banyak site dan user, sistem harus siap tumbuh tanpa hambatan.</p></div>
           </div>
           <div class="s9-p p4 ar d9">
-            <div class="ico" style="background:rgba(124,92,255,.1);color:#C4B5FD"><i class="fa-solid fa-mobile-screen"></i></div>
-            <div><h4>Kemudahan Pengguna</h4><p>UI modern yang responsif memudahkan tim di lapangan, bukan menyulitkan.</p></div>
+            <div class="ico sm purple"><i class="fa-solid fa-mobile-screen"></i></div>
+            <div><h4>Kemudahan Pengguna</h4><p>UI modern yang responsif memudahkan tim di lapangan setiap hari.</p></div>
           </div>
         </div>
       </div>
@@ -966,27 +1175,25 @@ body::after{
 </div>
 
 <!-- ══ SLIDE 10 — CLOSING ══ -->
-<div class="slide c" id="s10">
-  <div class="s10-glow"></div>
-  <div class="s10-r s10-r1"></div>
-  <div class="s10-r s10-r2"></div>
+<div class="slide center" id="s10">
+  <div class="s10-deco"></div>
   <div class="s10-content">
-    <div>
-      <div class="lbl au d1" style="justify-content:flex-start">Penutup</div>
-      <h2 class="s10-hl au d2">Build.<br>Implement.<br>Maintain.<br><em>Improve.</em></h2>
+    <div style="text-align:left">
+      <div class="eyebrow al d1" style="color:rgba(200,169,74,.7);">Penutup</div>
+      <h2 class="s10-h au d2">Build.<br>Implement.<br>Maintain.<br><em>Improve.</em></h2>
       <p class="s10-msg af d4">Itulah siklus kerja saya setiap hari — memastikan PMS Provices Group tetap akurat, aman, dan siap mendukung pertumbuhan ke depan.</p>
       <div class="s10-pills">
-        <div class="s10-pill al d5"><i class="fa-solid fa-code"></i><span>Developer — Bangun sistem & fitur</span></div>
-        <div class="s10-pill al d6"><i class="fa-solid fa-rocket"></i><span>Implementator — Pasang di 13 site</span></div>
-        <div class="s10-pill al d7"><i class="fa-solid fa-server"></i><span>Maintainer — Jaga & support harian</span></div>
-        <div class="s10-pill al d8"><i class="fa-solid fa-lightbulb"></i><span>Innovator — Ciptakan solusi baru</span></div>
+        <div class="s10-pill al d5"><div class="s10-pill-dot"></div><span>Developer — Bangun sistem &amp; fitur</span></div>
+        <div class="s10-pill al d6"><div class="s10-pill-dot"></div><span>Implementator — Pasang di 12 site</span></div>
+        <div class="s10-pill al d7"><div class="s10-pill-dot"></div><span>Maintainer — Jaga &amp; support harian</span></div>
+        <div class="s10-pill al d8"><div class="s10-pill-dot"></div><span>Innovator — Ciptakan solusi baru</span></div>
       </div>
     </div>
     <div class="s10-stats">
-      <div class="s10-st ar d3"><div class="s10-n anum d3">13</div><div class="s10-t"><h4>Sites Live & Operational</h4><p>Dari WB1 sampai Empyreal, semua berjalan.</p></div></div>
-      <div class="s10-st ar d5"><div class="s10-n anum d5">11</div><div class="s10-t"><h4>Modules Built & Integrated</h4><p>Front office hingga general ledger terhubung.</p></div></div>
-      <div class="s10-st ar d7"><div class="s10-n anum d7">500+</div><div class="s10-t"><h4>Support Tickets Resolved</h4><p>Setiap kendala tercatat dan diselesaikan.</p></div></div>
-      <div class="s10-st ar d9"><div class="s10-n anum d9">1</div><div class="s10-t"><h4>Next Target: Bakrie Tower</h4><p>Implementasi ke-14 sedang dalam persiapan.</p></div></div>
+      <div class="s10-st ar d3"><div class="s10-n">12</div><div class="s10-t"><h4>Sites Live &amp; Operational</h4><p>Dari WB1 sampai HO, semua berjalan.</p></div></div>
+      <div class="s10-st ar d5"><div class="s10-n">11</div><div class="s10-t"><h4>Modules Built &amp; Integrated</h4><p>Front office hingga general ledger terhubung.</p></div></div>
+      <div class="s10-st ar d7"><div class="s10-n">50</div><div class="s10-t"><h4>Active Users Setiap Hari</h4><p>Di seluruh unit operasional Provices Group.</p></div></div>
+      <div class="s10-st ar d9"><div class="s10-n">+1</div><div class="s10-t"><h4>Next Target: Bakrie Tower</h4><p>Implementasi ke-13 sedang dalam persiapan.</p></div></div>
     </div>
   </div>
   <div class="s10-foot">
@@ -1019,8 +1226,7 @@ body::after{
   document.addEventListener('keydown',function(e){
     if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '){e.preventDefault();go(cur+1);}
     if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();go(cur-1);}
-    if(e.key==='Home')go(0);
-    if(e.key==='End')go(total-1);
+    if(e.key==='Home')go(0);if(e.key==='End')go(total-1);
   });
   document.getElementById('pp').onclick=function(){go(cur-1);};
   document.getElementById('pn').onclick=function(){go(cur+1);};
