@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IT Division — Provices Group PMS</title>
+<title>PMS — Provices Group</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-/* ── TOKENS ── */
 :root {
   --bg:      #F5F3EF;
   --bg2:     #ECEAE4;
   --surface: #FFFFFF;
   --border:  #E2DDD6;
-  --border2: #D0C9BF;
+  --border2: #CEC7BD;
   --ink:     #1A1612;
   --ink2:    #3D3630;
   --muted:   #7A7268;
@@ -31,933 +30,504 @@
   --amber:   #D4820A;
   --purple:  #6B4ED4;
   --navy:    #0F1E35;
-
   --sh-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
   --sh-md: 0 4px 16px rgba(0,0,0,.08), 0 1px 4px rgba(0,0,0,.04);
   --sh-lg: 0 8px 32px rgba(0,0,0,.1), 0 2px 8px rgba(0,0,0,.05);
-  --gg: linear-gradient(135deg, #8A6A1A 0%, #D4A93C 45%, #B8912C 100%);
+  --gg: linear-gradient(135deg, #8A6A1A 0%, #D4A93C 50%, #B8912C 100%);
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:'Inter',sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;}
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+#deck{width:100vw;height:100vh;position:relative;overflow:hidden;}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:52px 80px;visibility:hidden;opacity:0;pointer-events:none;transition:opacity .4s cubic-bezier(.4,0,.2,1);overflow:hidden;}
+.slide.active{visibility:visible;opacity:1;pointer-events:all;}
 
-html, body {
-  width: 100%; height: 100%; overflow: hidden;
-  background: var(--bg);
-  font-family: 'Inter', sans-serif;
-  color: var(--ink);
-  -webkit-font-smoothing: antialiased;
-}
+#bar{position:fixed;bottom:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold-d),var(--gold-l));transition:width .5s cubic-bezier(.4,0,.2,1);z-index:99;}
+#num{position:fixed;bottom:14px;right:22px;font-size:.54rem;font-weight:600;letter-spacing:.18em;color:var(--dim);z-index:99;}
+.nav{position:fixed;bottom:9px;background:none;border:none;cursor:pointer;color:var(--border2);font-size:.95rem;z-index:99;padding:9px;transition:color .2s;}
+.nav:hover{color:var(--gold);}
+#pp{right:90px;}#pn{right:48px;}
 
-/* ── ENGINE ── */
-#deck { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+@keyframes up {from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes lft{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+@keyframes rgt{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+@keyframes scl{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+@keyframes gx {from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 
-.slide {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
-  padding: 52px 80px;
-  visibility: hidden; opacity: 0; pointer-events: none;
-  transition: opacity .4s cubic-bezier(.4,0,.2,1);
-  overflow: hidden;
-}
-.slide.active { visibility: visible; opacity: 1; pointer-events: all; }
-.slide.center { align-items: center; text-align: center; }
+.slide.active .au {animation:up  .6s cubic-bezier(.16,1,.3,1) both}
+.slide.active .al {animation:lft .6s cubic-bezier(.16,1,.3,1) both}
+.slide.active .ar {animation:rgt .6s cubic-bezier(.16,1,.3,1) both}
+.slide.active .af {animation:fin .6s ease both}
+.slide.active .as {animation:scl .6s cubic-bezier(.16,1,.3,1) both}
+.slide.active .agx{animation:gx  .8s cubic-bezier(.16,1,.3,1) both;transform-origin:left}
 
-/* ── HUD ── */
-#bar {
-  position: fixed; bottom: 0; left: 0; height: 3px;
-  background: linear-gradient(90deg, var(--gold-d), var(--gold-l));
-  transition: width .5s cubic-bezier(.4,0,.2,1); z-index: 99;
-}
-#num {
-  position: fixed; bottom: 14px; right: 22px;
-  font-size: .55rem; font-weight: 600; letter-spacing: .18em;
-  color: var(--dim); z-index: 99;
-}
-.nav {
-  position: fixed; bottom: 9px; background: none; border: none;
-  cursor: pointer; color: var(--border2); font-size: 1rem; z-index: 99;
-  padding: 9px; transition: color .2s;
-}
-.nav:hover { color: var(--gold); }
-#pp { right: 90px; } #pn { right: 48px; }
+.d0{animation-delay:.04s}.d1{animation-delay:.10s}.d2{animation-delay:.18s}
+.d3{animation-delay:.26s}.d4{animation-delay:.34s}.d5{animation-delay:.42s}
+.d6{animation-delay:.50s}.d7{animation-delay:.58s}.d8{animation-delay:.66s}
+.d9{animation-delay:.74s}.d10{animation-delay:.82s}.d11{animation-delay:.90s}
+.d12{animation-delay:.98s}.d13{animation-delay:1.06s}
 
-/* ── ANIMATIONS ── */
-@keyframes up  { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:none } }
-@keyframes lft { from { opacity:0; transform:translateX(-20px) } to { opacity:1; transform:none } }
-@keyframes rgt { from { opacity:0; transform:translateX(20px) } to { opacity:1; transform:none } }
-@keyframes fin { from { opacity:0 } to { opacity:1 } }
-@keyframes scl { from { opacity:0; transform:scale(.93) } to { opacity:1; transform:scale(1) } }
-@keyframes gx  { from { transform:scaleX(0) } to { transform:scaleX(1) } }
-@keyframes flt { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-@keyframes glw { 0%,100%{opacity:.6} 50%{opacity:1} }
+/* shared */
+.w{width:100%;max-width:1160px;}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.58rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.eyebrow::before{content:'';display:block;width:16px;height:1.5px;background:linear-gradient(90deg,var(--gold),var(--gold-l));border-radius:1px;flex-shrink:0;}
+.gold-rule{height:2px;width:44px;margin:14px 0;background:linear-gradient(90deg,var(--gold),var(--gold-l),transparent);border-radius:1px;transform-origin:left;}
+.h1{font-family:'Playfair Display',serif;font-weight:900;line-height:1.06;letter-spacing:-.02em;color:var(--ink);}
+.h2{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:800;line-height:1.1;letter-spacing:-.02em;color:var(--ink);}
+.lead{font-size:.92rem;color:var(--muted);line-height:1.8;}
+.body-sm{font-size:.78rem;color:var(--muted);line-height:1.7;}
+.body-xs{font-size:.67rem;color:var(--dim);line-height:1.55;}
+.hr{width:100%;height:1px;background:var(--border);margin:14px 0;}
 
-.slide.active .au  { animation: up  .6s cubic-bezier(.16,1,.3,1) both }
-.slide.active .al  { animation: lft .6s cubic-bezier(.16,1,.3,1) both }
-.slide.active .ar  { animation: rgt .6s cubic-bezier(.16,1,.3,1) both }
-.slide.active .af  { animation: fin .6s ease both }
-.slide.active .as  { animation: scl .6s cubic-bezier(.16,1,.3,1) both }
-.slide.active .agx { animation: gx  .8s cubic-bezier(.16,1,.3,1) both; transform-origin:left }
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--sh-md);}
+.stat-n{font-family:'Playfair Display',serif;font-weight:800;line-height:1;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stat-l{font-size:.54rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-top:4px;}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:.56rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid;}
+.badge.ok{background:#EDF7F2;color:#1A7A4E;border-color:#B2DEC9;}
+.badge.act{background:var(--gold-bg);color:var(--gold-d);border-color:#DCC07E;}
+.badge.pl{background:var(--bg);color:var(--dim);border-color:var(--border);}
+.ico{display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:10px;}
+.ico.sm{width:34px;height:34px;font-size:.8rem;}
+.ico.md{width:44px;height:44px;font-size:1rem;}
+.ico.lg{width:56px;height:56px;font-size:1.2rem;border-radius:14px;}
+.ico.blue  {background:#EEF3FE;color:var(--blue);}
+.ico.gold  {background:var(--gold-bg);color:var(--gold);}
+.ico.green {background:#EDF7F2;color:var(--green);}
+.ico.purple{background:#F3F0FD;color:var(--purple);}
+.ico.red   {background:#FEF2F2;color:var(--red);}
+.ico.amber {background:#FEF9EE;color:var(--amber);}
+.ico.teal  {background:#EDFAFA;color:var(--teal);}
+.ico.navy  {background:var(--navy);color:#FFF;}
 
-.d0{animation-delay:.04s} .d1{animation-delay:.1s}  .d2{animation-delay:.18s}
-.d3{animation-delay:.26s} .d4{animation-delay:.34s} .d5{animation-delay:.42s}
-.d6{animation-delay:.50s} .d7{animation-delay:.58s} .d8{animation-delay:.66s}
-.d9{animation-delay:.74s} .d10{animation-delay:.82s} .d11{animation-delay:.90s}
-.d12{animation-delay:.98s} .d13{animation-delay:1.06s} .d14{animation-delay:1.14s}
-.d15{animation-delay:1.22s}
+/* ══ SLIDE 1 — COVER ══ */
+#s1{background:var(--surface);}
+.s1-bg{position:absolute;right:0;top:0;bottom:0;width:44%;background:var(--bg);border-left:1px solid var(--border);pointer-events:none;}
+.s1-grid{position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,transparent,transparent 55px,var(--border) 55px,var(--border) 56px),repeating-linear-gradient(90deg,transparent,transparent 55px,var(--border) 55px,var(--border) 56px);opacity:.4;}
+.s1-left{width:52%;position:relative;z-index:2;}
+.s1-co{font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-bottom:26px;display:flex;align-items:center;gap:8px;}
+.s1-co::before{content:'';width:8px;height:8px;border-radius:2px;background:var(--gold);flex-shrink:0;}
+.s1-kpis{display:flex;gap:0;margin-top:30px;}
+.s1-kp{padding:0 24px;border-right:1px solid var(--border);}
+.s1-kp:first-child{padding-left:0;}
+.s1-kp:last-child{border:none;}
+.s1-kp .n{font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:800;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.s1-kp .l{font-size:.54rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:4px;}
 
-/* ── SHARED COMPONENTS ── */
-.w { width: 100%; max-width: 1160px; }
+.s1-right{position:absolute;right:0;top:0;bottom:0;width:44%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:52px 48px;z-index:2;}
+.s1-icon{width:180px;height:180px;border-radius:50%;border:1.5px solid var(--border2);background:var(--surface);box-shadow:var(--sh-lg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;animation:flt 5s ease-in-out infinite;}
+.s1-icon i{font-size:2.8rem;color:var(--gold);}
+.s1-icon span{font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);}
+.s1-vals{width:100%;display:flex;flex-direction:column;gap:9px;}
+.s1-val{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--sh-sm);}
+.s1-val i{font-size:.82rem;width:16px;text-align:center;}
+.s1-val span{font-size:.74rem;font-weight:600;color:var(--ink2);}
 
-.eyebrow {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: .6rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
-  color: var(--gold); margin-bottom: 14px;
-}
-.eyebrow::before {
-  content: ''; display: block; width: 18px; height: 1.5px;
-  background: linear-gradient(90deg, var(--gold), var(--gold-l));
-  border-radius: 1px; flex-shrink: 0;
-}
+/* ══ SLIDE 2 — PROBLEM ══ */
+#s2{background:var(--bg);}
+.prob-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px;width:100%;}
+.prob-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--sh-sm);padding:20px 22px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;}
+.prob-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:2px 0 0 2px;}
+.prob-card.c1::before{background:var(--red);}
+.prob-card.c2::before{background:var(--amber);}
+.prob-card.c3::before{background:var(--blue);}
+.prob-card.c4::before{background:var(--purple);}
+.prob-card h4{font-size:.82rem;font-weight:700;color:var(--ink);}
+.prob-card p{font-size:.72rem;color:var(--muted);line-height:1.6;}
+.prob-after{margin-top:20px;width:100%;border-radius:12px;padding:16px 20px;background:var(--gold-bg);border:1px solid #DCC07E;display:flex;align-items:center;gap:14px;}
+.prob-after i{font-size:1.1rem;color:var(--gold);flex-shrink:0;}
+.prob-after p{font-size:.82rem;color:var(--gold-d);font-weight:600;line-height:1.5;}
 
-.gold-rule {
-  height: 2px; width: 48px; margin: 14px 0;
-  background: linear-gradient(90deg, var(--gold), var(--gold-l), transparent);
-  border-radius: 1px; transform-origin: left;
-}
+/* ══ SLIDE 3 — VALUE PILLARS ══ */
+#s3{background:var(--surface);}
+.val-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px;width:100%;}
+.val-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--sh-md);padding:24px 20px;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s;}
+.val-card:hover{transform:translateY(-3px);box-shadow:var(--sh-lg);}
+.val-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;border-radius:0 0 14px 14px;}
+.val-card.v1::after{background:linear-gradient(90deg,var(--gold),transparent);}
+.val-card.v2::after{background:linear-gradient(90deg,var(--blue),transparent);}
+.val-card.v3::after{background:linear-gradient(90deg,var(--green),transparent);}
+.val-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--ink);}
+.val-pts{display:flex;flex-direction:column;gap:7px;margin-top:4px;}
+.val-pt{display:flex;align-items:flex-start;gap:9px;font-size:.72rem;color:var(--muted);line-height:1.5;}
+.val-pt::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--border2);margin-top:6px;flex-shrink:0;}
+.val-big{margin-top:auto;padding-top:14px;border-top:1px solid var(--border);}
+.val-big .n{font-family:'Playfair Display',serif;font-size:2rem;font-weight:800;line-height:1;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.val-big .l{font-size:.54rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);margin-top:3px;}
 
-.h1 { font-family: 'Playfair Display', serif; font-size: 3.8rem; font-weight: 800; line-height: 1.06; letter-spacing: -.02em; color: var(--ink); }
-.h2 { font-family: 'Playfair Display', serif; font-size: 2.6rem; font-weight: 800; line-height: 1.1; letter-spacing: -.02em; color: var(--ink); }
-.h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--ink); }
+/* ══ SLIDE 4 — COVERAGE ══ */
+#s4{background:var(--bg);}
+.s4-body{display:grid;grid-template-columns:1fr 1.7fr;gap:52px;margin-top:18px;width:100%;align-items:start;}
+.s4-big{margin-bottom:16px;}
+.s4-big .n{font-family:'Playfair Display',serif;font-size:5rem;font-weight:900;line-height:1;letter-spacing:-.05em;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.s4-big .l{font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-top:6px;}
+.s4-mini{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:14px;}
+.s4-ms{border-radius:10px;padding:13px 12px;text-align:center;background:var(--surface);border:1px solid var(--border);box-shadow:var(--sh-sm);}
+.s4-ms .n{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:800;line-height:1;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.s4-ms .l{font-size:.52rem;color:var(--dim);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-top:4px;}
 
-.lead { font-size: .95rem; color: var(--muted); line-height: 1.8; }
-.body-sm { font-size: .78rem; color: var(--muted); line-height: 1.7; }
-.body-xs { font-size: .68rem; color: var(--dim); line-height: 1.55; }
+.site-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;}
+.site-hdr-l{font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);}
+.site-hdr-r{display:flex;align-items:center;gap:5px;font-size:.56rem;font-weight:700;color:var(--green);}
+.site-hdr-r::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);}
+.site-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;}
+.site{border-radius:9px;padding:11px 7px;text-align:center;background:var(--surface);border:1px solid #B2DEC9;box-shadow:var(--sh-sm);transition:transform .2s;}
+.site:hover{transform:translateY(-2px);}
+.site i{font-size:.8rem;color:var(--green);display:block;margin-bottom:4px;}
+.site .sn{font-size:.64rem;font-weight:700;color:var(--ink2);}
+.site .ss{font-size:.52rem;color:var(--dim);margin-top:1px;}
+.site.wide{grid-column:span 2;}
+.site-next{border-radius:9px;padding:11px 7px;text-align:center;border:1.5px dashed #DCC07E;background:var(--gold-bg);box-shadow:var(--sh-sm);}
+.site-next i{font-size:.8rem;color:var(--gold);display:block;margin-bottom:4px;}
+.site-next .sn{font-size:.64rem;font-weight:700;color:var(--ink2);}
+.site-next .nb{display:block;font-size:.5rem;font-weight:700;color:var(--gold-d);margin-top:3px;text-transform:uppercase;letter-spacing:.06em;}
 
-/* card */
-.card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 14px; box-shadow: var(--sh-md);
-}
-.card-sm { border-radius: 10px; box-shadow: var(--sh-sm); }
+/* ══ SLIDE 5 — MODUL ══ */
+#s5{background:var(--surface);}
+.s5-body{display:grid;grid-template-columns:1.1fr 1.6fr;gap:52px;margin-top:20px;width:100%;align-items:start;}
+.mod-section-lbl{font-size:.56rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:10px;}
+.mod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
+.mod{border-radius:9px;padding:10px 10px;border:1px solid var(--border);background:var(--surface);box-shadow:var(--sh-sm);display:flex;align-items:center;gap:8px;transition:transform .2s,box-shadow .2s;}
+.mod:hover{transform:translateY(-2px);box-shadow:var(--sh-md);}
+.mod.wide{grid-column:span 2;}
+.m-name{font-size:.7rem;font-weight:600;color:var(--ink2);line-height:1.2;}
+.m-cat{font-size:.55rem;color:var(--dim);margin-top:1px;}
+.mod-total{margin-top:9px;padding:13px 16px;border-radius:10px;background:var(--gold-bg);border:1px solid #DCC07E;display:flex;align-items:center;justify-content:space-between;}
+.mod-total .n{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:800;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.mod-total .l{font-size:.58rem;color:var(--gold-d);font-weight:600;letter-spacing:.1em;text-transform:uppercase;}
 
-/* stat number */
-.stat-n {
-  font-family: 'Playfair Display', serif; font-size: 2.2rem;
-  font-weight: 800; line-height: 1;
-  background: var(--gg); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.stat-n.lg { font-size: 4.4rem; letter-spacing: -.04em; }
-.stat-l { font-size: .56rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); margin-top: 4px; }
+.benefit-list{display:flex;flex-direction:column;gap:10px;}
+.benefit{display:flex;align-items:flex-start;gap:13px;padding:13px 15px;border-radius:10px;border:1px solid var(--border);background:var(--bg);box-shadow:var(--sh-sm);}
+.benefit h4{font-size:.78rem;font-weight:700;color:var(--ink);margin-bottom:2px;}
+.benefit p{font-size:.67rem;color:var(--muted);line-height:1.5;}
 
-/* badge */
-.badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-size: .57rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-  padding: 3px 10px; border-radius: 20px; border: 1px solid;
-}
-.badge.ok { background: #EDF7F2; color: #1A7A4E; border-color: #B2DEC9; }
-.badge.act { background: var(--gold-bg); color: var(--gold-d); border-color: #DCC07E; }
-.badge.pl { background: var(--bg); color: var(--dim); border-color: var(--border); }
-.badge.nxt { background: #EEF3FE; color: var(--blue); border-color: #BFCFFA; }
+/* ══ SLIDE 6 — SUPPORT & RELIABILITY ══ */
+#s6{background:var(--bg);}
+.s6-body{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;margin-top:20px;width:100%;align-items:start;}
 
-/* icon circle */
-.ico {
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; border-radius: 10px;
-}
-.ico.sm { width: 32px; height: 32px; font-size: .78rem; }
-.ico.md { width: 42px; height: 42px; font-size: .95rem; }
-.ico.lg { width: 54px; height: 54px; font-size: 1.15rem; }
-.ico.blue   { background: #EEF3FE; color: var(--blue); }
-.ico.gold   { background: var(--gold-bg); color: var(--gold); }
-.ico.green  { background: #EDF7F2; color: var(--green); }
-.ico.purple { background: #F3F0FD; color: var(--purple); }
-.ico.red    { background: #FEF2F2; color: var(--red); }
-.ico.amber  { background: #FEF9EE; color: var(--amber); }
-.ico.teal   { background: #EDFAFA; color: var(--teal); }
-.ico.navy   { background: var(--navy); color: #FFFFFF; }
+.chat-mock{border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--sh-lg);background:var(--surface);}
+.cm-top{background:var(--navy);padding:10px 14px;display:flex;align-items:center;gap:8px;}
+.cm-dot{width:9px;height:9px;border-radius:50%;}
+.cm-title{font-size:.7rem;font-weight:600;color:#FFF;flex:1;margin-left:4px;}
+.cm-live{font-size:.52rem;font-weight:700;background:#1DB97E;color:#FFF;padding:2px 8px;border-radius:8px;}
+.cm-stats{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-bottom:1px solid var(--border);}
+.cs_{padding:11px;text-align:center;border-right:1px solid var(--border);}
+.cs_:last-child{border:none;}
+.cs_ .n{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:800;line-height:1;}
+.cs_ .l{font-size:.5rem;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-top:3px;font-weight:600;}
+.n.ro{color:var(--red);} .n.ya{color:var(--amber);} .n.gr2{color:var(--green);} .n.go2{background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.tk-list{padding:9px;display:flex;flex-direction:column;gap:5px;background:var(--bg);}
+.tk{border-radius:7px;padding:9px 11px;background:var(--surface);border-left:2.5px solid;}
+.tk.r{border-color:var(--red);}.tk.y{border-color:var(--amber);}.tk.g{border-color:var(--green);}
+.tk-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;}
+.tk-id{font-size:.56rem;font-weight:700;color:var(--dim);letter-spacing:.07em;}
+.tk-st{font-size:.5rem;font-weight:700;padding:2px 7px;border-radius:8px;text-transform:uppercase;border:1px solid;}
+.tk-st.op{background:#FEF2F2;color:var(--red);border-color:#FECACA;}
+.tk-st.pr{background:#FEF9EE;color:var(--amber);border-color:#FDE68A;}
+.tk-st.dn{background:#EDF7F2;color:var(--green);border-color:#B2DEC9;}
+.tk-title{font-size:.71rem;font-weight:600;color:var(--ink);}
+.tk-meta{font-size:.57rem;color:var(--dim);margin-top:1px;}
+.cm-inp{margin:0 9px 9px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 11px;font-size:.67rem;color:var(--dim);display:flex;justify-content:space-between;}
+.cm-inp i{color:var(--gold);}
 
-/* bullet row */
-.bullet { display: flex; align-items: flex-start; gap: 10px; }
-.bullet::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin-top: 7px; flex-shrink: 0; }
+.infra-panel{display:flex;flex-direction:column;gap:9px;}
+.infra-top{display:flex;gap:8px;margin-bottom:4px;}
+.infra-kp{flex:1;border-radius:10px;padding:13px 12px;text-align:center;background:var(--surface);border:1px solid var(--border);box-shadow:var(--sh-sm);}
+.infra-kp .n{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;line-height:1;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.infra-kp .l{font-size:.52rem;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-top:3px;}
+.infra-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--sh-sm);transition:transform .2s;}
+.infra-item:hover{transform:translateX(3px);}
+.infra-item h4{font-size:.76rem;font-weight:700;color:var(--ink);flex:1;}
+.infra-item p{font-size:.63rem;color:var(--muted);margin-top:1px;}
 
-/* divider */
-.hr { width: 100%; height: 1px; background: var(--border); margin: 14px 0; }
+/* ══ SLIDE 7 — FINANCE IMPACT ══ */
+#s7{background:var(--surface);}
+.s7-body{display:grid;grid-template-columns:1fr 1fr;gap:52px;margin-top:22px;width:100%;align-items:start;}
+.finance-flow{display:flex;flex-direction:column;}
+.ff-item{display:flex;gap:14px;}
+.ff-spine{display:flex;flex-direction:column;align-items:center;width:32px;flex-shrink:0;}
+.ff-dot{width:32px;height:32px;border-radius:50%;flex-shrink:0;border:1.5px solid;display:flex;align-items:center;justify-content:center;font-size:.7rem;}
+.ff-dot.ok {border-color:#B2DEC9;background:#EDF7F2;color:var(--green);}
+.ff-dot.go {border-color:#DCC07E;background:var(--gold-bg);color:var(--gold);}
+.ff-vl{flex:1;width:1px;background:var(--border);margin:3px 0;}
+.ff-body{padding:5px 0 14px;}
+.ff-body h4{font-size:.8rem;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.ff-body p{font-size:.67rem;color:var(--muted);line-height:1.55;}
 
-/* ══════════════════════════════
-   SLIDE 1 — OPENING
-══════════════════════════════ */
-#s1 { background: var(--surface); }
-.s1-deco {
-  position: absolute; right: 0; top: 0; bottom: 0; width: 42%;
-  background: var(--bg); border-left: 1px solid var(--border);
-  pointer-events: none;
-}
-.s1-deco-lines {
-  position: absolute; inset: 0; pointer-events: none;
-  background-image:
-    repeating-linear-gradient(0deg, transparent, transparent 47px, var(--border) 47px, var(--border) 48px),
-    repeating-linear-gradient(90deg, transparent, transparent 47px, var(--border) 47px, var(--border) 48px);
-  opacity: .5;
-}
-.s1-left { width: 52%; position: relative; z-index: 2; }
-.s1-tag {
-  display: inline-flex; align-items: center; gap: 9px;
-  font-size: .62rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
-  color: var(--muted); margin-bottom: 28px;
-}
-.s1-tag span {
-  display: inline-block; width: 8px; height: 8px; border-radius: 2px;
-  background: var(--gold);
-}
-.s1-roles { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 28px; }
-.s1-role {
-  display: flex; align-items: center; gap: 9px;
-  padding: 9px 16px; border-radius: 8px;
-  border: 1px solid var(--border); background: var(--surface);
-  box-shadow: var(--sh-sm);
-  font-size: .75rem; font-weight: 600; color: var(--ink2);
-}
-.s1-role i { font-size: .78rem; }
-.s1-role.r1 i { color: var(--blue); }
-.s1-role.r2 i { color: var(--gold); }
-.s1-role.r3 i { color: var(--green); }
-.s1-role.r4 i { color: var(--purple); }
+.finance-kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.fk{border-radius:11px;padding:14px 14px;background:var(--bg);border:1px solid var(--border);box-shadow:var(--sh-sm);}
+.fk .n{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:800;line-height:1;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.fk .l{font-size:.53rem;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-top:4px;}
+.fk .sub{font-size:.65rem;color:var(--muted);margin-top:5px;line-height:1.45;}
 
-.s1-stats { display: flex; gap: 0; }
-.s1-st { padding: 0 24px; border-right: 1px solid var(--border); }
-.s1-st:first-child { padding-left: 0; }
-.s1-st:last-child { border: none; }
+/* ══ SLIDE 8 — NEXT: BAKRIE TOWER ══ */
+#s8{background:var(--bg);}
+.s8-body{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:22px;width:100%;align-items:start;}
+.s8-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px;}
+.s8-kp{border-radius:10px;padding:13px 12px;text-align:center;background:var(--surface);border:1px solid var(--border);box-shadow:var(--sh-sm);}
+.checklist{display:flex;flex-direction:column;gap:8px;}
+.cli{display:flex;align-items:center;gap:10px;padding:9px 13px;border-radius:8px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--sh-sm);font-size:.74rem;color:var(--ink2);font-weight:500;}
+.cli i{color:var(--green);font-size:.7rem;width:14px;text-align:center;flex-shrink:0;}
+.s8-right{display:flex;flex-direction:column;align-items:center;gap:22px;padding-top:8px;}
+.s8-circle{width:210px;height:210px;border-radius:50%;border:1.5px solid var(--border2);background:var(--surface);box-shadow:var(--sh-lg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;animation:flt 5s ease-in-out infinite;}
+.s8-circle i{font-size:2.8rem;color:var(--gold);}
+.s8-circle .sc-l{font-size:.54rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);}
+.s8-circle .sc-t{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:800;color:var(--ink);text-align:center;line-height:1.3;}
+.s8-caption{font-size:.8rem;color:var(--muted);text-align:center;max-width:280px;line-height:1.75;}
 
-.s1-right {
-  position: absolute; right: 0; top: 0; bottom: 0; width: 42%;
-  display: flex; flex-direction: column; justify-content: center;
-  align-items: center; padding: 52px 48px; z-index: 2;
-}
-.s1-circle {
-  width: 200px; height: 200px; border-radius: 50%;
-  border: 1.5px solid var(--border2);
-  background: var(--surface); box-shadow: var(--sh-lg);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 8px; margin-bottom: 36px;
-  animation: flt 5s ease-in-out infinite;
-}
-.s1-circle i { font-size: 2.8rem; color: var(--gold); }
-.s1-circle span { font-size: .58rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--dim); }
-.s1-steps { width: 100%; display: flex; flex-direction: column; gap: 10px; }
-.s1-step {
-  display: flex; align-items: center; gap: 12px;
-  padding: 11px 14px; border-radius: 10px;
-  background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-sm);
-}
-.s1-step i { font-size: .85rem; width: 18px; text-align: center; }
-.s1-step span { font-size: .74rem; font-weight: 600; color: var(--ink2); }
+/* ══ SLIDE 9 — ROADMAP ══ */
+#s9{background:var(--surface);}
+.s9-body{display:grid;grid-template-columns:1.2fr 1fr;gap:52px;margin-top:22px;width:100%;align-items:start;}
+.road{display:flex;flex-direction:column;}
+.ri{display:flex;gap:16px;}
+.ri-spine{display:flex;flex-direction:column;align-items:center;width:36px;flex-shrink:0;}
+.ri-dot{width:36px;height:36px;border-radius:50%;flex-shrink:0;border:1.5px solid;display:flex;align-items:center;justify-content:center;font-size:.8rem;}
+.ri-dot.done{border-color:#B2DEC9;background:#EDF7F2;color:var(--green);}
+.ri-dot.act {border-color:#DCC07E;background:var(--gold-bg);color:var(--gold);}
+.ri-dot.nxt {border-color:var(--border2);background:var(--bg);color:var(--dim);}
+.ri-vl{flex:1;width:1px;background:var(--border);margin:3px 0;}
+.ri-body{padding:4px 0 18px;}
+.ri-body h4{font-size:.8rem;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.ri-body p{font-size:.68rem;color:var(--muted);line-height:1.55;}
+.s9-pillars{display:flex;flex-direction:column;gap:9px;}
+.s9-p{border-radius:10px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--sh-sm);display:flex;align-items:flex-start;gap:13px;position:relative;overflow:hidden;transition:transform .2s;}
+.s9-p:hover{transform:translateX(3px);}
+.s9-p::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:2px 0 0 2px;}
+.s9-p.p1::before{background:var(--green);}
+.s9-p.p2::before{background:var(--blue);}
+.s9-p.p3::before{background:var(--gold);}
+.s9-p.p4::before{background:var(--purple);}
+.s9-p h4{font-size:.78rem;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.s9-p p{font-size:.67rem;color:var(--muted);line-height:1.5;}
 
-/* ══════════════════════════════
-   SLIDE 2 — 4 ROLES OVERVIEW
-══════════════════════════════ */
-#s2 { background: var(--bg); }
-.roles-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 16px; margin-top: 28px; width: 100%;
-}
-.role-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 14px; box-shadow: var(--sh-md);
-  padding: 24px 20px; display: flex; flex-direction: column; gap: 12px;
-  position: relative; overflow: hidden; transition: transform .25s, box-shadow .25s;
-}
-.role-card:hover { transform: translateY(-3px); box-shadow: var(--sh-lg); }
-.role-card::after {
-  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
-  border-radius: 0 0 14px 14px;
-}
-.role-card.dev::after { background: linear-gradient(90deg, var(--blue), transparent); }
-.role-card.imp::after { background: linear-gradient(90deg, var(--gold), transparent); }
-.role-card.mnt::after { background: linear-gradient(90deg, var(--green), transparent); }
-.role-card.inv::after { background: linear-gradient(90deg, var(--purple), transparent); }
-
-.rc-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--ink); }
-.rc-tags { display: flex; flex-direction: column; gap: 5px; margin-top: 4px; }
-.rc-tag { font-size: .67rem; color: var(--muted); display: flex; align-items: center; gap: 7px; }
-.rc-tag::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--border2); flex-shrink: 0; }
-.rc-big { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); }
-.rc-big .n {
-  font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 800; line-height: 1;
-  background: var(--gg); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.rc-big .l { font-size: .54rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; color: var(--dim); margin-top: 3px; }
-
-/* ══════════════════════════════
-   SLIDE 3 — DEVELOPER
-══════════════════════════════ */
-#s3 { background: var(--surface); }
-.s3-body { display: grid; grid-template-columns: 1fr 1.6fr; gap: 52px; margin-top: 20px; width: 100%; align-items: start; }
-
-.dev-act-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
-.dev-act {
-  display: flex; align-items: flex-start; gap: 13px;
-  padding: 13px 15px; border-radius: 10px;
-  border: 1px solid var(--border); background: var(--bg); box-shadow: var(--sh-sm);
-}
-.dev-act h4 { font-size: .78rem; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
-.dev-act p { font-size: .67rem; color: var(--muted); line-height: 1.5; }
-
-/* modules */
-.mod-label { font-size: .56rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--dim); margin-bottom: 10px; }
-.mod-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
-.mod {
-  border-radius: 9px; padding: 10px 10px;
-  border: 1px solid var(--border); background: var(--surface); box-shadow: var(--sh-sm);
-  display: flex; align-items: center; gap: 8px;
-  transition: transform .2s, box-shadow .2s;
-}
-.mod:hover { transform: translateY(-2px); box-shadow: var(--sh-md); }
-.mod.wide { grid-column: span 2; }
-.m-name { font-size: .7rem; font-weight: 600; color: var(--ink2); line-height: 1.2; }
-.m-cat { font-size: .55rem; color: var(--dim); margin-top: 1px; }
-
-.mod-total {
-  margin-top: 9px; padding: 12px 16px; border-radius: 10px;
-  background: var(--gold-bg); border: 1px solid #DCC07E;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.mod-total .n {
-  font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 800;
-  background: var(--gg); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.mod-total .l { font-size: .58rem; color: var(--gold-d); font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
-
-/* ══════════════════════════════
-   SLIDE 4 — IMPLEMENTATOR
-══════════════════════════════ */
-#s4 { background: var(--bg); }
-.s4-body { display: grid; grid-template-columns: 1fr 1.55fr; gap: 52px; margin-top: 20px; width: 100%; align-items: start; }
-
-/* flow */
-.impl-flow { display: flex; flex-direction: column; }
-.if-item { display: flex; gap: 14px; }
-.if-spine { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 32px; }
-.if-dot {
-  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; border: 1.5px solid;
-  display: flex; align-items: center; justify-content: center; font-size: .7rem;
-}
-.if-dot.done { border-color: #B2DEC9; background: #EDF7F2; color: var(--green); }
-.if-dot.act  { border-color: #DCC07E; background: var(--gold-bg); color: var(--gold); }
-.if-vl { flex: 1; width: 1px; background: var(--border); margin: 3px 0; }
-.if-body { padding: 5px 0 14px; }
-.if-body h4 { font-size: .78rem; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
-.if-body p  { font-size: .66rem; color: var(--muted); line-height: 1.5; }
-.if-tag {
-  display: inline-block; font-size: .52rem; font-weight: 700; padding: 2px 9px;
-  border-radius: 8px; margin-top: 4px;
-  background: var(--gold-bg); color: var(--gold-d); border: 1px solid #DCC07E;
-}
-
-/* stats + sites */
-.impl-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
-.impl-stat {
-  border-radius: 10px; padding: 14px 12px; text-align: center;
-  background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-sm);
-}
-
-.site-section-lbl {
-  font-size: .56rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
-  color: var(--dim); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;
-}
-.site-lbl-ok { display: flex; align-items: center; gap: 5px; color: var(--green); }
-.site-lbl-ok::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
-
-.site-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; }
-.site {
-  border-radius: 8px; padding: 10px 5px; text-align: center;
-  background: var(--surface); border: 1px solid #B2DEC9; box-shadow: var(--sh-sm);
-}
-.site i { font-size: .8rem; color: var(--green); display: block; margin-bottom: 4px; }
-.site .sn { font-size: .62rem; font-weight: 600; color: var(--ink2); display: block; }
-
-.site-next {
-  border-radius: 8px; padding: 10px 5px; text-align: center;
-  border: 1.5px dashed #DCC07E; background: var(--gold-bg);
-}
-.site-next i { font-size: .8rem; color: var(--gold); display: block; margin-bottom: 4px; }
-.site-next .sn { font-size: .6rem; font-weight: 600; color: var(--ink2); }
-.site-next .nb { display: block; font-size: .5rem; font-weight: 700; color: var(--gold-d); margin-top: 3px; text-transform: uppercase; letter-spacing: .06em; }
-
-/* ══════════════════════════════
-   SLIDE 5 — MAINTAINER
-══════════════════════════════ */
-#s5 { background: var(--surface); }
-.s5-body { display: grid; grid-template-columns: 1.1fr 1fr; gap: 52px; margin-top: 20px; width: 100%; align-items: start; }
-
-/* server panel */
-.srv {
-  border-radius: 12px; border: 1px solid var(--border); overflow: hidden;
-  box-shadow: var(--sh-md);
-}
-.srv-top {
-  background: var(--navy); padding: 12px 16px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.srv-top span { font-size: .68rem; font-weight: 600; color: #FFFFFF; }
-.srv-live { display: flex; align-items: center; gap: 6px; font-size: .57rem; color: #6EE7B7; font-weight: 700; }
-.srv-live::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #1DB97E; }
-.srv-nums { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--surface); }
-.sn_ { padding: 14px 10px; text-align: center; border-right: 1px solid var(--border); }
-.sn_:last-child { border: none; }
-.sn_ .n { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 800; line-height: 1; }
-.sn_ .l { font-size: .52rem; color: var(--dim); font-weight: 600; text-transform: uppercase; letter-spacing: .1em; margin-top: 4px; }
-.sn_ .n.b  { color: var(--blue); }
-.sn_ .n.g  { background: var(--gg); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.sn_ .n.gr { color: var(--green); }
-.srv-bars { padding: 13px 14px; display: flex; flex-direction: column; gap: 11px; background: var(--bg); }
-.sbi { display: flex; align-items: center; gap: 10px; }
-.sbi-info { flex: 1; }
-.sbi-info h5 { font-size: .68rem; font-weight: 600; color: var(--ink2); margin-bottom: 5px; }
-.bt { height: 5px; border-radius: 3px; background: var(--border); overflow: hidden; }
-.bf { height: 100%; border-radius: 3px; }
-.sbi-val { font-size: .62rem; color: var(--muted); font-weight: 700; min-width: 30px; text-align: right; }
-
-/* ticket summary */
-.tkt-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin-bottom: 10px; margin-top: 12px; }
-.tkt-mini {
-  border-radius: 9px; padding: 11px 10px; text-align: center;
-  background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-sm);
-}
-.tkt-mini .n { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 800; line-height: 1; }
-.tkt-mini .l { font-size: .52rem; color: var(--dim); text-transform: uppercase; letter-spacing: .08em; margin-top: 3px; font-weight: 600; }
-.n.ro  { color: var(--red); }
-.n.ya  { color: var(--amber); }
-.n.gr2 { color: var(--green); }
-.n.go2 { background: var(--gg); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-
-/* mnt tasks */
-.mnt-tasks { display: flex; flex-direction: column; gap: 8px; }
-.mt {
-  display: flex; align-items: center; gap: 12px;
-  padding: 12px 14px; border-radius: 10px;
-  background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-sm);
-  transition: transform .2s;
-}
-.mt:hover { transform: translateX(3px); }
-.mt h4 { font-size: .76rem; font-weight: 700; color: var(--ink); }
-.mt p  { font-size: .64rem; color: var(--muted); margin-top: 1px; }
-
-/* ══════════════════════════════
-   SLIDE 6 — INNOVATOR
-══════════════════════════════ */
-#s6 { background: var(--bg); }
-.s6-body { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; margin-top: 20px; width: 100%; align-items: start; }
-
-/* chat mock */
-.chat-mock {
-  border-radius: 12px; overflow: hidden;
-  border: 1px solid var(--border); box-shadow: var(--sh-lg); background: var(--surface);
-}
-.cm-top {
-  background: var(--navy); padding: 10px 14px;
-  display: flex; align-items: center; gap: 8px;
-}
-.cm-dot { width: 9px; height: 9px; border-radius: 50%; }
-.cm-title { font-size: .72rem; font-weight: 600; color: #FFFFFF; flex: 1; margin-left: 4px; }
-.cm-live { font-size: .55rem; font-weight: 700; background: #1DB97E; color: #FFF; padding: 2px 8px; border-radius: 8px; }
-.cm-stats { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--surface); border-bottom: 1px solid var(--border); }
-.cs_ { padding: 11px; text-align: center; border-right: 1px solid var(--border); }
-.cs_:last-child { border: none; }
-.cs_ .n { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 800; line-height: 1; }
-.cs_ .l { font-size: .5rem; color: var(--dim); text-transform: uppercase; letter-spacing: .07em; margin-top: 3px; font-weight: 600; }
-.tk-list { padding: 9px; display: flex; flex-direction: column; gap: 5px; background: var(--bg); }
-.tk { border-radius: 7px; padding: 9px 11px; background: var(--surface); border-left: 2.5px solid; }
-.tk.r { border-color: var(--red); } .tk.y { border-color: var(--amber); } .tk.g { border-color: var(--green); }
-.tk-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
-.tk-id { font-size: .57rem; font-weight: 700; color: var(--dim); letter-spacing: .07em; }
-.tk-st { font-size: .5rem; font-weight: 700; padding: 2px 7px; border-radius: 8px; text-transform: uppercase; border: 1px solid; }
-.tk-st.op { background: #FEF2F2; color: var(--red); border-color: #FECACA; }
-.tk-st.pr { background: #FEF9EE; color: var(--amber); border-color: #FDE68A; }
-.tk-st.dn { background: #EDF7F2; color: var(--green); border-color: #B2DEC9; }
-.tk-title { font-size: .72rem; font-weight: 600; color: var(--ink); }
-.tk-meta  { font-size: .58rem; color: var(--dim); margin-top: 1px; }
-.cm-inp {
-  margin: 0 9px 9px; background: var(--surface); border: 1px solid var(--border);
-  border-radius: 6px; padding: 7px 11px; font-size: .67rem; color: var(--dim);
-  display: flex; justify-content: space-between;
-}
-.cm-inp i { color: var(--gold); }
-
-/* right: features */
-.inv-kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
-.ik { border-radius: 10px; padding: 13px 14px; text-align: center; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-sm); }
-.inv-feats { display: flex; flex-direction: column; gap: 8px; }
-.inv-f {
-  border-radius: 9px; padding: 10px 12px; background: var(--surface);
-  border: 1px solid var(--border); box-shadow: var(--sh-sm);
-  display: flex; align-items: center; gap: 11px;
-  transition: transform .2s;
-}
-.inv-f:hover { transform: translateX(3px); }
-.inv-f h4 { font-size: .76rem; font-weight: 700; color: var(--ink); }
-.inv-f p  { font-size: .64rem; color: var(--muted); margin-top: 1px; }
-.cat-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
-.cp { font-size: .57rem; font-weight: 700; padding: 3px 10px; border-radius: 10px; border: 1px solid; letter-spacing: .03em; }
-.cp.bug { border-color: #FECACA; color: var(--red);    background: #FEF2F2; }
-.cp.dat { border-color: #BFCFFA; color: var(--blue);   background: #EEF3FE; }
-.cp.enh { border-color: #DCC07E; color: var(--gold-d); background: var(--gold-bg); }
-.cp.sup { border-color: #99DDD9; color: var(--teal);   background: #EDFAFA; }
-.cp.unp { border-color: #C4B5FD; color: var(--purple); background: #F3F0FD; }
-
-/* ══════════════════════════════
-   SLIDE 7 — REAL IMPLEMENTATION
-══════════════════════════════ */
-#s7 { background: var(--surface); }
-.s7-body { display: grid; grid-template-columns: 1fr 1.8fr; gap: 52px; margin-top: 18px; width: 100%; align-items: start; }
-
-.s7-big { margin-bottom: 20px; }
-.s7-big .label { font-size: .6rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--dim); margin-bottom: 6px; }
-.s7-mini { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.s7-ms { border-radius: 10px; padding: 12px 13px; text-align: center; background: var(--bg); border: 1px solid var(--border); box-shadow: var(--sh-sm); }
-.s7-ms .n { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 800; line-height: 1; background: var(--gg); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.s7-ms .l { font-size: .52rem; color: var(--dim); font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-top: 4px; }
-
-.s7-site-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.s7-site-hdr span { font-size: .56rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); }
-.s7-site-ok { display: flex; align-items: center; gap: 5px; color: var(--green) !important; }
-.s7-site-ok::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
-.site-grid-lg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
-.sitelg {
-  border-radius: 10px; padding: 12px 8px; text-align: center;
-  background: var(--surface); border: 1px solid #B2DEC9; box-shadow: var(--sh-sm);
-  transition: transform .2s, box-shadow .2s;
-}
-.sitelg:hover { transform: translateY(-2px); box-shadow: var(--sh-md); }
-.sitelg i { font-size: .85rem; color: var(--green); display: block; margin-bottom: 5px; }
-.sitelg .sn { font-size: .68rem; font-weight: 700; color: var(--ink2); }
-.sitelg .ss { font-size: .54rem; color: var(--dim); margin-top: 2px; }
-.site-next-lg {
-  border-radius: 10px; padding: 12px 8px; text-align: center;
-  border: 1.5px dashed #DCC07E; background: var(--gold-bg); box-shadow: var(--sh-sm);
-  grid-column: span 2;
-}
-.site-next-lg i { font-size: .85rem; color: var(--gold); display: block; margin-bottom: 5px; }
-.site-next-lg .sn { font-size: .68rem; font-weight: 700; color: var(--ink2); }
-.site-next-lg .nb { display: inline-block; font-size: .54rem; font-weight: 700; color: var(--gold-d); background: #DCC07E40; padding: 2px 8px; border-radius: 4px; margin-top: 4px; text-transform: uppercase; letter-spacing: .08em; }
-
-/* ══════════════════════════════
-   SLIDE 8 — WHAT'S NEXT: BAKRIE TOWER
-══════════════════════════════ */
-#s8 { background: var(--bg); }
-.s8-body { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; margin-top: 22px; width: 100%; align-items: start; }
-
-.s8-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
-.s8-kp { border-radius: 10px; padding: 13px 12px; text-align: center; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-sm); }
-
-.checklist { display: flex; flex-direction: column; gap: 8px; }
-.cli {
-  display: flex; align-items: center; gap: 10px;
-  padding: 9px 12px; border-radius: 8px;
-  background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-sm);
-  font-size: .74rem; color: var(--ink2); font-weight: 500;
-}
-.cli i { color: var(--green); font-size: .72rem; width: 14px; text-align: center; flex-shrink: 0; }
-
-.s8-right-content { display: flex; flex-direction: column; align-items: center; gap: 24px; padding-top: 8px; }
-.s8-tower {
-  width: 220px; height: 220px; border-radius: 50%;
-  border: 1.5px solid var(--border2);
-  background: var(--surface); box-shadow: var(--sh-lg);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 10px; animation: flt 5s ease-in-out infinite;
-}
-.s8-tower i { font-size: 3rem; color: var(--gold); }
-.s8-tower .sc-l { font-size: .56rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--dim); }
-.s8-tower .sc-t { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--ink); text-align: center; }
-
-.s8-reason { font-size: .8rem; color: var(--muted); line-height: 1.7; text-align: center; max-width: 300px; }
-.s8-reason strong { color: var(--gold-d); font-weight: 700; font-style: italic; }
-
-/* ══════════════════════════════
-   SLIDE 9 — TECH ROADMAP
-══════════════════════════════ */
-#s9 { background: var(--surface); }
-.s9-body { display: grid; grid-template-columns: 1.2fr 1fr; gap: 52px; margin-top: 22px; width: 100%; align-items: start; }
-
-/* roadmap */
-.road { display: flex; flex-direction: column; }
-.ri { display: flex; gap: 16px; }
-.ri-spine { display: flex; flex-direction: column; align-items: center; width: 36px; flex-shrink: 0; }
-.ri-dot { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; border: 1.5px solid; display: flex; align-items: center; justify-content: center; font-size: .8rem; }
-.ri-dot.done { border-color: #B2DEC9; background: #EDF7F2; color: var(--green); }
-.ri-dot.act  { border-color: #DCC07E; background: var(--gold-bg); color: var(--gold); }
-.ri-dot.nxt  { border-color: var(--border2); background: var(--bg); color: var(--dim); }
-.ri-vl { flex: 1; width: 1px; background: var(--border); margin: 3px 0; }
-.ri-body { padding: 4px 0 18px; }
-.ri-body h4 { font-size: .8rem; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
-.ri-body p  { font-size: .68rem; color: var(--muted); line-height: 1.55; }
-
-/* pillars */
-.s9-pillars { display: flex; flex-direction: column; gap: 9px; }
-.s9-p {
-  border-radius: 10px; padding: 14px 16px;
-  background: var(--surface); border: 1px solid var(--border); box-shadow: var(--sh-sm);
-  display: flex; align-items: flex-start; gap: 13px;
-  position: relative; overflow: hidden;
-  transition: transform .2s;
-}
-.s9-p:hover { transform: translateX(3px); }
-.s9-p::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 2px 0 0 2px; }
-.s9-p.p1::before { background: var(--red); }
-.s9-p.p2::before { background: var(--amber); }
-.s9-p.p3::before { background: var(--blue); }
-.s9-p.p4::before { background: var(--purple); }
-.s9-p h4 { font-size: .78rem; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
-.s9-p p  { font-size: .67rem; color: var(--muted); line-height: 1.5; }
-
-/* ══════════════════════════════
-   SLIDE 10 — CLOSING
-══════════════════════════════ */
-#s10 { background: var(--navy); }
-.s10-deco {
-  position: absolute; inset: 0; pointer-events: none;
-  background-image:
-    repeating-linear-gradient(0deg, transparent, transparent 55px, rgba(255,255,255,.03) 55px, rgba(255,255,255,.03) 56px),
-    repeating-linear-gradient(90deg, transparent, transparent 55px, rgba(255,255,255,.03) 55px, rgba(255,255,255,.03) 56px);
-}
-.s10-content {
-  position: relative; z-index: 2; width: 100%; max-width: 1140px;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
-}
-.s10-h {
-  font-family: 'Playfair Display', serif;
-  font-size: 3.6rem; font-weight: 900; line-height: 1.05; letter-spacing: -.03em;
-  color: #FFFFFF; margin-bottom: 20px;
-}
-.s10-h em { color: var(--gold-l); font-style: italic; }
-.s10-msg { font-size: .88rem; color: rgba(255,255,255,.55); line-height: 1.8; max-width: 440px; margin-bottom: 28px; }
-.s10-pills { display: flex; flex-direction: column; gap: 9px; }
-.s10-pill { display: flex; align-items: center; gap: 12px; }
-.s10-pill-dot { width: 3px; height: 32px; border-radius: 2px; background: var(--gold); flex-shrink: 0; }
-.s10-pill span { font-size: .82rem; font-weight: 600; color: rgba(255,255,255,.8); }
-
-.s10-stats { display: flex; flex-direction: column; gap: 10px; }
-.s10-st {
-  border-radius: 12px; padding: 16px 20px;
-  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
-  display: flex; align-items: center; gap: 18px;
-  transition: background .25s;
-}
-.s10-st:hover { background: rgba(255,255,255,.08); }
-.s10-n {
-  font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 800;
-  line-height: 1; min-width: 72px; letter-spacing: -.03em;
-  background: var(--gg); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.s10-t h4 { font-size: .78rem; font-weight: 700; color: rgba(255,255,255,.9); margin-bottom: 2px; }
-.s10-t p  { font-size: .65rem; color: rgba(255,255,255,.4); }
-.s10-foot {
-  position: absolute; bottom: 18px; left: 80px; right: 80px; z-index: 3;
-  display: flex; justify-content: space-between; align-items: center;
-  border-top: 1px solid rgba(255,255,255,.07); padding-top: 12px;
-}
-.s10-fl { font-size: .54rem; color: rgba(255,255,255,.2); letter-spacing: .16em; text-transform: uppercase; }
-.s10-fr { font-size: .54rem; color: rgba(200,169,74,.4); letter-spacing: .12em; }
+/* ══ SLIDE 10 — CLOSING ══ */
+#s10{background:var(--navy);}
+.s10-deco{position:absolute;inset:0;pointer-events:none;background-image:repeating-linear-gradient(0deg,transparent,transparent 55px,rgba(255,255,255,.025) 55px,rgba(255,255,255,.025) 56px),repeating-linear-gradient(90deg,transparent,transparent 55px,rgba(255,255,255,.025) 55px,rgba(255,255,255,.025) 56px);}
+.s10-content{position:relative;z-index:2;width:100%;max-width:1140px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.s10-h{font-family:'Playfair Display',serif;font-size:3.4rem;font-weight:900;line-height:1.06;letter-spacing:-.03em;color:#FFF;margin-bottom:18px;}
+.s10-h em{color:var(--gold-l);font-style:italic;}
+.s10-msg{font-size:.88rem;color:rgba(255,255,255,.5);line-height:1.8;max-width:420px;margin-bottom:26px;}
+.s10-pts{display:flex;flex-direction:column;gap:9px;}
+.s10-pt{display:flex;align-items:center;gap:12px;}
+.s10-pt-bar{width:3px;height:30px;border-radius:2px;background:var(--gold);flex-shrink:0;}
+.s10-pt span{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.75);}
+.s10-stats{display:flex;flex-direction:column;gap:10px;}
+.s10-st{border-radius:12px;padding:16px 20px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);display:flex;align-items:center;gap:18px;transition:background .25s;}
+.s10-st:hover{background:rgba(255,255,255,.08);}
+.s10-n{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:800;line-height:1;min-width:70px;letter-spacing:-.03em;background:var(--gg);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.s10-t h4{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.88);margin-bottom:2px;}
+.s10-t p{font-size:.64rem;color:rgba(255,255,255,.38);}
+.s10-foot{position:absolute;bottom:18px;left:80px;right:80px;z-index:3;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.06);padding-top:12px;}
+.s10-fl{font-size:.53rem;color:rgba(255,255,255,.18);letter-spacing:.16em;text-transform:uppercase;}
+.s10-fr{font-size:.53rem;color:rgba(200,169,74,.35);letter-spacing:.12em;}
 </style>
 </head>
 <body>
 <div id="deck">
 
-<!-- ══ SLIDE 1 — OPENING ══ -->
+<!-- ══ SLIDE 1 — COVER ══ -->
 <div class="slide" id="s1">
-  <div class="s1-deco">
-    <div class="s1-deco-lines"></div>
-  </div>
+  <div class="s1-bg"><div class="s1-grid"></div></div>
   <div class="s1-left">
-    <div class="s1-tag au d0"><span></span>Provices Group · IT Division</div>
-    <div class="eyebrow al d1">Property Management System</div>
-    <h1 class="h1 au d2" style="font-size:3.2rem;max-width:540px;line-height:1.08;">Saya yang membangun, memasang, menjaga, dan mengembangkan <em style="font-style:italic;color:var(--gold)">PMS Provices.</em></h1>
+    <div class="s1-co au d0">Provices Group · Property Management System</div>
+    <div class="eyebrow al d1">Sistem Operasional Properti</div>
+    <h1 class="h1 au d2" style="font-size:3.3rem;max-width:520px;line-height:1.07;">PMS — <em style="font-style:italic;color:var(--gold)">Backbone Digital</em> Operasional Provices Group.</h1>
     <div class="gold-rule agx d3"></div>
-    <p class="lead af d4" style="max-width:460px;margin-bottom:22px;">Satu peran yang mencakup seluruh lifecycle sistem — dari kode pertama, hingga 50 user aktif di 12 unit operasional berjalan setiap hari.</p>
-    <div class="s1-roles">
-      <div class="s1-role r1 as d5"><i class="fa-solid fa-code"></i> Developer</div>
-      <div class="s1-role r2 as d6"><i class="fa-solid fa-rocket"></i> Implementator</div>
-      <div class="s1-role r3 as d7"><i class="fa-solid fa-server"></i> Maintainer</div>
-      <div class="s1-role r4 as d8"><i class="fa-solid fa-lightbulb"></i> Innovator</div>
-    </div>
-    <div class="s1-stats af d9">
-      <div class="s1-st"><div class="stat-n">12</div><div class="stat-l">Sites Live</div></div>
-      <div class="s1-st"><div class="stat-n">11</div><div class="stat-l">Modules Built</div></div>
-      <div class="s1-st"><div class="stat-n">50</div><div class="stat-l">Active Users</div></div>
-      <div class="s1-st"><div class="stat-n">500+</div><div class="stat-l">Tickets Resolved</div></div>
+    <p class="lead af d4" style="max-width:460px;margin-bottom:26px;">Satu platform terintegrasi yang mengelola tenant, keuangan, operasional, dan dukungan di seluruh unit properti Provices Group.</p>
+    <div class="s1-kpis af d5">
+      <div class="s1-kp"><div class="n">12</div><div class="l">Unit Aktif</div></div>
+      <div class="s1-kp"><div class="n">11</div><div class="l">Modul Terintegrasi</div></div>
+      <div class="s1-kp"><div class="n">50</div><div class="l">User Aktif</div></div>
+      <div class="s1-kp"><div class="n">500+</div><div class="l">Tiket Tertangani</div></div>
     </div>
   </div>
   <div class="s1-right as d3">
-    <div class="s1-circle">
-      <i class="fa-solid fa-laptop-code"></i>
-      <span>IT Developer</span>
+    <div class="s1-icon">
+      <i class="fa-solid fa-building-columns"></i>
+      <span>Provices Group</span>
     </div>
-    <div class="s1-steps" style="width:100%">
-      <div class="s1-step"><i class="fa-solid fa-code" style="color:var(--blue)"></i><span>Membangun sistem & fitur</span></div>
-      <div class="s1-step"><i class="fa-solid fa-rocket" style="color:var(--gold)"></i><span>Implementasi ke 12 unit</span></div>
-      <div class="s1-step"><i class="fa-solid fa-server" style="color:var(--green)"></i><span>Menjaga & support harian</span></div>
-      <div class="s1-step"><i class="fa-solid fa-lightbulb" style="color:var(--purple)"></i><span>Mengembangkan solusi baru</span></div>
+    <div class="s1-vals">
+      <div class="s1-val"><i class="fa-solid fa-chart-line" style="color:var(--gold)"></i><span>Transparansi keuangan lintas unit</span></div>
+      <div class="s1-val"><i class="fa-solid fa-users" style="color:var(--blue)"></i><span>Tenant &amp; owner management terpusat</span></div>
+      <div class="s1-val"><i class="fa-solid fa-circle-check" style="color:var(--green)"></i><span>Operasional terstandarisasi 12 site</span></div>
+      <div class="s1-val"><i class="fa-solid fa-headset" style="color:var(--purple)"></i><span>Support terstruktur &amp; terlacak</span></div>
     </div>
   </div>
 </div>
 
-<!-- ══ SLIDE 2 — 4 ROLES ══ -->
+<!-- ══ SLIDE 2 — PROBLEM BEFORE PMS ══ -->
 <div class="slide" id="s2">
   <div class="w">
-    <div class="eyebrow al d1">Scope of Role</div>
-    <h2 class="h2 au d2">Satu orang. Empat peran. Semua berjalan.</h2>
-    <p class="lead af d3" style="max-width:580px;margin-top:6px;">Tidak ada vendor eksternal yang mengelola PMS — saya yang mengerjakan dari ujung ke ujung.</p>
-    <div class="roles-grid">
-      <div class="role-card dev as d4">
-        <div class="ico md blue"><i class="fa-solid fa-code"></i></div>
-        <div class="rc-title">Developer</div>
-        <p class="body-sm">Membangun dan mengembangkan seluruh fitur PMS dari nol.</p>
-        <div class="rc-tags">
-          <div class="rc-tag">11 modul dibangun</div>
-          <div class="rc-tag">Frontend & backend</div>
-          <div class="rc-tag">Custom per kebutuhan unit</div>
-        </div>
-        <div class="rc-big">
-          <div class="n">11</div>
-          <div class="l">Modules Built</div>
-        </div>
+    <div class="eyebrow al d1">Latar Belakang</div>
+    <h2 class="h2 au d2">Sebelum PMS: operasional bergantung pada proses manual.</h2>
+    <p class="lead af d3" style="max-width:660px;margin-top:6px;">Dengan 12 unit properti yang terus berkembang, Provices Group membutuhkan sistem yang menyatukan data, proses, dan pelaporan dalam satu platform.</p>
+    <div class="prob-grid">
+      <div class="prob-card c1 as d4">
+        <div class="ico sm red"><i class="fa-solid fa-file-excel"></i></div>
+        <h4>Data Tersebar di Spreadsheet</h4>
+        <p>Tagihan, pembayaran, dan data tenant dikelola manual di masing-masing unit tanpa standar yang sama, berisiko error dan tidak efisien.</p>
       </div>
-      <div class="role-card imp as d5">
-        <div class="ico md gold"><i class="fa-solid fa-rocket"></i></div>
-        <div class="rc-title">Implementator</div>
-        <p class="body-sm">Memasang sistem di setiap unit — dari setup hingga go-live.</p>
-        <div class="rc-tags">
-          <div class="rc-tag">Analisis kebutuhan per site</div>
-          <div class="rc-tag">Setup entity & master data</div>
-          <div class="rc-tag">Training & pendampingan</div>
-        </div>
-        <div class="rc-big">
-          <div class="n">12</div>
-          <div class="l">Sites Implemented</div>
-        </div>
+      <div class="prob-card c2 as d5">
+        <div class="ico sm amber"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h4>Laporan Keuangan Tidak Real-Time</h4>
+        <p>Rekap AR, AP, dan cash flow membutuhkan waktu lama karena dikonsolidasikan secara manual dari setiap unit sebelum dapat dilaporkan.</p>
       </div>
-      <div class="role-card mnt as d6">
-        <div class="ico md green"><i class="fa-solid fa-server"></i></div>
-        <div class="rc-title">Maintainer</div>
-        <p class="body-sm">Menjaga server, database, dan sistem tetap berjalan setiap hari.</p>
-        <div class="rc-tags">
-          <div class="rc-tag">VPS cloud management</div>
-          <div class="rc-tag">Daily support & monitoring</div>
-          <div class="rc-tag">Data validation</div>
-        </div>
-        <div class="rc-big">
-          <div class="n">99.9%</div>
-          <div class="l">Uptime Target</div>
-        </div>
+      <div class="prob-card c3 as d6">
+        <div class="ico sm blue"><i class="fa-solid fa-arrows-split-up-and-left"></i></div>
+        <h4>Tidak Ada Standar Antar Unit</h4>
+        <p>Setiap unit beroperasi dengan cara berbeda — tidak ada format seragam untuk billing, kontrak, maupun pengelolaan aset.</p>
       </div>
-      <div class="role-card inv as d7">
-        <div class="ico md purple"><i class="fa-solid fa-lightbulb"></i></div>
-        <div class="rc-title">Innovator</div>
-        <p class="body-sm">Mengembangkan solusi baru yang tidak ada sebelumnya.</p>
-        <div class="rc-tags">
-          <div class="rc-tag">PVI Support Chat (in-house)</div>
-          <div class="rc-tag">Upgrade teknologi stack</div>
-          <div class="rc-tag">Continuous improvement</div>
-        </div>
-        <div class="rc-big">
-          <div class="n">500+</div>
-          <div class="l">Tickets Handled</div>
-        </div>
+      <div class="prob-card c4 as d7">
+        <div class="ico sm purple"><i class="fa-solid fa-magnifying-glass-minus"></i></div>
+        <h4>Visibilitas Manajemen Terbatas</h4>
+        <p>Manajemen tidak dapat melihat performa operasional dan keuangan seluruh unit secara cepat dan akurat dalam satu tampilan.</p>
       </div>
+    </div>
+    <div class="prob-after af d8">
+      <i class="fa-solid fa-arrow-right-long"></i>
+      <p>PMS hadir sebagai solusi — satu sistem yang menyatukan semua unit, menstandarisasi proses, dan memberikan visibilitas penuh kepada manajemen.</p>
     </div>
   </div>
 </div>
 
-<!-- ══ SLIDE 3 — DEVELOPER ══ -->
+<!-- ══ SLIDE 3 — NILAI UNTUK PROVICES ══ -->
 <div class="slide" id="s3">
   <div class="w">
-    <div class="badge nxt al d1"><i class="fa-solid fa-code"></i> Role 1 of 4</div>
-    <h2 class="h2 au d2" style="margin-top:10px;">Developer — Saya yang membangun sistemnya.</h2>
-    <div class="gold-rule agx d3"></div>
-    <div class="s3-body">
-      <div>
-        <p class="body-sm af d3" style="margin-bottom:16px;">PMS dibangun sepenuhnya in-house. Setiap modul, setiap fitur — dikode dan dikonfigurasi sesuai kebutuhan operasional masing-masing unit.</p>
-        <div class="dev-act-list">
-          <div class="dev-act al d4">
-            <div class="ico sm blue"><i class="fa-solid fa-layer-group"></i></div>
-            <div><h4>Bangun modul dari kebutuhan bisnis</h4><p>Dirancang sesuai alur operasional properti, bukan template generik.</p></div>
-          </div>
-          <div class="dev-act al d5">
-            <div class="ico sm gold"><i class="fa-solid fa-file-code"></i></div>
-            <div><h4>Custom report & output</h4><p>Format laporan disesuaikan kebutuhan manajemen dan tim finance.</p></div>
-          </div>
-          <div class="dev-act al d6">
-            <div class="ico sm green"><i class="fa-solid fa-sliders"></i></div>
-            <div><h4>Konfigurasi per unit</h4><p>Setiap site punya setup berbeda — billing, entitas, workflow.</p></div>
-          </div>
-          <div class="dev-act al d7">
-            <div class="ico sm purple"><i class="fa-solid fa-arrows-rotate"></i></div>
-            <div><h4>Iterasi & perbaikan berkelanjutan</h4><p>Sistem terus diperbarui berdasarkan feedback pengguna di lapangan.</p></div>
-          </div>
+    <div class="eyebrow al d1">Nilai untuk Provices Group</div>
+    <h2 class="h2 au d2">PMS memberikan tiga nilai utama yang langsung dirasakan.</h2>
+    <p class="lead af d3" style="max-width:640px;margin-top:6px;">Dari efisiensi harian hingga akurasi laporan — dampaknya nyata di setiap unit operasional.</p>
+    <div class="val-grid">
+      <div class="val-card v1 as d4">
+        <div class="ico lg gold"><i class="fa-solid fa-chart-pie"></i></div>
+        <div class="val-title">Transparansi Keuangan</div>
+        <p class="body-sm">Data AR, AP, Cash &amp; Bank, dan General Ledger dari seluruh unit tersedia secara real-time dalam satu sistem.</p>
+        <div class="val-pts">
+          <div class="val-pt">Tagihan otomatis — tidak ada yang terlewat</div>
+          <div class="val-pt">Rekonsiliasi lebih cepat dan akurat</div>
+          <div class="val-pt">Laporan keuangan siap kapan saja</div>
         </div>
+        <div class="val-big"><div class="n">11</div><div class="l">Modul Terintegrasi</div></div>
       </div>
-      <div>
-        <div class="mod-label ar d2">11 Modul yang Dibangun</div>
-        <div class="mod-grid">
-          <div class="mod as d3"><div class="ico sm blue"><i class="fa-solid fa-user-tie"></i></div><div><div class="m-name">Tenant Mgmt</div><div class="m-cat">Front Office</div></div></div>
-          <div class="mod as d4"><div class="ico sm blue"><i class="fa-solid fa-building-user"></i></div><div><div class="m-name">Owner Mgmt</div><div class="m-cat">Front Office</div></div></div>
-          <div class="mod as d4"><div class="ico sm blue"><i class="fa-solid fa-bolt"></i></div><div><div class="m-name">Utility Mgmt</div><div class="m-cat">Front Office</div></div></div>
-          <div class="mod as d5"><div class="ico sm purple"><i class="fa-solid fa-users-cog"></i></div><div><div class="m-name">User Mgmt</div><div class="m-cat">Admin</div></div></div>
-          <div class="mod as d5"><div class="ico sm gold"><i class="fa-solid fa-file-invoice-dollar"></i></div><div><div class="m-name">AR Mgmt</div><div class="m-cat">Finance</div></div></div>
-          <div class="mod as d6"><div class="ico sm gold"><i class="fa-solid fa-receipt"></i></div><div><div class="m-name">AP Mgmt</div><div class="m-cat">Finance</div></div></div>
-          <div class="mod as d6"><div class="ico sm gold"><i class="fa-solid fa-wallet"></i></div><div><div class="m-name">Cash &amp; Bank</div><div class="m-cat">Finance</div></div></div>
-          <div class="mod as d7"><div class="ico sm gold"><i class="fa-solid fa-book-open"></i></div><div><div class="m-name">General Ledger</div><div class="m-cat">Accounting</div></div></div>
-          <div class="mod as d7"><div class="ico sm teal"><i class="fa-solid fa-boxes-stacked"></i></div><div><div class="m-name">Inventory</div><div class="m-cat">Back Office</div></div></div>
-          <div class="mod as d8"><div class="ico sm teal"><i class="fa-solid fa-cart-shopping"></i></div><div><div class="m-name">Purchasing</div><div class="m-cat">Back Office</div></div></div>
-          <div class="mod wide as d9"><div class="ico sm green"><i class="fa-solid fa-comments"></i></div><div><div class="m-name">PVI Support Chat</div><div class="m-cat">Support · In-House · WA Notification</div></div></div>
+      <div class="val-card v2 as d5">
+        <div class="ico lg blue"><i class="fa-solid fa-gears"></i></div>
+        <div class="val-title">Efisiensi Operasional</div>
+        <p class="body-sm">Proses yang sebelumnya manual kini terdigitalisasi — dari manajemen tenant hingga pengadaan barang.</p>
+        <div class="val-pts">
+          <div class="val-pt">Standar proses seragam di semua unit</div>
+          <div class="val-pt">Kurangi duplikasi kerja tim administrasi</div>
+          <div class="val-pt">Inventory dan purchasing terlacak real-time</div>
         </div>
-        <div class="mod-total af d10">
-          <div><div class="n">11</div><div class="l">Total Modules</div></div>
-          <p class="body-xs" style="text-align:right;line-height:1.6;">Seluruhnya dikembangkan<br>dan di-maintain secara mandiri</p>
+        <div class="val-big"><div class="n">12</div><div class="l">Unit Terstandarisasi</div></div>
+      </div>
+      <div class="val-card v3 as d6">
+        <div class="ico lg green"><i class="fa-solid fa-tower-broadcast"></i></div>
+        <div class="val-title">Visibilitas Manajemen</div>
+        <p class="body-sm">Manajemen dapat memantau kondisi operasional dan keuangan seluruh unit kapan saja — tidak perlu menunggu laporan manual.</p>
+        <div class="val-pts">
+          <div class="val-pt">Dashboard performa per unit</div>
+          <div class="val-pt">Histori transaksi terdokumentasi</div>
+          <div class="val-pt">Audit trail yang lengkap &amp; akurat</div>
         </div>
+        <div class="val-big"><div class="n">50</div><div class="l">User Aktif Setiap Hari</div></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ SLIDE 4 — IMPLEMENTATOR ══ -->
+<!-- ══ SLIDE 4 — COVERAGE ══ -->
 <div class="slide" id="s4">
   <div class="w">
-    <div class="badge act al d1"><i class="fa-solid fa-rocket"></i> Role 2 of 4</div>
-    <h2 class="h2 au d2" style="margin-top:10px;">Implementator — Saya yang pasang di lapangan.</h2>
+    <div class="eyebrow al d1">Cakupan Implementasi</div>
+    <h2 class="h2 au d2">PMS sudah berjalan di 12 unit Provices Group.</h2>
     <div class="gold-rule agx d3"></div>
     <div class="s4-body">
-      <div>
-        <div class="impl-flow">
-          <div class="if-item al d3">
-            <div class="if-spine"><div class="if-dot done"><i class="fa-solid fa-magnifying-glass"></i></div><div class="if-vl"></div></div>
-            <div class="if-body"><h4>Analisis Kebutuhan Site</h4><p>Pahami proses bisnis, alur billing, dan entitas yang perlu disiapkan.</p><span class="if-tag">per unit berbeda</span></div>
-          </div>
-          <div class="if-item al d4">
-            <div class="if-spine"><div class="if-dot done"><i class="fa-solid fa-database"></i></div><div class="if-vl"></div></div>
-            <div class="if-body"><h4>Setup Entity &amp; Master Data</h4><p>Konfigurasi project, entitas, COA, item, dan parameter billing.</p><span class="if-tag">~3–5 hari</span></div>
-          </div>
-          <div class="if-item al d5">
-            <div class="if-spine"><div class="if-dot done"><i class="fa-solid fa-users"></i></div><div class="if-vl"></div></div>
-            <div class="if-body"><h4>Setup User &amp; Hak Akses</h4><p>Buat user, assign role, dan mapping akses per divisi.</p><span class="if-tag">per departemen</span></div>
-          </div>
-          <div class="if-item al d6">
-            <div class="if-spine"><div class="if-dot done"><i class="fa-solid fa-flask"></i></div><div class="if-vl"></div></div>
-            <div class="if-body"><h4>Testing &amp; Validasi Data</h4><p>Uji billing, invoice, payment, dan output laporan.</p><span class="if-tag">~2–3 hari</span></div>
-          </div>
-          <div class="if-item al d7">
-            <div class="if-spine"><div class="if-dot done"><i class="fa-solid fa-chalkboard-user"></i></div><div class="if-vl"></div></div>
-            <div class="if-body"><h4>Training User</h4><p>Pendampingan tim lapangan sampai mandiri.</p><span class="if-tag">hands-on</span></div>
-          </div>
-          <div class="if-item al d8">
-            <div class="if-spine"><div class="if-dot act"><i class="fa-solid fa-flag-checkered"></i></div></div>
-            <div class="if-body"><h4>Go-Live &amp; Post-Live Monitoring</h4><p>Sistem aktif, monitoring intensif 1–2 minggu pertama.</p><span class="if-tag">≤ 14 hari total</span></div>
-          </div>
+      <div class="al d3">
+        <div class="s4-big">
+          <div class="n">12</div>
+          <div class="l">Unit Aktif & Operasional</div>
+        </div>
+        <div class="hr"></div>
+        <p class="body-sm af d4" style="margin-bottom:14px;">Dari kantor pusat hingga seluruh unit properti, PMS menjadi sistem tunggal yang menyatukan operasional Provices Group.</p>
+        <div class="s4-mini">
+          <div class="s4-ms as d5"><div class="n">11</div><div class="l">Modul/Unit</div></div>
+          <div class="s4-ms as d6"><div class="n">50</div><div class="l">User Aktif</div></div>
+          <div class="s4-ms as d7"><div class="n">0</div><div class="l">Downtime Kritis</div></div>
+          <div class="s4-ms as d8"><div class="n">99.9%</div><div class="l">Ketersediaan</div></div>
         </div>
       </div>
-      <div>
-        <div class="impl-stats">
-          <div class="impl-stat as d3"><div class="stat-n">12</div><div class="stat-l">Sites Live</div></div>
-          <div class="impl-stat as d5"><div class="stat-n">≤14</div><div class="stat-l">Days / Site</div></div>
-          <div class="impl-stat as d7"><div class="stat-n">0</div><div class="stat-l">Failed</div></div>
-        </div>
-        <div class="site-section-lbl af d4">
-          <span>Live &amp; Operational</span>
-          <span class="site-lbl-ok">All Green</span>
+      <div class="ar d4">
+        <div class="site-hdr">
+          <span class="site-hdr-l">Unit yang Sudah Menggunakan PMS</span>
+          <span class="site-hdr-r">Semua Aktif</span>
         </div>
         <div class="site-grid">
-          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">WB1</span></div>
-          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">WB2</span></div>
-          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">ROP</span></div>
-          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">TWS</span></div>
-          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">BAP</span></div>
-          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">Epiwalk</span></div>
-          <div class="site"><i class="fa-solid fa-building-columns"></i><span class="sn">GIC</span></div>
-          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">PPM</span></div>
-          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">NWU</span></div>
-          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">JEM</span></div>
-          <div class="site" style="grid-column:span 2"><i class="fa-solid fa-gem"></i><span class="sn">Masterpiece &amp; Empyreal</span></div>
-          <div class="site"><i class="fa-solid fa-building-columns"></i><span class="sn">HO</span></div>
+          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">WB1</span><span class="ss">Wisma Barito 1</span></div>
+          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">WB2</span><span class="ss">Wisma Barito 2</span></div>
+          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">ROP</span><span class="ss">Rasuna Office Park</span></div>
+          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">TWS</span><span class="ss">TWS</span></div>
+          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">BAP</span><span class="ss">BAP</span></div>
+          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">Epiwalk</span><span class="ss">Epiwalk</span></div>
+          <div class="site"><i class="fa-solid fa-building-columns"></i><span class="sn">GIC</span><span class="ss">GIC</span></div>
+          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">PPM</span><span class="ss">PPM</span></div>
+          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">NWU</span><span class="ss">NWU</span></div>
+          <div class="site"><i class="fa-solid fa-building"></i><span class="sn">JEM</span><span class="ss">JEM</span></div>
+          <div class="site wide"><i class="fa-solid fa-gem"></i><span class="sn">Masterpiece &amp; Empyreal</span><span class="ss">1 Unit · 2 Tower</span></div>
+          <div class="site"><i class="fa-solid fa-building-columns"></i><span class="sn">HO</span><span class="ss">Head Office</span></div>
         </div>
-        <div style="margin-top:6px;">
-          <div class="site-next"><i class="fa-solid fa-tower-observation"></i><span class="sn">Bakrie Tower</span><span class="nb">Next Implementation →</span></div>
+        <div style="margin-top:7px;">
+          <div class="site-next"><i class="fa-solid fa-tower-observation"></i><span class="sn">Bakrie Tower</span><span class="nb">Target Berikutnya →</span></div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ SLIDE 5 — MAINTAINER ══ -->
+<!-- ══ SLIDE 5 — MODUL ══ -->
 <div class="slide" id="s5">
   <div class="w">
-    <div class="badge ok al d1"><i class="fa-solid fa-server"></i> Role 3 of 4</div>
-    <h2 class="h2 au d2" style="margin-top:10px;">Maintainer — Saya yang jaga sistem tetap hidup.</h2>
+    <div class="eyebrow al d1">Modul Sistem</div>
+    <h2 class="h2 au d2">11 modul yang mengelola seluruh proses bisnis properti.</h2>
     <div class="gold-rule agx d3"></div>
     <div class="s5-body">
-      <div class="al d3">
-        <div class="srv">
-          <div class="srv-top"><span>VPS Cloud Server</span><div class="srv-live">Online — All Systems Go</div></div>
-          <div class="srv-nums">
-            <div class="sn_"><div class="n b">42%</div><div class="l">CPU Usage</div></div>
-            <div class="sn_"><div class="n g">61%</div><div class="l">Memory</div></div>
-            <div class="sn_"><div class="n gr">99.9%</div><div class="l">Uptime</div></div>
-          </div>
-          <div class="srv-bars">
-            <div class="sbi">
-              <div class="ico sm blue"><i class="fa-solid fa-microchip"></i></div>
-              <div class="sbi-info"><h5>CPU</h5><div class="bt"><div class="bf" style="width:42%;background:var(--blue)"></div></div></div>
-              <span class="sbi-val">42%</span>
-            </div>
-            <div class="sbi">
-              <div class="ico sm gold"><i class="fa-solid fa-memory"></i></div>
-              <div class="sbi-info"><h5>Memory</h5><div class="bt"><div class="bf" style="width:61%;background:var(--gold)"></div></div></div>
-              <span class="sbi-val">61%</span>
-            </div>
-            <div class="sbi">
-              <div class="ico sm teal"><i class="fa-solid fa-hard-drive"></i></div>
-              <div class="sbi-info"><h5>Disk</h5><div class="bt"><div class="bf" style="width:55%;background:var(--teal)"></div></div></div>
-              <span class="sbi-val">55%</span>
-            </div>
-          </div>
+      <div>
+        <div class="mod-section-lbl ar d2">Modul Terintegrasi</div>
+        <div class="mod-grid">
+          <div class="mod as d3"><div class="ico sm blue"><i class="fa-solid fa-user-tie"></i></div><div><div class="m-name">Tenant Mgmt</div><div class="m-cat">Front Office</div></div></div>
+          <div class="mod as d3"><div class="ico sm blue"><i class="fa-solid fa-building-user"></i></div><div><div class="m-name">Owner Mgmt</div><div class="m-cat">Front Office</div></div></div>
+          <div class="mod as d4"><div class="ico sm blue"><i class="fa-solid fa-bolt"></i></div><div><div class="m-name">Utility Mgmt</div><div class="m-cat">Front Office</div></div></div>
+          <div class="mod as d4"><div class="ico sm purple"><i class="fa-solid fa-users-cog"></i></div><div><div class="m-name">User Mgmt</div><div class="m-cat">Admin</div></div></div>
+          <div class="mod as d5"><div class="ico sm gold"><i class="fa-solid fa-file-invoice-dollar"></i></div><div><div class="m-name">AR Mgmt</div><div class="m-cat">Finance</div></div></div>
+          <div class="mod as d5"><div class="ico sm gold"><i class="fa-solid fa-receipt"></i></div><div><div class="m-name">AP Mgmt</div><div class="m-cat">Finance</div></div></div>
+          <div class="mod as d6"><div class="ico sm gold"><i class="fa-solid fa-wallet"></i></div><div><div class="m-name">Cash &amp; Bank</div><div class="m-cat">Finance</div></div></div>
+          <div class="mod as d6"><div class="ico sm gold"><i class="fa-solid fa-book-open"></i></div><div><div class="m-name">General Ledger</div><div class="m-cat">Accounting</div></div></div>
+          <div class="mod as d7"><div class="ico sm teal"><i class="fa-solid fa-boxes-stacked"></i></div><div><div class="m-name">Inventory</div><div class="m-cat">Back Office</div></div></div>
+          <div class="mod as d7"><div class="ico sm teal"><i class="fa-solid fa-cart-shopping"></i></div><div><div class="m-name">Purchasing</div><div class="m-cat">Back Office</div></div></div>
+          <div class="mod wide as d8"><div class="ico sm green"><i class="fa-solid fa-comments"></i></div><div><div class="m-name">PVI Support Chat</div><div class="m-cat">Support Real-Time · Notifikasi WhatsApp</div></div></div>
         </div>
-        <div>
-          <div class="mod-label" style="margin-top:14px;margin-bottom:8px;">Support Tickets — PVI Chat</div>
-          <div class="tkt-row">
-            <div class="tkt-mini"><div class="n ro">12</div><div class="l">Open</div></div>
-            <div class="tkt-mini"><div class="n ya">7</div><div class="l">In Progress</div></div>
-            <div class="tkt-mini"><div class="n gr2">481</div><div class="l">Resolved</div></div>
-            <div class="tkt-mini"><div class="n go2">500+</div><div class="l">Total</div></div>
-          </div>
+        <div class="mod-total af d9">
+          <div><div class="n">11</div><div class="l">Modul Aktif</div></div>
+          <p class="body-xs" style="text-align:right;line-height:1.6;">Digunakan setiap hari<br>di seluruh unit operasional</p>
         </div>
       </div>
       <div>
-        <div class="mod-label af d3" style="margin-bottom:10px;">Yang ditangani setiap hari</div>
-        <div class="mnt-tasks">
-          <div class="mt ar d3">
-            <div class="ico sm blue"><i class="fa-solid fa-cloud"></i></div>
-            <div style="flex:1"><h4>VPS Cloud Server</h4><p>Provisioning, konfigurasi, patch, dan monitoring</p></div>
-            <span class="badge ok">Active</span>
+        <div class="mod-section-lbl al d2">Manfaat yang Dirasakan</div>
+        <div class="benefit-list">
+          <div class="benefit al d3">
+            <div class="ico sm gold"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+            <div><h4>Tagihan Tenant Otomatis &amp; Akurat</h4><p>Billing listrik, air, service charge, dan sewa dibuat otomatis — tidak ada yang terlewat atau salah hitung.</p></div>
           </div>
-          <div class="mt ar d4">
-            <div class="ico sm gold"><i class="fa-solid fa-database"></i></div>
-            <div style="flex:1"><h4>Database Management</h4><p>Performa, integritas data, dan optimasi query</p></div>
-            <span class="badge ok">Healthy</span>
+          <div class="benefit al d4">
+            <div class="ico sm blue"><i class="fa-solid fa-chart-line"></i></div>
+            <div><h4>Laporan Keuangan Siap Setiap Saat</h4><p>AR, AP, Cash &amp; Bank, dan GL tersedia real-time — manajemen bisa mengakses tanpa menunggu rekap manual.</p></div>
           </div>
-          <div class="mt ar d5">
-            <div class="ico sm green"><i class="fa-solid fa-hard-drive"></i></div>
-            <div style="flex:1"><h4>Backup &amp; Recovery</h4><p>Backup terjadwal dan prosedur pemulihan data</p></div>
-            <span class="badge ok">Running</span>
+          <div class="benefit al d5">
+            <div class="ico sm teal"><i class="fa-solid fa-boxes-stacked"></i></div>
+            <div><h4>Procurement &amp; Inventory Terkontrol</h4><p>Permintaan pengadaan dan stok gudang terlacak — mengurangi pemborosan dan mempercepat proses approval.</p></div>
           </div>
-          <div class="mt ar d6">
-            <div class="ico sm purple"><i class="fa-solid fa-lock"></i></div>
-            <div style="flex:1"><h4>Security &amp; Access Control</h4><p>Firewall, hak akses user, dan patch keamanan</p></div>
-            <span class="badge act">Active</span>
-          </div>
-          <div class="mt ar d7">
-            <div class="ico sm teal"><i class="fa-solid fa-headset"></i></div>
-            <div style="flex:1"><h4>Daily Support via PVI Chat</h4><p>Tangani tiket kendala dari seluruh unit setiap hari</p></div>
-            <span class="badge act">Active</span>
+          <div class="benefit al d6">
+            <div class="ico sm green"><i class="fa-solid fa-shield-halved"></i></div>
+            <div><h4>Hak Akses Berbasis Peran</h4><p>Setiap tim hanya mengakses data yang relevan — keamanan data terjaga di seluruh level organisasi.</p></div>
           </div>
         </div>
       </div>
@@ -965,11 +535,11 @@ html, body {
   </div>
 </div>
 
-<!-- ══ SLIDE 6 — INNOVATOR ══ -->
+<!-- ══ SLIDE 6 — SUPPORT & RELIABILITY ══ -->
 <div class="slide" id="s6">
   <div class="w">
-    <div class="badge pl al d1" style="background:#F3F0FD;color:var(--purple);border-color:#C4B5FD;"><i class="fa-solid fa-lightbulb"></i> Role 4 of 4</div>
-    <h2 class="h2 au d2" style="margin-top:10px;">Innovator — Saya yang ciptakan solusi baru.</h2>
+    <div class="eyebrow al d1">Support &amp; Keandalan</div>
+    <h2 class="h2 au d2">Setiap kendala tertangani — tidak ada yang jatuh di celah.</h2>
     <div class="gold-rule agx d3"></div>
     <div class="s6-body">
       <div class="chat-mock al d3">
@@ -977,7 +547,7 @@ html, body {
           <div class="cm-dot" style="background:#FF5F57"></div>
           <div class="cm-dot" style="background:#FEBC2E"></div>
           <div class="cm-dot" style="background:#28C840"></div>
-          <div class="cm-title">PVI Support Chat — Dibangun In-House</div>
+          <div class="cm-title">PVI Support Chat — Internal Support System</div>
           <div class="cm-live">Live</div>
         </div>
         <div class="cm-stats">
@@ -989,92 +559,109 @@ html, body {
         <div class="tk-list">
           <div class="tk r">
             <div class="tk-top"><span class="tk-id">#TKT-0241</span><span class="tk-st op">Open</span></div>
-            <div class="tk-title">Tagihan air tidak muncul di invoice</div>
-            <div class="tk-meta">Bug / Error · WB1 · 2 jam yang lalu</div>
+            <div class="tk-title">Tagihan air tidak muncul di invoice — WB1</div>
+            <div class="tk-meta">Bug · Dilaporkan 2 jam lalu · Sedang ditangani</div>
           </div>
           <div class="tk y">
             <div class="tk-top"><span class="tk-id">#TKT-0238</span><span class="tk-st pr">In Progress</span></div>
-            <div class="tk-title">Penyesuaian format laporan AR</div>
-            <div class="tk-meta">Enhancement · GIC · 5 jam yang lalu</div>
+            <div class="tk-title">Penyesuaian format laporan AR — GIC</div>
+            <div class="tk-meta">Enhancement · Dilaporkan 5 jam lalu</div>
           </div>
           <div class="tk g">
             <div class="tk-top"><span class="tk-id">#TKT-0235</span><span class="tk-st dn">Resolved</span></div>
-            <div class="tk-title">Unpost transaksi jurnal salah input</div>
-            <div class="tk-meta">Unpost · ROP · Kemarin</div>
+            <div class="tk-title">Unpost transaksi jurnal salah input — ROP</div>
+            <div class="tk-meta">Unpost · Selesai kemarin · Dikonfirmasi user</div>
           </div>
         </div>
         <div class="cm-inp"><span>Tulis pesan atau upload file...</span><i class="fa-solid fa-paper-plane"></i></div>
       </div>
       <div>
-        <div class="inv-kpis af d3">
-          <div class="ik as d3"><div class="stat-n" style="font-size:2rem">96%</div><div class="stat-l">Resolution Rate</div></div>
-          <div class="ik as d4"><div class="stat-n" style="font-size:2rem">100%</div><div class="stat-l">In-House Built</div></div>
+        <div class="infra-top af d3">
+          <div class="infra-kp"><div class="n">96%</div><div class="l">Resolution Rate</div></div>
+          <div class="infra-kp"><div class="n">500+</div><div class="l">Tiket Tertangani</div></div>
         </div>
-        <div class="mod-label" style="margin-bottom:9px;">Fitur PVI Support Chat</div>
-        <div class="inv-feats">
-          <div class="inv-f ar d4"><div class="ico sm purple"><i class="fa-solid fa-ticket"></i></div><div><h4>Nomor Tiket Unik per Kendala</h4><p>Semua masalah terlacak, tidak ada yang jatuh di celah.</p></div></div>
-          <div class="inv-f ar d5"><div class="ico sm green"><i class="fa-brands fa-whatsapp"></i></div><div><h4>Notifikasi WhatsApp Otomatis</h4><p>User dapat update status tiket langsung via WA.</p></div></div>
-          <div class="inv-f ar d6"><div class="ico sm blue"><i class="fa-solid fa-paperclip"></i></div><div><h4>Attachment &amp; Riwayat Lengkap</h4><p>Semua file dan percakapan tersimpan per tiket.</p></div></div>
-          <div class="inv-f ar d7"><div class="ico sm gold"><i class="fa-solid fa-circle-check"></i></div><div><h4>Konfirmasi Selesai oleh User</h4><p>Tiket closed hanya setelah user mengkonfirmasi.</p></div></div>
-        </div>
-        <div class="cat-pills af d8">
-          <div class="cp bug">Bug / Error</div>
-          <div class="cp dat">Data Correction</div>
-          <div class="cp enh">Enhancement</div>
-          <div class="cp sup">Support</div>
-          <div class="cp unp">Unpost</div>
+        <div class="mod-section-lbl af d4" style="margin-bottom:9px;">Infrastruktur &amp; Keandalan</div>
+        <div class="infra-panel">
+          <div class="infra-item ar d4">
+            <div class="ico sm blue"><i class="fa-solid fa-cloud"></i></div>
+            <div style="flex:1"><h4>VPS Cloud Server</h4><p>Sistem berjalan di cloud — stabil, cepat, dan dapat diakses dari mana saja</p></div>
+            <span class="badge ok">Online</span>
+          </div>
+          <div class="infra-item ar d5">
+            <div class="ico sm gold"><i class="fa-solid fa-database"></i></div>
+            <div style="flex:1"><h4>Database Terpusat</h4><p>Seluruh data 12 unit tersimpan terpusat, terstruktur, dan terbackup otomatis</p></div>
+            <span class="badge ok">Healthy</span>
+          </div>
+          <div class="infra-item ar d6">
+            <div class="ico sm green"><i class="fa-solid fa-hard-drive"></i></div>
+            <div style="flex:1"><h4>Backup Otomatis</h4><p>Data aman dengan prosedur backup terjadwal dan recovery yang teruji</p></div>
+            <span class="badge ok">Running</span>
+          </div>
+          <div class="infra-item ar d7">
+            <div class="ico sm purple"><i class="fa-solid fa-lock"></i></div>
+            <div style="flex:1"><h4>Keamanan Akses</h4><p>Role-based access control memastikan setiap user hanya akses data yang relevan</p></div>
+            <span class="badge act">Active</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ SLIDE 7 — REAL IMPLEMENTATION ══ -->
+<!-- ══ SLIDE 7 — FINANCE IMPACT ══ -->
 <div class="slide" id="s7">
   <div class="w">
-    <div class="eyebrow al d1">Real Implementation</div>
-    <h2 class="h2 au d2">Bukan teori. 12 unit sudah berjalan.</h2>
+    <div class="eyebrow al d1">Dampak Keuangan</div>
+    <h2 class="h2 au d2">Dari tagihan manual ke laporan keuangan yang akurat dan real-time.</h2>
     <div class="gold-rule agx d3"></div>
     <div class="s7-body">
       <div class="al d3">
-        <div class="s7-big">
-          <div class="label">Sites Live</div>
-          <div class="stat-n lg">12</div>
-          <p class="body-sm" style="margin-top:8px;">Units Live &amp; Operational</p>
-        </div>
-        <div class="hr"></div>
-        <p class="body-sm af d4" style="margin-bottom:14px;">Dari WB1 hingga HO — setiap implementasi memperkuat template, mempercepat proses, dan meningkatkan standar.</p>
-        <div class="s7-mini">
-          <div class="s7-ms as d5"><div class="n">11</div><div class="l">Modules/Site</div></div>
-          <div class="s7-ms as d6"><div class="n">50</div><div class="l">Active Users</div></div>
-          <div class="s7-ms as d7"><div class="n">≤14d</div><div class="l">Per Impl.</div></div>
-          <div class="s7-ms as d8"><div class="n">0</div><div class="l">Failed</div></div>
+        <p class="body-sm" style="margin-bottom:18px;">Modul keuangan PMS mengotomatiskan seluruh siklus pendapatan dan pengeluaran — dari billing tenant hingga jurnal akuntansi.</p>
+        <div class="finance-flow">
+          <div class="ff-item">
+            <div class="ff-spine"><div class="ff-dot ok"><i class="fa-solid fa-file-invoice"></i></div><div class="ff-vl"></div></div>
+            <div class="ff-body"><h4>Penerbitan Tagihan Otomatis</h4><p>Tagihan listrik, air, sewa, dan service charge dibuat dan dikirim ke tenant secara otomatis sesuai jadwal.</p></div>
+          </div>
+          <div class="ff-item">
+            <div class="ff-spine"><div class="ff-dot ok"><i class="fa-solid fa-money-bill-transfer"></i></div><div class="ff-vl"></div></div>
+            <div class="ff-body"><h4>Pencatatan Pembayaran &amp; Rekonsiliasi</h4><p>Setiap pembayaran dari tenant langsung tercatat dan direkonsiliasi dengan tagihan — tidak ada celah slip.</p></div>
+          </div>
+          <div class="ff-item">
+            <div class="ff-spine"><div class="ff-dot ok"><i class="fa-solid fa-wallet"></i></div><div class="ff-vl"></div></div>
+            <div class="ff-body"><h4>Cash &amp; Bank Real-Time</h4><p>Posisi kas dan bank seluruh unit terpantau langsung — tidak perlu menunggu laporan akhir bulan.</p></div>
+          </div>
+          <div class="ff-item">
+            <div class="ff-spine"><div class="ff-dot go"><i class="fa-solid fa-book-open"></i></div></div>
+            <div class="ff-body"><h4>Jurnal &amp; Laporan Keuangan Otomatis</h4><p>Setiap transaksi menghasilkan jurnal akuntansi secara otomatis — laporan siap kapan saja dibutuhkan.</p></div>
+          </div>
         </div>
       </div>
-      <div class="ar d4">
-        <div class="s7-site-hdr">
-          <span>Live Sites — All Operational</span>
-          <span class="s7-site-ok">All Green</span>
-        </div>
-        <div class="site-grid-lg">
-          <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">WB1</span><span class="ss">Wisma Barito 1</span></div>
-          <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">WB2</span><span class="ss">Wisma Barito 2</span></div>
-          <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">ROP</span><span class="ss">Rasuna Office Park</span></div>
-          <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">TWS</span><span class="ss">TWS</span></div>
-          <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">BAP</span><span class="ss">BAP</span></div>
-          <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">Epiwalk</span><span class="ss">Epiwalk</span></div>
-          <div class="sitelg"><i class="fa-solid fa-building-columns"></i><span class="sn">GIC</span><span class="ss">GIC</span></div>
-          <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">PPM</span><span class="ss">PPM</span></div>
-          <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">NWU</span><span class="ss">NWU</span></div>
-          <div class="sitelg"><i class="fa-solid fa-building"></i><span class="sn">JEM</span><span class="ss">JEM</span></div>
-          <div class="site-next-lg"><i class="fa-solid fa-gem"></i><span class="sn">Masterpiece &amp; Empyreal</span><div class="nb">1 Unit · 2 Tower</div></div>
-          <div class="sitelg"><i class="fa-solid fa-building-columns"></i><span class="sn">HO</span><span class="ss">Head Office</span></div>
-        </div>
-        <div style="margin-top:7px;">
-          <div class="site-next-lg" style="display:flex;align-items:center;gap:12px;text-align:left;padding:10px 14px;grid-column:span 4">
-            <i class="fa-solid fa-tower-observation" style="font-size:.95rem"></i>
-            <div><span class="sn" style="display:block">Bakrie Tower</span><div class="nb" style="display:inline-block;margin-top:0">Next Implementation →</div></div>
+      <div>
+        <div class="finance-kpis">
+          <div class="fk as d3">
+            <div class="n">AR</div>
+            <div class="l">Accounts Receivable</div>
+            <div class="sub">Tagihan tenant terlacak per unit, per periode, dengan status pembayaran real-time.</div>
           </div>
+          <div class="fk as d4">
+            <div class="n">AP</div>
+            <div class="l">Accounts Payable</div>
+            <div class="sub">Kewajiban pembayaran ke vendor tercatat dan terjadwal dengan baik.</div>
+          </div>
+          <div class="fk as d5">
+            <div class="n">C&amp;B</div>
+            <div class="l">Cash &amp; Bank</div>
+            <div class="sub">Posisi kas dan rekening bank seluruh unit tersedia dalam satu tampilan.</div>
+          </div>
+          <div class="fk as d6">
+            <div class="n">GL</div>
+            <div class="l">General Ledger</div>
+            <div class="sub">Jurnal otomatis dari setiap transaksi — laporan keuangan akurat &amp; audit-ready.</div>
+          </div>
+        </div>
+        <div class="benefit al d7" style="margin-top:4px;">
+          <div class="ico sm gold"><i class="fa-solid fa-circle-check"></i></div>
+          <div><h4>Laporan Tersedia Tanpa Rekap Manual</h4><p>Manajemen dapat mencetak laporan AR aging, cash flow, dan P&amp;L kapan saja — tanpa menunggu tim finance mengompilasi data dari masing-masing unit.</p></div>
         </div>
       </div>
     </div>
@@ -1084,89 +671,88 @@ html, body {
 <!-- ══ SLIDE 8 — BAKRIE TOWER ══ -->
 <div class="slide" id="s8">
   <div class="w">
-    <div class="eyebrow al d1">What's Next · Implementasi</div>
-    <h2 class="h2 au d2">Bakrie Tower — Implementasi ke-13.</h2>
+    <div class="eyebrow al d1">Ekspansi Berikutnya</div>
+    <h2 class="h2 au d2">Bakrie Tower — PMS siap untuk implementasi ke-13.</h2>
     <div class="gold-rule agx d3"></div>
     <div class="s8-body">
       <div>
         <div class="s8-kpis">
-          <div class="s8-kp as d3"><div class="stat-n" style="font-size:1.7rem;">12</div><div class="stat-l">Sites Done</div></div>
-          <div class="s8-kp as d4"><div class="stat-n" style="font-size:1.7rem;">≤14</div><div class="stat-l">Days/Site</div></div>
-          <div class="s8-kp as d5"><div class="stat-n" style="font-size:1.7rem;">0</div><div class="stat-l">Failed</div></div>
+          <div class="s8-kp as d3"><div class="stat-n" style="font-size:1.7rem;">12</div><div class="stat-l">Sudah Berjalan</div></div>
+          <div class="s8-kp as d4"><div class="stat-n" style="font-size:1.7rem;">≤14</div><div class="stat-l">Hari/Implementasi</div></div>
+          <div class="s8-kp as d5"><div class="stat-n" style="font-size:1.7rem;">0</div><div class="stat-l">Gagal</div></div>
         </div>
-        <p class="body-sm af d4" style="margin-bottom:14px;">12 implementasi sebelumnya menghasilkan template yang solid. Bakrie Tower akan lebih cepat, lebih terstruktur, dan lebih terdokumentasi.</p>
+        <p class="body-sm af d4" style="margin-bottom:16px;">Proses implementasi di 12 unit sebelumnya telah menghasilkan template yang teruji. Bakrie Tower dapat onboarding dengan cepat dan terstruktur.</p>
         <div class="checklist">
-          <div class="cli al d5"><i class="fa-solid fa-circle-check"></i> Analisis kebutuhan &amp; mapping unit</div>
-          <div class="cli al d6"><i class="fa-solid fa-circle-check"></i> Setup project, entity &amp; master data</div>
-          <div class="cli al d7"><i class="fa-solid fa-circle-check"></i> Setup user &amp; hak akses per divisi</div>
-          <div class="cli al d8"><i class="fa-solid fa-circle-check"></i> Testing billing, invoice &amp; payment</div>
-          <div class="cli al d9"><i class="fa-solid fa-circle-check"></i> Validasi laporan &amp; print output</div>
-          <div class="cli al d10"><i class="fa-solid fa-circle-check"></i> Training user &amp; pendampingan</div>
-          <div class="cli al d11"><i class="fa-solid fa-circle-check"></i> Pendampingan go-live</div>
-          <div class="cli al d12"><i class="fa-solid fa-circle-check"></i> Post-live monitoring 2 minggu</div>
+          <div class="cli al d5"><i class="fa-solid fa-circle-check"></i> Analisis kebutuhan unit &amp; mapping proses bisnis</div>
+          <div class="cli al d6"><i class="fa-solid fa-circle-check"></i> Setup entity, project &amp; master data</div>
+          <div class="cli al d7"><i class="fa-solid fa-circle-check"></i> Konfigurasi modul sesuai kebutuhan unit</div>
+          <div class="cli al d8"><i class="fa-solid fa-circle-check"></i> Setup user, role &amp; hak akses</div>
+          <div class="cli al d9"><i class="fa-solid fa-circle-check"></i> Uji coba billing, invoice &amp; laporan</div>
+          <div class="cli al d10"><i class="fa-solid fa-circle-check"></i> Training tim operasional</div>
+          <div class="cli al d11"><i class="fa-solid fa-circle-check"></i> Go-live &amp; pendampingan awal</div>
         </div>
       </div>
-      <div class="s8-right-content as d4">
-        <div class="s8-tower">
+      <div class="s8-right as d4">
+        <div class="s8-circle">
           <i class="fa-solid fa-tower-observation"></i>
-          <div class="sc-l">Next Implementation</div>
+          <div class="sc-l">Target Selanjutnya</div>
           <div class="sc-t">Bakrie Tower</div>
         </div>
-        <p class="s8-reason"><strong>"Lebih siap. Lebih cepat.<br>Lebih terstruktur."</strong><br><br>Template dari 12 implementasi sebelumnya menjadi panduan yang teruji dan terdokumentasi.</p>
+        <p class="s8-caption">Dengan bergabungnya Bakrie Tower, PMS akan mencakup <strong style="color:var(--gold-d);font-weight:700">13 unit</strong> properti Provices Group dalam satu ekosistem digital yang terintegrasi.</p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ SLIDE 9 — TECH ROADMAP ══ -->
+<!-- ══ SLIDE 9 — ROADMAP ══ -->
 <div class="slide" id="s9">
   <div class="w">
-    <div class="eyebrow al d1">What's Next · Pengembangan</div>
-    <h2 class="h2 au d2">Sistem tidak berhenti berkembang.</h2>
-    <p class="lead af d3" style="max-width:580px;margin-top:6px;">Setelah 12 site berjalan, fokus berikutnya adalah modernisasi teknologi, keamanan, dan pengalaman pengguna yang lebih baik.</p>
+    <div class="eyebrow al d1">Pengembangan ke Depan</div>
+    <h2 class="h2 au d2">PMS akan terus berkembang seiring pertumbuhan Provices Group.</h2>
+    <p class="lead af d3" style="max-width:640px;margin-top:6px;">Investasi berikutnya berfokus pada keamanan, performa, dan kemudahan penggunaan di seluruh unit.</p>
     <div class="s9-body">
       <div class="al d3">
         <div class="road">
           <div class="ri">
             <div class="ri-spine"><div class="ri-dot done"><i class="fa-solid fa-check"></i></div><div class="ri-vl"></div></div>
-            <div class="ri-body"><span class="badge ok" style="margin-bottom:6px">Completed</span><h4>Migrasi ke VPS Cloud</h4><p>Sistem lebih stabil, skalabel, dan mudah dikelola.</p></div>
+            <div class="ri-body"><span class="badge ok" style="margin-bottom:6px">Selesai</span><h4>Migrasi ke VPS Cloud</h4><p>Sistem berjalan di infrastruktur cloud yang stabil, cepat, dan skalabel.</p></div>
           </div>
           <div class="ri">
             <div class="ri-spine"><div class="ri-dot done"><i class="fa-solid fa-check"></i></div><div class="ri-vl"></div></div>
-            <div class="ri-body"><span class="badge ok" style="margin-bottom:6px">Completed</span><h4>PVI Support Chat</h4><p>Sistem ticketing support internal berhasil berjalan.</p></div>
+            <div class="ri-body"><span class="badge ok" style="margin-bottom:6px">Selesai</span><h4>PVI Support Chat</h4><p>Sistem support internal dengan tiket terstruktur dan notifikasi WhatsApp otomatis.</p></div>
           </div>
           <div class="ri">
             <div class="ri-spine"><div class="ri-dot act"><i class="fa-solid fa-arrows-rotate"></i></div><div class="ri-vl"></div></div>
-            <div class="ri-body"><span class="badge act" style="margin-bottom:6px">In Progress</span><h4>Bakrie Tower Implementation</h4><p>Implementasi site ke-13 — target berikutnya.</p></div>
+            <div class="ri-body"><span class="badge act" style="margin-bottom:6px">Sedang Berjalan</span><h4>Ekspansi ke Bakrie Tower</h4><p>Onboarding unit ke-13 ke dalam ekosistem PMS Provices Group.</p></div>
           </div>
           <div class="ri">
             <div class="ri-spine"><div class="ri-dot nxt"><i class="fa-solid fa-clock"></i></div><div class="ri-vl"></div></div>
-            <div class="ri-body"><span class="badge pl" style="margin-bottom:6px">Planned</span><h4>Upgrade Stack Teknologi</h4><p>Modernisasi framework untuk keamanan dan performa lebih baik.</p></div>
+            <div class="ri-body"><span class="badge pl" style="margin-bottom:6px">Direncanakan</span><h4>Modernisasi Teknologi Stack</h4><p>Upgrade framework untuk keamanan, performa, dan kompatibilitas jangka panjang.</p></div>
           </div>
           <div class="ri">
             <div class="ri-spine"><div class="ri-dot nxt"><i class="fa-solid fa-clock"></i></div></div>
-            <div class="ri-body"><span class="badge pl" style="margin-bottom:6px">Planned</span><h4>UI/UX Modern &amp; Mobile Ready</h4><p>Tampilan baru, responsif, lebih intuitif di semua perangkat.</p></div>
+            <div class="ri-body"><span class="badge pl" style="margin-bottom:6px">Direncanakan</span><h4>Tampilan Modern &amp; Mobile-Ready</h4><p>Antarmuka yang lebih intuitif dan responsif di semua perangkat.</p></div>
           </div>
         </div>
       </div>
       <div>
-        <div class="mod-label" style="margin-bottom:10px;">Mengapa ini penting</div>
+        <div class="mod-section-lbl" style="margin-bottom:10px;">Manfaat Pengembangan</div>
         <div class="s9-pillars">
           <div class="s9-p p1 ar d3">
-            <div class="ico sm red"><i class="fa-solid fa-shield-halved"></i></div>
-            <div><h4>Keamanan Data</h4><p>Teknologi lama rentan terhadap celah yang terus berkembang. Data perusahaan harus selalu terlindungi.</p></div>
+            <div class="ico sm green"><i class="fa-solid fa-shield-halved"></i></div>
+            <div><h4>Keamanan Data Lebih Kuat</h4><p>Perlindungan data perusahaan dan tenant sesuai standar keamanan modern yang terus berkembang.</p></div>
           </div>
           <div class="s9-p p2 ar d5">
-            <div class="ico sm amber"><i class="fa-solid fa-bolt"></i></div>
-            <div><h4>Performa Sistem</h4><p>Stack terbaru memberikan response time lebih cepat untuk semua pengguna.</p></div>
+            <div class="ico sm blue"><i class="fa-solid fa-bolt"></i></div>
+            <div><h4>Sistem Lebih Cepat &amp; Responsif</h4><p>Peningkatan performa berdampak langsung pada produktivitas tim operasional setiap hari.</p></div>
           </div>
           <div class="s9-p p3 ar d7">
-            <div class="ico sm blue"><i class="fa-solid fa-arrow-up-right-dots"></i></div>
-            <div><h4>Skalabilitas</h4><p>Semakin banyak site dan user, sistem harus siap tumbuh tanpa hambatan.</p></div>
+            <div class="ico sm gold"><i class="fa-solid fa-arrow-up-right-dots"></i></div>
+            <div><h4>Siap Tumbuh Bersama Provices</h4><p>Arsitektur yang skalabel memudahkan penambahan unit baru tanpa hambatan teknis.</p></div>
           </div>
           <div class="s9-p p4 ar d9">
             <div class="ico sm purple"><i class="fa-solid fa-mobile-screen"></i></div>
-            <div><h4>Kemudahan Pengguna</h4><p>UI modern yang responsif memudahkan tim di lapangan setiap hari.</p></div>
+            <div><h4>Pengalaman Pengguna Lebih Baik</h4><p>Tampilan modern yang mudah digunakan oleh tim di lapangan maupun manajemen.</p></div>
           </div>
         </div>
       </div>
@@ -1175,34 +761,34 @@ html, body {
 </div>
 
 <!-- ══ SLIDE 10 — CLOSING ══ -->
-<div class="slide center" id="s10">
+<div class="slide" id="s10">
   <div class="s10-deco"></div>
   <div class="s10-content">
-    <div style="text-align:left">
-      <div class="eyebrow al d1" style="color:rgba(200,169,74,.7);">Penutup</div>
-      <h2 class="s10-h au d2">Build.<br>Implement.<br>Maintain.<br><em>Improve.</em></h2>
-      <p class="s10-msg af d4">Itulah siklus kerja saya setiap hari — memastikan PMS Provices Group tetap akurat, aman, dan siap mendukung pertumbuhan ke depan.</p>
-      <div class="s10-pills">
-        <div class="s10-pill al d5"><div class="s10-pill-dot"></div><span>Developer — Bangun sistem &amp; fitur</span></div>
-        <div class="s10-pill al d6"><div class="s10-pill-dot"></div><span>Implementator — Pasang di 12 site</span></div>
-        <div class="s10-pill al d7"><div class="s10-pill-dot"></div><span>Maintainer — Jaga &amp; support harian</span></div>
-        <div class="s10-pill al d8"><div class="s10-pill-dot"></div><span>Innovator — Ciptakan solusi baru</span></div>
+    <div>
+      <div class="eyebrow al d1" style="color:rgba(200,169,74,.65);">Kesimpulan</div>
+      <h2 class="s10-h au d2">PMS adalah<br><em>aset strategis</em><br>Provices Group.</h2>
+      <p class="s10-msg af d4">Bukan sekadar software — PMS adalah fondasi digital yang menyatukan 12 unit, menstandarisasi proses, dan memberikan visibilitas penuh kepada manajemen.</p>
+      <div class="s10-pts">
+        <div class="s10-pt al d5"><div class="s10-pt-bar"></div><span>12 unit berjalan dalam satu ekosistem</span></div>
+        <div class="s10-pt al d6"><div class="s10-pt-bar"></div><span>Keuangan transparan &amp; laporan real-time</span></div>
+        <div class="s10-pt al d7"><div class="s10-pt-bar"></div><span>Operasional terstandarisasi &amp; terdokumentasi</span></div>
+        <div class="s10-pt al d8"><div class="s10-pt-bar"></div><span>Support terstruktur — 500+ tiket tertangani</span></div>
       </div>
     </div>
     <div class="s10-stats">
-      <div class="s10-st ar d3"><div class="s10-n">12</div><div class="s10-t"><h4>Sites Live &amp; Operational</h4><p>Dari WB1 sampai HO, semua berjalan.</p></div></div>
-      <div class="s10-st ar d5"><div class="s10-n">11</div><div class="s10-t"><h4>Modules Built &amp; Integrated</h4><p>Front office hingga general ledger terhubung.</p></div></div>
-      <div class="s10-st ar d7"><div class="s10-n">50</div><div class="s10-t"><h4>Active Users Setiap Hari</h4><p>Di seluruh unit operasional Provices Group.</p></div></div>
-      <div class="s10-st ar d9"><div class="s10-n">+1</div><div class="s10-t"><h4>Next Target: Bakrie Tower</h4><p>Implementasi ke-13 sedang dalam persiapan.</p></div></div>
+      <div class="s10-st ar d3"><div class="s10-n">12</div><div class="s10-t"><h4>Unit Aktif &amp; Operasional</h4><p>Dari WB1 hingga HO, semua terhubung dalam satu sistem.</p></div></div>
+      <div class="s10-st ar d5"><div class="s10-n">11</div><div class="s10-t"><h4>Modul Terintegrasi</h4><p>Front office hingga general ledger dalam satu platform.</p></div></div>
+      <div class="s10-st ar d7"><div class="s10-n">50</div><div class="s10-t"><h4>User Aktif Setiap Hari</h4><p>Di seluruh unit — dari tim operasional hingga finance.</p></div></div>
+      <div class="s10-st ar d9"><div class="s10-n">+1</div><div class="s10-t"><h4>Bakrie Tower — Target Berikutnya</h4><p>PMS siap menyambut unit properti Provices berikutnya.</p></div></div>
     </div>
   </div>
   <div class="s10-foot">
-    <span class="s10-fl">Provices Group · IT Division · Property Management System</span>
+    <span class="s10-fl">Provices Group · Property Management System</span>
     <span class="s10-fr">2025</span>
   </div>
 </div>
 
-</div><!-- #deck -->
+</div>
 
 <div id="bar"></div>
 <div id="num">1 / 10</div>
@@ -1211,13 +797,11 @@ html, body {
 
 <script>
 (function(){
-  var slides = Array.from(document.querySelectorAll('.slide'));
-  var total  = slides.length;
-  var cur    = 0;
+  var slides=Array.from(document.querySelectorAll('.slide'));
+  var total=slides.length,cur=0;
   function go(n){
     if(n<0||n>=total)return;
-    slides[cur].classList.remove('active');
-    cur=n;
+    slides[cur].classList.remove('active');cur=n;
     void slides[cur].offsetWidth;
     slides[cur].classList.add('active');
     document.getElementById('bar').style.width=((cur+1)/total*100)+'%';
