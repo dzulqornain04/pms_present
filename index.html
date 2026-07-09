@@ -7,1152 +7,420 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   DESIGN TOKENS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 :root{
-  --ink:    #07111F;   /* near-black navy */
-  --deep:   #0C1A2E;
-  --mid:    #122340;
-  --slate:  #1E3050;
-  --gold:   #C8A94A;
-  --gold-l: #E2CA7C;
-  --gold-d: #A07B28;
-  --white:  #FFFFFF;
-  --muted:  #7B92AD;
-  --dim:    rgba(200,169,74,.1);
-  --blue:   #4285F4;
-  --teal:   #0EA5A0;
-  --green:  #22C55E;
-  --red:    #EF4444;
-  --amber:  #F59E0B;
-  --purple: #8B5CF6;
+  --ink:   #07111F;
+  --deep:  #0C1A2E;
+  --mid:   #122340;
+  --slate: #1E3050;
+  --gold:  #C8A94A;
+  --gold-l:#E2CA7C;
+  --white: #FFFFFF;
+  --muted: #7B92AD;
+  --blue:  #4285F4;
+  --teal:  #0EA5A0;
+  --green: #22C55E;
+  --red:   #EF4444;
+  --amber: #F59E0B;
+  --purple:#8B5CF6;
 }
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   RESET & REVEAL BASE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 *{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#07111F;font-family:'Inter',sans-serif;}
 
-.reveal{font-family:'Inter',sans-serif;}
-.reveal .slides section{
-  height:100vh;width:100%;
-  display:flex!important;flex-direction:column;
-  justify-content:center;align-items:flex-start;
-  padding:52px 72px;text-align:left;
-  overflow:hidden;position:relative;
-}
-.reveal .slides section.center-content{align-items:center;text-align:center;}
-.reveal h1,.reveal h2,.reveal h3{
-  font-family:'Syne',sans-serif;
-  text-transform:none;letter-spacing:-.025em;line-height:1.1;
-}
-.reveal .progress{background:rgba(200,169,74,.12);}
-.reveal .progress span{background:var(--gold);}
-body,.reveal,.reveal .slide-background{background:#07111F!important;}
-.reveal .controls{color:var(--gold);bottom:14px;right:14px;}
-.reveal .slide-number{
-  background:transparent;color:rgba(200,169,74,.4);
-  font-family:'Inter',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.14em;
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   KEYFRAMES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-@keyframes up   {from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:none}}
-@keyframes left {from{opacity:0;transform:translateX(-28px)}to{opacity:1;transform:none}}
-@keyframes right{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
-@keyframes fade {from{opacity:0}to{opacity:1}}
-@keyframes scl  {from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
-@keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@keyframes growY{from{transform:scaleY(0)}to{transform:scaleY(1)}}
-@keyframes spin {from{transform:rotate(0)}to{transform:rotate(360deg)}}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(200,169,74,.3)}50%{box-shadow:0 0 0 12px rgba(200,169,74,0)}}
-@keyframes glow {0%,100%{opacity:.25}50%{opacity:.6}}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-@keyframes tick {from{stroke-dashoffset:60}to{stroke-dashoffset:0}}
-@keyframes barW {from{width:0}to{width:var(--w)}}
-
-/* Trigger helpers — fires when Reveal adds .present */
-.anim-run .au   {animation:up    .6s ease backwards;}
-.anim-run .al   {animation:left  .6s ease backwards;}
-.anim-run .ar   {animation:right .6s ease backwards;}
-.anim-run .af   {animation:fade  .6s ease backwards;}
-.anim-run .as   {animation:scl   .6s ease backwards;}
-.anim-run .agx  {animation:growX .8s ease backwards;transform-origin:left;}
-.anim-run .agy  {animation:growY .8s ease backwards;transform-origin:top;}
-
-.d0 {animation-delay:.0s!important}
-.d05{animation-delay:.05s!important}
-.d1 {animation-delay:.1s!important}
-.d15{animation-delay:.15s!important}
-.d2 {animation-delay:.2s!important}
-.d25{animation-delay:.25s!important}
-.d3 {animation-delay:.3s!important}
-.d35{animation-delay:.35s!important}
-.d4 {animation-delay:.4s!important}
-.d45{animation-delay:.45s!important}
-.d5 {animation-delay:.5s!important}
-.d55{animation-delay:.55s!important}
-.d6 {animation-delay:.6s!important}
-.d65{animation-delay:.65s!important}
-.d7 {animation-delay:.7s!important}
-.d75{animation-delay:.75s!important}
-.d8 {animation-delay:.8s!important}
-.d85{animation-delay:.85s!important}
-.d9 {animation-delay:.9s!important}
-.d95{animation-delay:.95s!important}
-.d10{animation-delay:1.0s!important}
-.d11{animation-delay:1.1s!important}
-.d12{animation-delay:1.2s!important}
-.d13{animation-delay:1.3s!important}
-.d14{animation-delay:1.4s!important}
-.d15x{animation-delay:1.5s!important}
-.d16{animation-delay:1.6s!important}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   REUSABLES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.eyebrow{
-  font-size:.62rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
-  color:var(--gold);display:flex;align-items:center;gap:10px;margin-bottom:14px;
-}
-.eyebrow::before{content:'';display:block;width:22px;height:2px;background:var(--gold);border-radius:1px;}
-.anim-run .eyebrow{animation:left .5s .05s ease backwards;}
-
-.rule{
-  height:1px;background:rgba(255,255,255,.07);
-  margin:20px 0;width:100%;
-  
-}
-.anim-run .rule{animation:growX .7s ease backwards;transform-origin:left;}
-
-/* Gold bar accent */
-.bar-gold{
-  height:3px;width:48px;background:var(--gold);border-radius:2px;margin:14px 0;
-  transform-origin:left;
-}
-.anim-run .bar-gold{animation:growX .6s ease backwards;}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ══ SLIDE 1 — OPENING ══
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.s1{background:var(--ink);}
-
-/* Noise texture overlay */
-.s1-noise{
+/* ── DECK ENGINE ── */
+#deck{width:100vw;height:100vh;position:relative;overflow:hidden;}
+.slide{
   position:absolute;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
-  pointer-events:none;opacity:.5;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:flex-start;
+  padding:52px 72px;
+  visibility:hidden;
+  pointer-events:none;
+  overflow:hidden;
 }
-
-/* Diagonal split */
-.s1-split{
-  position:absolute;top:0;right:0;bottom:0;width:42%;
-  background:var(--deep);
-  clip-path:polygon(12% 0,100% 0,100% 100%,0 100%);
+.slide.active{
+  visibility:visible;
+  pointer-events:all;
 }
+.slide.center{align-items:center;text-align:center;}
 
-/* Grid on the right */
-.s1-grid{
-  position:absolute;top:0;right:0;bottom:0;width:42%;
-  background-image:
-    linear-gradient(rgba(200,169,74,.05) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(200,169,74,.05) 1px,transparent 1px);
-  background-size:48px 48px;
-  clip-path:polygon(12% 0,100% 0,100% 100%,0 100%);
-}
+/* ── PROGRESS & COUNTER ── */
+#progress{position:fixed;bottom:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-l));transition:width .4s ease;z-index:100;}
+#counter{position:fixed;bottom:14px;right:20px;font-size:.65rem;font-weight:700;letter-spacing:.14em;color:rgba(200,169,74,.45);z-index:100;}
+#nav-prev,#nav-next{position:fixed;bottom:12px;background:none;border:none;cursor:pointer;color:rgba(200,169,74,.4);font-size:1.2rem;z-index:100;padding:8px;transition:color .2s ease;}
+#nav-prev:hover,#nav-next:hover{color:var(--gold);}
+#nav-prev{right:90px;}
+#nav-next{right:48px;}
 
-/* Gold radial on right */
-.s1-radial{
-  position:absolute;right:6%;top:50%;transform:translateY(-50%);
-  width:420px;height:420px;border-radius:50%;
-  background:radial-gradient(circle,rgba(200,169,74,.1) 0%,transparent 68%);
-  animation:glow 5s ease-in-out infinite;pointer-events:none;
-}
+/* ── KEYFRAMES ── */
+@keyframes up   {from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes dn   {from{opacity:0;transform:translateY(-28px)}to{opacity:1;transform:none}}
+@keyframes lft  {from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:none}}
+@keyframes rgt  {from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+@keyframes fin  {from{opacity:0}to{opacity:1}}
+@keyframes scl  {from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+@keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(200,169,74,.3)}50%{box-shadow:0 0 0 12px rgba(200,169,74,0)}}
+@keyframes glow {0%,100%{opacity:.25}50%{opacity:.65}}
+@keyframes spin {from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
-/* Bottom border */
-.s1::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--gold),var(--gold-l),transparent);
-}
+/* Entrance — only fires when slide is .active */
+.slide.active .a-up  {animation:up  .6s ease both;}
+.slide.active .a-dn  {animation:dn  .6s ease both;}
+.slide.active .a-lft {animation:lft .6s ease both;}
+.slide.active .a-rgt {animation:rgt .6s ease both;}
+.slide.active .a-fin {animation:fin .6s ease both;}
+.slide.active .a-scl {animation:scl .6s ease both;}
+.slide.active .a-gx  {animation:growX .7s ease both;transform-origin:left;}
 
+/* Delays */
+.d0{animation-delay:0s} .d1{animation-delay:.1s} .d15{animation-delay:.15s}
+.d2{animation-delay:.2s} .d25{animation-delay:.25s} .d3{animation-delay:.3s}
+.d35{animation-delay:.35s} .d4{animation-delay:.4s} .d45{animation-delay:.45s}
+.d5{animation-delay:.5s} .d55{animation-delay:.55s} .d6{animation-delay:.6s}
+.d65{animation-delay:.65s} .d7{animation-delay:.7s} .d75{animation-delay:.75s}
+.d8{animation-delay:.8s} .d85{animation-delay:.85s} .d9{animation-delay:.9s}
+.d10{animation-delay:1s} .d11{animation-delay:1.1s} .d12{animation-delay:1.2s}
+
+/* ── SHARED ── */
+.eyebrow{font-size:.62rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.eyebrow::before{content:'';display:block;width:22px;height:2px;background:var(--gold);border-radius:1px;}
+.bar{height:3px;width:48px;background:var(--gold);border-radius:2px;margin:14px 0;transform-origin:left;}
+.wrap{width:100%;max-width:1140px;}
+
+/* ━━━ SLIDE 1 ━━━ */
+#s1{background:var(--ink);}
+.s1-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(200,169,74,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(200,169,74,.04) 1px,transparent 1px);background-size:56px 56px;}
+.s1-split{position:absolute;top:0;right:0;bottom:0;width:42%;background:var(--deep);clip-path:polygon(12% 0,100% 0,100% 100%,0 100%);}
+.s1-glow{position:absolute;right:8%;top:50%;transform:translateY(-50%);width:400px;height:400px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(200,169,74,.1) 0%,transparent 65%);animation:glow 5s ease-in-out infinite;}
+#s1::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-l),transparent);}
 .s1-wrap{position:relative;z-index:2;width:54%;}
-
-.s1-company{
-  font-size:.62rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;
-  color:var(--gold);margin-bottom:28px;display:flex;align-items:center;gap:10px;
-  
-}
-.s1-company::before{
-  content:'';width:20px;height:20px;border:1.5px solid var(--gold);border-radius:4px;
-  display:block;flex-shrink:0;
-}
-.anim-run .s1-company{animation:left .5s .1s ease backwards;}
-
-.s1-h{
-  font-size:4rem;font-weight:800;color:var(--white);
-  line-height:1.08;margin-bottom:20px;
-}
+.s1-co{font-size:.62rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:28px;display:flex;align-items:center;gap:10px;}
+.s1-co::before{content:'';width:18px;height:18px;border:1.5px solid var(--gold);border-radius:4px;display:block;flex-shrink:0;}
+.s1-h{font-family:'Syne',sans-serif;font-size:3.8rem;font-weight:800;color:var(--white);line-height:1.08;margin-bottom:20px;}
 .s1-h em{color:var(--gold);font-style:normal;}
-.anim-run .s1-h{animation:up .7s .25s ease backwards;}
-
-.s1-rule{
-  width:100%;height:1px;background:rgba(255,255,255,.1);margin:24px 0;
-  transform-origin:left;
-}
-.anim-run .s1-rule{animation:growX .7s .5s ease backwards;}
-
-.s1-desc{
-  font-size:.95rem;font-weight:400;color:var(--muted);
-  line-height:1.7;max-width:480px;margin-bottom:36px;
-}
-.anim-run .s1-desc{animation:up .6s .55s ease backwards;}
-
+.s1-rule{width:100%;height:1px;background:rgba(255,255,255,.1);margin:22px 0;transform-origin:left;}
+.s1-desc{font-size:.95rem;color:var(--muted);line-height:1.7;max-width:480px;margin-bottom:32px;}
 .s1-tags{display:flex;gap:10px;flex-wrap:wrap;}
-.anim-run .s1-tags{animation:up .6s .75s ease backwards;}
+.s1-tag{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(200,169,74,.3);color:var(--gold);padding:6px 14px;border-radius:3px;}
+.s1-icon{position:absolute;right:8%;top:50%;transform:translateY(-50%);z-index:3;width:130px;height:130px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-l));display:flex;align-items:center;justify-content:center;font-size:3rem;color:var(--ink);box-shadow:0 0 0 16px rgba(200,169,74,.08),0 0 60px rgba(200,169,74,.25);animation:pulse 3.5s ease-in-out infinite,float 5s ease-in-out infinite;}
 
-.s1-tag{
-  font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
-  border:1px solid rgba(200,169,74,.3);color:var(--gold);
-  padding:6px 14px;border-radius:3px;
-  transition:all .25s ease;
-}
-.s1-tag:hover{background:var(--dim);border-color:var(--gold);}
+/* ━━━ SLIDE 2 ━━━ */
+#s2{background:var(--deep);}
+.s2-body{display:grid;grid-template-columns:1fr 1.4fr;gap:56px;align-items:center;margin-top:28px;width:100%;}
+.s2-h{font-family:'Syne',sans-serif;font-size:2.6rem;font-weight:800;color:var(--white);max-width:440px;}
+.s2-pts{display:flex;flex-direction:column;gap:14px;}
+.s2-pt{display:flex;align-items:flex-start;gap:14px;}
+.s2-ico{width:42px;height:42px;flex-shrink:0;border-radius:10px;background:rgba(200,169,74,.1);display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--gold);}
+.s2-pt h4{font-size:.85rem;font-weight:700;color:var(--white);margin-bottom:3px;}
+.s2-pt p{font-size:.75rem;color:var(--muted);line-height:1.5;}
+.arch{display:flex;flex-direction:column;gap:10px;}
+.arch-row{display:flex;gap:10px;}
+.ab{flex:1;border-radius:8px;padding:14px 16px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);}
+.ab .lbl{font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+.ab .ttl{font-size:.82rem;font-weight:700;color:var(--white);margin-top:4px;}
+.ab .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);margin-bottom:4px;}
+.ab.hl{background:rgba(200,169,74,.07);border-color:rgba(200,169,74,.3);}
+.arch-arr{text-align:center;font-size:.75rem;color:rgba(200,169,74,.35);padding:2px 0;}
 
-/* Right side visual */
-.s1-right{
-  position:absolute;right:5%;top:50%;transform:translateY(-50%);
-  z-index:3;display:flex;flex-direction:column;align-items:center;gap:0;
-  
-}
-.anim-run .s1-right{animation:scl .8s .4s ease backwards;}
-
-.s1-icon-big{
-  width:130px;height:130px;border-radius:50%;
-  background:linear-gradient(135deg,var(--gold),var(--gold-l));
-  display:flex;align-items:center;justify-content:center;
-  font-size:3rem;color:var(--ink);
-  box-shadow:0 0 0 16px rgba(200,169,74,.08),0 0 60px rgba(200,169,74,.25);
-  animation:pulse 3.5s ease-in-out infinite,float 5s ease-in-out infinite;
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ══ SLIDE 2 — THE SYSTEM ══
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.s2{background:var(--deep);}
-
-.s2-wrap{width:100%;max-width:1140px;}
-
-.s2-h{font-size:2.8rem;font-weight:800;color:var(--white);max-width:680px;}
-.anim-run .s2-h{animation:up .6s .15s ease backwards;}
-
-.s2-sub{font-size:.92rem;color:var(--muted);margin-top:12px;max-width:540px;line-height:1.65;}
-.anim-run .s2-sub{animation:up .5s .3s ease backwards;}
-
-/* Two column: description + visual */
-.s2-body{
-  display:grid;grid-template-columns:1fr 1.4fr;gap:56px;
-  align-items:center;margin-top:36px;
-  width:100%;
-}
-
-.s2-points{display:flex;flex-direction:column;gap:14px;}
-
-.s2-pt{
-  display:flex;align-items:flex-start;gap:14px;
-  transition:all .3s ease;
-}
-.s2-pt:hover .s2-pt-icon{background:rgba(200,169,74,.2);transform:scale(1.05);}
-
-.anim-run .s2-pt:nth-child(1){animation:left .5s .4s ease backwards;}
-.anim-run .s2-pt:nth-child(2){animation:left .5s .52s ease backwards;}
-.anim-run .s2-pt:nth-child(3){animation:left .5s .64s ease backwards;}
-.anim-run .s2-pt:nth-child(4){animation:left .5s .76s ease backwards;}
-
-.s2-pt-icon{
-  width:42px;height:42px;flex-shrink:0;border-radius:10px;
-  background:rgba(200,169,74,.1);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1rem;color:var(--gold);
-  transition:all .3s ease;
-}
-.s2-pt-text h4{font-family:'Inter',sans-serif;font-size:.85rem;font-weight:700;color:var(--white);margin-bottom:3px;}
-.s2-pt-text p{font-size:.76rem;color:var(--muted);line-height:1.5;}
-
-/* System architecture visual */
-.sys-arch{
-  position:relative;display:flex;flex-direction:column;gap:10px;
-}
-.anim-run .sys-arch{animation:right .6s .35s ease backwards;}
-
-.arch-row{display:flex;gap:10px;align-items:stretch;}
-
-.arch-box{
-  flex:1;border-radius:8px;padding:14px 16px;
-  border:1px solid rgba(255,255,255,.07);
-  background:rgba(255,255,255,.03);
-  display:flex;flex-direction:column;gap:6px;
-  transition:all .3s ease;cursor:default;
-}
-.arch-box:hover{background:rgba(200,169,74,.06);border-color:rgba(200,169,74,.25);transform:translateY(-2px);}
-
-.arch-box .ab-label{
-  font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--muted);
-}
-.arch-box .ab-title{font-size:.82rem;font-weight:700;color:var(--white);}
-.arch-box .ab-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);margin-bottom:2px;}
-.arch-box.highlight{
-  background:rgba(200,169,74,.07);border-color:rgba(200,169,74,.3);
-}
-.arch-arrow{
-  display:flex;align-items:center;justify-content:center;
-  font-size:.7rem;color:rgba(200,169,74,.4);padding:4px 0;
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ══ SLIDE 3 — MODULES ══
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.s3{background:var(--ink);}
-.s3-wrap{width:100%;max-width:1140px;}
-.s3-h{font-size:2.6rem;font-weight:800;color:var(--white);}
-.anim-run .s3-h{animation:up .6s .1s ease backwards;}
-
-.module-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  grid-template-rows:repeat(3,auto);
-  gap:10px;margin-top:28px;
-}
-
-.mod{
-  border-radius:8px;padding:16px 14px;
-  border:1px solid rgba(255,255,255,.07);
-  background:rgba(255,255,255,.03);
-  display:flex;align-items:center;gap:12px;
-  transition:all .3s ease;cursor:default;
-}
-.mod:hover{background:rgba(200,169,74,.07);border-color:rgba(200,169,74,.25);transform:translateY(-2px);}
-
-/* stagger */
-.anim-run .mod:nth-child(1) {animation:scl .4s .15s ease backwards;}
-.anim-run .mod:nth-child(2) {animation:scl .4s .22s ease backwards;}
-.anim-run .mod:nth-child(3) {animation:scl .4s .29s ease backwards;}
-.anim-run .mod:nth-child(4) {animation:scl .4s .36s ease backwards;}
-.anim-run .mod:nth-child(5) {animation:scl .4s .43s ease backwards;}
-.anim-run .mod:nth-child(6) {animation:scl .4s .50s ease backwards;}
-.anim-run .mod:nth-child(7) {animation:scl .4s .57s ease backwards;}
-.anim-run .mod:nth-child(8) {animation:scl .4s .64s ease backwards;}
-.anim-run .mod:nth-child(9) {animation:scl .4s .71s ease backwards;}
-.anim-run .mod:nth-child(10){animation:scl .4s .78s ease backwards;}
-.anim-run .mod:nth-child(11){animation:scl .4s .85s ease backwards;}
-
-.mod .mod-icon{
-  width:40px;height:40px;flex-shrink:0;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:.95rem;
-}
-.mod .mod-name{font-size:.8rem;font-weight:700;color:var(--white);line-height:1.3;}
-.mod .mod-cat{font-size:.6rem;color:var(--muted);font-weight:500;margin-top:2px;}
-
-/* color themes per group */
-.mod.fo .mod-icon{background:rgba(66,133,244,.12);color:var(--blue);}
-.mod.fi .mod-icon{background:rgba(200,169,74,.12);color:var(--gold);}
-.mod.op .mod-icon{background:rgba(14,165,160,.12);color:var(--teal);}
-.mod.ad .mod-icon{background:rgba(139,92,246,.12);color:var(--purple);}
-
-/* Wide module spans */
+/* ━━━ SLIDE 3 ━━━ */
+#s3{background:var(--ink);}
+.s3-h{font-family:'Syne',sans-serif;font-size:2.6rem;font-weight:800;color:var(--white);}
+.mod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:24px;}
+.mod{border-radius:8px;padding:15px 13px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);display:flex;align-items:center;gap:12px;}
+.m-ico{width:40px;height:40px;flex-shrink:0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.95rem;}
+.m-name{font-size:.8rem;font-weight:700;color:var(--white);line-height:1.25;}
+.m-cat{font-size:.6rem;color:var(--muted);margin-top:2px;}
+.mod.fo .m-ico{background:rgba(66,133,244,.12);color:var(--blue);}
+.mod.fi .m-ico{background:rgba(200,169,74,.12);color:var(--gold);}
+.mod.op .m-ico{background:rgba(14,165,160,.12);color:var(--teal);}
+.mod.ad .m-ico{background:rgba(139,92,246,.12);color:var(--purple);}
 .mod.wide{grid-column:span 2;}
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ══ SLIDE 4 — COVERAGE MAP ══
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.s4{background:var(--deep);}
-.s4-wrap{width:100%;max-width:1140px;}
-.s4-h{font-size:2.6rem;font-weight:800;color:var(--white);}
-.anim-run .s4-h{animation:up .6s .1s ease backwards;}
+/* ━━━ SLIDE 4 ━━━ */
+#s4{background:var(--deep);}
+.s4-h{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--white);}
+.s4-stats{display:flex;gap:28px;margin:16px 0 24px;align-items:center;}
+.s4-stat .n{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--gold);line-height:1;}
+.s4-stat .l{font-size:.62rem;color:var(--muted);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-top:3px;}
+.s4-div{width:1px;background:rgba(255,255,255,.1);height:56px;}
+.site-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;}
+.site{border-radius:7px;padding:13px 7px;text-align:center;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);}
+.site i{color:var(--gold);font-size:1rem;display:block;margin-bottom:5px;}
+.site .sn{color:var(--white);font-size:.7rem;font-weight:700;display:block;}
+.site .ss{color:var(--muted);font-size:.57rem;display:block;margin-top:1px;}
+.next-row{display:flex;justify-content:center;margin-top:8px;}
+.site-next{width:calc(100%/7 - 5px);border-radius:7px;padding:13px 7px;text-align:center;background:rgba(200,169,74,.07);border:2px solid var(--gold);box-shadow:0 0 20px rgba(200,169,74,.15);animation:pulse 3s ease-in-out infinite;}
+.site-next i{color:var(--gold-l);font-size:1rem;display:block;margin-bottom:5px;}
+.site-next .sn{color:var(--white);font-size:.7rem;font-weight:700;}
+.site-next .nb{display:inline-block;font-size:.5rem;font-weight:800;background:var(--gold);color:var(--ink);padding:2px 7px;border-radius:2px;margin-top:4px;text-transform:uppercase;}
 
-.s4-stats{
-  display:flex;gap:28px;margin:20px 0 30px;flex-wrap:wrap;
-}
-.anim-run .s4-stats{animation:up .5s .25s ease backwards;}
-
-.s4-stat{display:flex;flex-direction:column;}
-.s4-stat .num{
-  font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;
-  color:var(--gold);line-height:1;
-}
-.s4-stat .lbl{font-size:.65rem;color:var(--muted);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-top:4px;}
-.s4-divv{width:1px;background:rgba(255,255,255,.1);height:60px;align-self:center;}
-
-/* Site cards grid */
-.site-grid{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:8px;width:100%;
-}
-
-.site{
-  border-radius:7px;padding:14px 8px;text-align:center;
-  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
-  transition:all .3s ease;cursor:default;
-}
-.site:hover{background:rgba(200,169,74,.07);border-color:rgba(200,169,74,.25);transform:translateY(-3px);}
-
-.anim-run .site:nth-child(1) {animation:up .35s .3s  ease backwards;}
-.anim-run .site:nth-child(2) {animation:up .35s .36s ease backwards;}
-.anim-run .site:nth-child(3) {animation:up .35s .42s ease backwards;}
-.anim-run .site:nth-child(4) {animation:up .35s .48s ease backwards;}
-.anim-run .site:nth-child(5) {animation:up .35s .54s ease backwards;}
-.anim-run .site:nth-child(6) {animation:up .35s .60s ease backwards;}
-.anim-run .site:nth-child(7) {animation:up .35s .66s ease backwards;}
-.anim-run .site:nth-child(8) {animation:up .35s .72s ease backwards;}
-.anim-run .site:nth-child(9) {animation:up .35s .78s ease backwards;}
-.anim-run .site:nth-child(10){animation:up .35s .84s ease backwards;}
-.anim-run .site:nth-child(11){animation:up .35s .90s ease backwards;}
-.anim-run .site:nth-child(12){animation:up .35s .96s ease backwards;}
-.anim-run .site:nth-child(13){animation:up .35s 1.02s ease backwards;}
-
-.site i{color:var(--gold);font-size:1.1rem;display:block;margin-bottom:6px;}
-.site .sn{color:var(--white);font-size:.72rem;font-weight:700;display:block;}
-.site .ss{color:var(--muted);font-size:.58rem;display:block;margin-top:2px;}
-
-/* Next target */
-.site-next-row{
-  display:flex;justify-content:center;margin-top:9px;width:100%;
-}
-.anim-run .site-next-row{animation:scl .5s 1.1s ease backwards;}
-.site-next{
-  width:calc(100% / 7 - 5px);
-  border-radius:7px;padding:14px 8px;text-align:center;
-  background:rgba(200,169,74,.07);
-  border:1.5px solid var(--gold);
-  box-shadow:0 0 24px rgba(200,169,74,.15);
-  animation:pulse 3s ease-in-out infinite;
-  cursor:default;
-}
-.site-next i{color:var(--gold-l);font-size:1.1rem;display:block;margin-bottom:6px;}
-.site-next .sn{color:var(--white);font-size:.72rem;font-weight:700;}
-.site-next .snb{
-  display:inline-block;font-size:.5rem;font-weight:800;
-  background:var(--gold);color:var(--ink);
-  padding:2px 7px;border-radius:2px;margin-top:5px;
-  text-transform:uppercase;letter-spacing:.08em;
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ══ SLIDE 5 — HOW I WORK ══
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.s5{background:var(--ink);}
-.s5-wrap{width:100%;max-width:1140px;}
-.s5-h{font-size:2.6rem;font-weight:800;color:var(--white);max-width:600px;}
-.anim-run .s5-h{animation:up .6s .1s ease backwards;}
-
-/* Two columns: phases left, impact right */
-.s5-body{
-  display:grid;grid-template-columns:1.1fr 1fr;gap:48px;
-  align-items:start;margin-top:32px;width:100%;
-}
-
-/* Phase flow */
-.phase-flow{display:flex;flex-direction:column;gap:0;}
-
-.phase{
-  display:flex;align-items:stretch;gap:16px;
-}
-.anim-run .phase:nth-child(1){animation:left .5s .3s ease backwards;}
-.anim-run .phase:nth-child(2){animation:left .5s .42s ease backwards;}
-.anim-run .phase:nth-child(3){animation:left .5s .54s ease backwards;}
-.anim-run .phase:nth-child(4){animation:left .5s .66s ease backwards;}
-.anim-run .phase:nth-child(5){animation:left .5s .78s ease backwards;}
-.anim-run .phase:nth-child(6){animation:left .5s .90s ease backwards;}
-
-.phase-spine{
-  display:flex;flex-direction:column;align-items:center;gap:0;
-  flex-shrink:0;
-}
-.phase-dot{
-  width:36px;height:36px;border-radius:50%;flex-shrink:0;
-  border:2px solid rgba(200,169,74,.3);background:var(--deep);
-  display:flex;align-items:center;justify-content:center;
-  font-size:.8rem;color:var(--gold);
-  transition:all .3s ease;
-}
-.phase:hover .phase-dot{background:var(--gold);color:var(--ink);border-color:var(--gold);}
-.phase-dot.active{background:var(--gold);color:var(--ink);border-color:var(--gold);animation:pulse 2.5s ease-in-out infinite;}
-.phase-line{flex:1;width:1px;background:rgba(200,169,74,.18);margin:4px 0;}
-
-.phase-body{padding:6px 0 18px;}
-.phase-body h4{font-family:'Inter',sans-serif;font-size:.85rem;font-weight:800;color:var(--white);margin-bottom:3px;}
-.phase-body p{font-size:.73rem;color:var(--muted);line-height:1.5;}
-
-/* Impact side */
+/* ━━━ SLIDE 5 ━━━ */
+#s5{background:var(--ink);}
+.s5-h{font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:var(--white);max-width:600px;}
+.s5-body{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;margin-top:28px;width:100%;}
+.phase{display:flex;align-items:stretch;gap:16px;}
+.ph-spine{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.ph-dot{width:36px;height:36px;border-radius:50%;flex-shrink:0;border:2px solid rgba(200,169,74,.3);background:var(--deep);display:flex;align-items:center;justify-content:center;font-size:.8rem;color:var(--gold);}
+.ph-dot.act{background:var(--gold);color:var(--ink);border-color:var(--gold);animation:pulse 2.5s ease-in-out infinite;}
+.ph-line{flex:1;width:1px;background:rgba(200,169,74,.18);margin:4px 0;}
+.ph-body{padding:5px 0 18px;}
+.ph-body h4{font-size:.85rem;font-weight:800;color:var(--white);margin-bottom:3px;}
+.ph-body p{font-size:.73rem;color:var(--muted);line-height:1.5;}
 .impact-cards{display:flex;flex-direction:column;gap:10px;}
+.icard{border-radius:8px;padding:15px 17px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:14px;}
+.icard-ico{width:40px;height:40px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.95rem;}
+.icard h4{font-size:.82rem;font-weight:700;color:var(--white);margin-bottom:2px;}
+.icard p{font-size:.7rem;color:var(--muted);line-height:1.45;}
+.icard-ico.bl{background:rgba(66,133,244,.12);color:var(--blue);}
+.icard-ico.go{background:rgba(200,169,74,.12);color:var(--gold);}
+.icard-ico.te{background:rgba(14,165,160,.12);color:var(--teal);}
+.icard-ico.pu{background:rgba(139,92,246,.12);color:var(--purple);}
 
-.icard{
-  border-radius:8px;padding:16px 18px;
-  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
-  display:flex;align-items:center;gap:14px;
-  transition:all .3s ease;cursor:default;
-}
-.icard:hover{background:rgba(200,169,74,.06);border-color:rgba(200,169,74,.22);transform:translateX(4px);}
+/* ━━━ SLIDE 6 ━━━ */
+#s6{background:var(--deep);}
+.s6-h{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;color:var(--white);max-width:680px;}
+.s6-body{display:grid;grid-template-columns:1.1fr 1fr;gap:36px;align-items:start;margin-top:24px;width:100%;}
+.chat-mock{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.1);background:var(--mid);}
+.chat-top{background:var(--slate);padding:11px 15px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.07);}
+.ct-dot{width:8px;height:8px;border-radius:50%;background:var(--green);}
+.ct-title{font-size:.75rem;font-weight:700;color:var(--white);}
+.ct-badge{margin-left:auto;font-size:.55rem;font-weight:700;background:var(--gold);color:var(--ink);padding:2px 7px;border-radius:10px;}
+.chat-body{padding:12px;display:flex;flex-direction:column;gap:9px;}
+.ctkt{background:rgba(255,255,255,.04);border-radius:8px;padding:11px 13px;border-left:3px solid;}
+.ctkt.t1{border-color:var(--red);}
+.ctkt.t2{border-color:var(--gold);}
+.ctkt.t3{border-color:var(--teal);}
+.cth{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.cid{font-size:.6rem;font-weight:700;color:var(--muted);letter-spacing:.08em;}
+.cst{font-size:.55rem;font-weight:700;padding:2px 8px;border-radius:10px;text-transform:uppercase;}
+.cst.op{background:rgba(239,68,68,.15);color:#FCA5A5;}
+.cst.pr{background:rgba(200,169,74,.15);color:var(--gold-l);}
+.cst.dn{background:rgba(34,197,94,.15);color:#86EFAC;}
+.ctt{font-size:.76rem;font-weight:600;color:var(--white);margin-bottom:3px;}
+.ctm{font-size:.62rem;color:var(--muted);}
+.chat-inp{margin:0 12px 11px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:8px 12px;font-size:.7rem;color:var(--muted);display:flex;justify-content:space-between;align-items:center;}
+.chat-inp i{color:var(--gold);}
+.benefits{display:flex;flex-direction:column;gap:9px;}
+.bi{display:flex;align-items:flex-start;gap:11px;}
+.bi-ico{width:34px;height:34px;flex-shrink:0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.85rem;background:rgba(200,169,74,.1);color:var(--gold);}
+.bi h4{font-size:.82rem;font-weight:700;color:var(--white);}
+.bi p{font-size:.7rem;color:var(--muted);line-height:1.45;margin-top:2px;}
+.cat-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:16px;}
+.cp{font-size:.62rem;font-weight:600;padding:4px 12px;border-radius:20px;border:1px solid;letter-spacing:.04em;}
+.cp.bug{border-color:var(--red);color:#FCA5A5;background:rgba(239,68,68,.08);}
+.cp.dat{border-color:var(--blue);color:#93C5FD;background:rgba(66,133,244,.08);}
+.cp.enh{border-color:var(--gold);color:var(--gold-l);background:rgba(200,169,74,.08);}
+.cp.sup{border-color:var(--teal);color:#5EEAD4;background:rgba(14,165,160,.08);}
+.cp.unp{border-color:var(--purple);color:#C4B5FD;background:rgba(139,92,246,.08);}
 
-.anim-run .icard:nth-child(1){animation:right .5s .35s ease backwards;}
-.anim-run .icard:nth-child(2){animation:right .5s .48s ease backwards;}
-.anim-run .icard:nth-child(3){animation:right .5s .61s ease backwards;}
-.anim-run .icard:nth-child(4){animation:right .5s .74s ease backwards;}
-
-.icard-icon{
-  width:40px;height:40px;border-radius:9px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:.95rem;
-}
-.icard-icon.blue  {background:rgba(66,133,244,.12);color:var(--blue);}
-.icard-icon.gold  {background:rgba(200,169,74,.12);color:var(--gold);}
-.icard-icon.teal  {background:rgba(14,165,160,.12);color:var(--teal);}
-.icard-icon.purple{background:rgba(139,92,246,.12);color:var(--purple);}
-
-.icard-text h4{font-family:'Inter',sans-serif;font-size:.82rem;font-weight:700;color:var(--white);margin-bottom:2px;}
-.icard-text p{font-size:.7rem;color:var(--muted);line-height:1.45;}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ══ SLIDE 6 — PVI CHAT ══
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.s6{background:var(--deep);}
-.s6-wrap{width:100%;max-width:1140px;}
-.s6-h{font-size:2.6rem;font-weight:800;color:var(--white);max-width:700px;}
-.anim-run .s6-h{animation:up .6s .1s ease backwards;}
-
-.s6-body{
-  display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:start;
-  margin-top:28px;width:100%;
-}
-
-/* Chat UI mockup */
-.chat-mock{
-  border-radius:12px;overflow:hidden;
-  border:1px solid rgba(255,255,255,.1);background:var(--mid);
-  
-}
-.anim-run .chat-mock{animation:left .6s .25s ease backwards;}
-
-.chat-topbar{
-  background:var(--slate);padding:12px 16px;
-  display:flex;align-items:center;gap:10px;
-  border-bottom:1px solid rgba(255,255,255,.07);
-}
-.chat-topbar .ct-dot{width:8px;height:8px;border-radius:50%;background:var(--green);}
-.chat-topbar .ct-title{font-size:.75rem;font-weight:700;color:var(--white);}
-.chat-topbar .ct-badge{
-  margin-left:auto;font-size:.55rem;font-weight:700;
-  background:var(--gold);color:var(--ink);padding:2px 7px;border-radius:10px;
-}
-
-.chat-body{padding:14px;display:flex;flex-direction:column;gap:10px;}
-
-.chat-ticket{
-  background:rgba(255,255,255,.04);border-radius:8px;padding:12px 14px;
-  border-left:3px solid;
-}
-.chat-ticket.t1{border-color:var(--red);}
-.chat-ticket.t2{border-color:var(--gold);}
-.chat-ticket.t3{border-color:var(--teal);}
-
-.ct-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-.ct-id{font-size:.6rem;font-weight:700;color:var(--muted);letter-spacing:.08em;}
-.ct-status{
-  font-size:.55rem;font-weight:700;padding:2px 8px;border-radius:10px;
-  text-transform:uppercase;letter-spacing:.06em;
-}
-.ct-status.open   {background:rgba(239,68,68,.15);color:#FCA5A5;}
-.ct-status.progress{background:rgba(200,169,74,.15);color:var(--gold-l);}
-.ct-status.done   {background:rgba(34,197,94,.15);color:#86EFAC;}
-
-.ct-title-text{font-size:.77rem;font-weight:600;color:var(--white);margin-bottom:4px;}
-.ct-meta{font-size:.62rem;color:var(--muted);}
-
-.chat-input{
-  margin:0 14px 12px;background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);border-radius:6px;
-  padding:9px 12px;font-size:.7rem;color:var(--muted);
-  display:flex;justify-content:space-between;align-items:center;
-}
-.chat-input i{color:var(--gold);}
-
-/* Benefits list */
-.benefits{display:flex;flex-direction:column;gap:10px;}
-
-.bitem{
-  display:flex;align-items:flex-start;gap:12px;
-}
-.anim-run .bitem:nth-child(1){animation:right .45s .3s ease backwards;}
-.anim-run .bitem:nth-child(2){animation:right .45s .42s ease backwards;}
-.anim-run .bitem:nth-child(3){animation:right .45s .54s ease backwards;}
-.anim-run .bitem:nth-child(4){animation:right .45s .66s ease backwards;}
-.anim-run .bitem:nth-child(5){animation:right .45s .78s ease backwards;}
-.anim-run .bitem:nth-child(6){animation:right .45s .90s ease backwards;}
-
-.bitem-icon{
-  width:34px;height:34px;flex-shrink:0;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;font-size:.85rem;
-  background:rgba(200,169,74,.1);color:var(--gold);
-}
-.bitem-text h4{font-family:'Inter',sans-serif;font-size:.82rem;font-weight:700;color:var(--white);}
-.bitem-text p{font-size:.7rem;color:var(--muted);line-height:1.45;margin-top:2px;}
-
-/* Category pills */
-.cat-row{
-  display:flex;gap:7px;flex-wrap:wrap;margin-top:18px;
-}
-.anim-run .cat-row{animation:up .5s .95s ease backwards;}
-.cat-p{
-  font-size:.62rem;font-weight:600;padding:4px 12px;border-radius:20px;
-  border:1px solid;letter-spacing:.04em;transition:transform .2s ease;cursor:default;
-}
-.cat-p:hover{transform:scale(1.05);}
-.cat-p.bug   {border-color:var(--red);   color:#FCA5A5;background:rgba(239,68,68,.08);}
-.cat-p.data  {border-color:var(--blue);  color:#93C5FD;background:rgba(66,133,244,.08);}
-.cat-p.enh   {border-color:var(--gold);  color:var(--gold-l);background:rgba(200,169,74,.08);}
-.cat-p.supp  {border-color:var(--teal);  color:#5EEAD4;background:rgba(14,165,160,.08);}
-.cat-p.unpost{border-color:var(--purple);color:#C4B5FD;background:rgba(139,92,246,.08);}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ══ SLIDE 7 — INFRA ══
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.s7{background:var(--ink);}
-.s7-wrap{width:100%;max-width:1140px;}
-.s7-h{font-size:2.6rem;font-weight:800;color:var(--white);max-width:640px;}
-.anim-run .s7-h{animation:up .6s .1s ease backwards;}
-
-.infra-body{
-  display:grid;grid-template-columns:1fr 1.2fr;gap:48px;
-  align-items:center;margin-top:32px;width:100%;
-}
-
-/* Server visual */
-.server-vis{
-  display:flex;flex-direction:column;gap:10px;
-}
-.anim-run .server-vis{animation:left .6s .25s ease backwards;}
-
-.sv-label{font-size:.62rem;font-weight:700;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:4px;}
-
-.sv-bar{
-  border-radius:7px;background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.07);padding:12px 14px;
-  display:flex;align-items:center;gap:12px;
-  transition:all .3s ease;
-}
-.sv-bar:hover{background:rgba(200,169,74,.06);border-color:rgba(200,169,74,.2);}
-.sv-bar .sb-icon{
-  width:36px;height:36px;border-radius:8px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:.9rem;
-}
-.sv-bar .sb-info{flex:1;}
-.sv-bar .sb-info h5{font-family:'Inter',sans-serif;font-size:.78rem;font-weight:700;color:var(--white);margin-bottom:4px;}
-.sb-progress{height:4px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden;}
-.sb-progress .fill{height:100%;border-radius:2px;transform-origin:left;}
-.anim-run .sb-progress .fill{animation:growX .8s ease backwards;}
-
+/* ━━━ SLIDE 7 ━━━ */
+#s7{background:var(--ink);}
+.s7-h{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;color:var(--white);max-width:640px;}
+.s7-body{display:grid;grid-template-columns:1fr 1.2fr;gap:48px;align-items:center;margin-top:28px;width:100%;}
+.sv-lbl{font-size:.6rem;font-weight:700;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;}
+.sv-bar{border-radius:7px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);padding:11px 13px;display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.sb-ico{width:36px;height:36px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.9rem;}
+.sb-info{flex:1;}
+.sb-info h5{font-size:.78rem;font-weight:700;color:var(--white);margin-bottom:5px;}
+.sb-prog{height:4px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden;}
+.sb-fill{height:100%;border-radius:2px;}
+.slide.active .sb-fill{animation:growX .8s ease both;}
 .sb-val{font-size:.62rem;color:var(--muted);margin-left:auto;font-weight:600;flex-shrink:0;}
-
-/* Uptime ring */
-.uptime-wrap{display:flex;align-items:center;gap:16px;margin-top:14px;}
-.uptime-ring{position:relative;width:80px;height:80px;flex-shrink:0;}
-.uptime-ring svg{transform:rotate(-90deg);}
-.uptime-ring circle{fill:none;stroke-width:6;}
-.uptime-ring .bg {stroke:rgba(255,255,255,.06);}
-.uptime-ring .fg {stroke:var(--green);stroke-dasharray:220;stroke-linecap:round;}
-.anim-run .uptime-ring .fg{animation:tick 1s .5s ease backwards;stroke-dashoffset:0;}
-.uptime-ring .pct{
-  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  font-size:.75rem;font-weight:800;color:var(--white);
-}
-.uptime-text h4{font-family:'Inter',sans-serif;font-size:.85rem;font-weight:700;color:var(--white);}
-.uptime-text p{font-size:.7rem;color:var(--muted);margin-top:3px;}
-
-/* Tasks */
-.infra-tasks{display:flex;flex-direction:column;gap:8px;}
-
-.itask{
-  display:flex;align-items:center;gap:12px;
-  border-radius:7px;padding:12px 14px;
-  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
-  transition:all .3s ease;cursor:default;
-}
-.itask:hover{background:rgba(200,169,74,.06);border-color:rgba(200,169,74,.2);}
-
-.anim-run .itask:nth-child(1){animation:right .45s .3s ease backwards;}
-.anim-run .itask:nth-child(2){animation:right .45s .42s ease backwards;}
-.anim-run .itask:nth-child(3){animation:right .45s .54s ease backwards;}
-.anim-run .itask:nth-child(4){animation:right .45s .66s ease backwards;}
-.anim-run .itask:nth-child(5){animation:right .45s .78s ease backwards;}
-
-.itask .it-icon{
-  width:36px;height:36px;border-radius:8px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:.85rem;
-}
-.itask .it-text h4{font-family:'Inter',sans-serif;font-size:.8rem;font-weight:700;color:var(--white);margin-bottom:1px;}
-.itask .it-text p{font-size:.68rem;color:var(--muted);}
-.itask .it-badge{
-  margin-left:auto;font-size:.55rem;font-weight:700;padding:3px 8px;border-radius:10px;
-  flex-shrink:0;
-}
+.upt{display:flex;align-items:center;gap:16px;margin-top:16px;}
+.upt-ring{position:relative;width:80px;height:80px;flex-shrink:0;}
+.upt-ring svg{transform:rotate(-90deg);}
+.upt-ring circle{fill:none;stroke-width:6;}
+.upt-ring .bg{stroke:rgba(255,255,255,.06);}
+.upt-ring .fg{stroke:var(--green);stroke-dasharray:201;stroke-linecap:round;stroke-dashoffset:4;}
+.upt-ring .pct{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.75rem;font-weight:800;color:var(--white);}
+.upt-txt h4{font-size:.85rem;font-weight:700;color:var(--white);}
+.upt-txt p{font-size:.7rem;color:var(--muted);margin-top:3px;}
+.itasks{display:flex;flex-direction:column;gap:8px;}
+.itask{display:flex;align-items:center;gap:12px;border-radius:7px;padding:11px 13px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);}
+.it-ico{width:36px;height:36px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.85rem;}
+.it-text h4{font-size:.8rem;font-weight:700;color:var(--white);margin-bottom:1px;}
+.it-text p{font-size:.68rem;color:var(--muted);}
+.it-badge{margin-left:auto;font-size:.55rem;font-weight:700;padding:3px 8px;border-radius:10px;flex-shrink:0;}
 .it-badge.ok{background:rgba(34,197,94,.12);color:#86EFAC;}
-.it-badge.active{background:rgba(200,169,74,.12);color:var(--gold-l);}
+.it-badge.ac{background:rgba(200,169,74,.12);color:var(--gold-l);}
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ══ SLIDE 8 — TECH UPGRADE ══
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.s8{background:var(--deep);}
-.s8-wrap{width:100%;max-width:1140px;}
-.s8-h{font-size:2.6rem;font-weight:800;color:var(--white);max-width:680px;}
-.anim-run .s8-h{animation:up .6s .1s ease backwards;}
-
-.s8-sub{font-size:.9rem;color:var(--muted);margin-top:10px;max-width:560px;line-height:1.65;}
-.anim-run .s8-sub{animation:up .5s .25s ease backwards;}
-
-.s8-body{
-  display:grid;grid-template-columns:1.2fr 1fr;gap:44px;
-  align-items:start;margin-top:30px;width:100%;
-}
-
-/* Upgrade timeline */
-.upgrade-timeline{display:flex;flex-direction:column;gap:0;position:relative;}
-.anim-run .upgrade-timeline{animation:left .6s .3s ease backwards;}
-
-.ut-item{
-  display:flex;align-items:stretch;gap:16px;
-  transition:all .3s ease;
-}
+/* ━━━ SLIDE 8 ━━━ */
+#s8{background:var(--deep);}
+.s8-h{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;color:var(--white);max-width:680px;}
+.s8-sub{font-size:.9rem;color:var(--muted);margin-top:10px;max-width:540px;line-height:1.65;}
+.s8-body{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:start;margin-top:24px;width:100%;}
+.ut-item{display:flex;align-items:stretch;gap:16px;}
 .ut-spine{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
-.ut-dot{
-  width:38px;height:38px;border-radius:50%;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:.9rem;
-  border:2px solid;transition:all .3s ease;
-}
-.ut-item:hover .ut-dot{transform:scale(1.1);}
-.ut-dot.done   {border-color:var(--green);background:rgba(34,197,94,.1);color:var(--green);}
-.ut-dot.ongoing{border-color:var(--gold);background:rgba(200,169,74,.1);color:var(--gold);animation:pulse 2.5s ease-in-out infinite;}
-.ut-dot.next   {border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.03);color:var(--muted);}
-.ut-vline{flex:1;width:1px;background:rgba(255,255,255,.08);margin:3px 0;}
-
-.ut-body{padding:6px 0 20px;}
-.ut-status{
-  font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  padding:2px 8px;border-radius:10px;margin-bottom:6px;display:inline-block;
-}
-.ut-status.done   {background:rgba(34,197,94,.12);color:#86EFAC;}
-.ut-status.ongoing{background:rgba(200,169,74,.12);color:var(--gold-l);}
-.ut-status.next   {background:rgba(255,255,255,.06);color:var(--muted);}
-.ut-body h4{font-family:'Inter',sans-serif;font-size:.85rem;font-weight:800;color:var(--white);margin-bottom:3px;}
+.ut-dot{width:38px;height:38px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.9rem;border:2px solid;}
+.ut-dot.done{border-color:var(--green);background:rgba(34,197,94,.1);color:var(--green);}
+.ut-dot.ong{border-color:var(--gold);background:rgba(200,169,74,.1);color:var(--gold);animation:pulse 2.5s ease-in-out infinite;}
+.ut-dot.nxt{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.03);color:var(--muted);}
+.ut-vl{flex:1;width:1px;background:rgba(255,255,255,.08);margin:3px 0;}
+.ut-body{padding:5px 0 18px;}
+.ut-st{font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:10px;margin-bottom:6px;display:inline-block;}
+.ut-st.done{background:rgba(34,197,94,.12);color:#86EFAC;}
+.ut-st.ong{background:rgba(200,169,74,.12);color:var(--gold-l);}
+.ut-st.nxt{background:rgba(255,255,255,.06);color:var(--muted);}
+.ut-body h4{font-size:.85rem;font-weight:800;color:var(--white);margin-bottom:3px;}
 .ut-body p{font-size:.72rem;color:var(--muted);line-height:1.5;}
+.wcards{display:flex;flex-direction:column;gap:9px;}
+.wcard{border-radius:8px;padding:13px 15px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:12px;}
+.wc-ico{width:38px;height:38px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.9rem;}
+.wc-txt h4{font-size:.82rem;font-weight:700;color:var(--white);}
+.wc-txt p{font-size:.7rem;color:var(--muted);margin-top:2px;}
 
-/* Why upgrade cards */
-.why-cards{display:flex;flex-direction:column;gap:10px;}
-.wcard{
-  border-radius:8px;padding:14px 16px;
-  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
-  display:flex;align-items:center;gap:12px;
-  transition:all .3s ease;cursor:default;
-}
-.wcard:hover{background:rgba(200,169,74,.06);border-color:rgba(200,169,74,.22);transform:translateX(4px);}
-.anim-run .wcard:nth-child(1){animation:right .45s .35s ease backwards;}
-.anim-run .wcard:nth-child(2){animation:right .45s .48s ease backwards;}
-.anim-run .wcard:nth-child(3){animation:right .45s .61s ease backwards;}
-.anim-run .wcard:nth-child(4){animation:right .45s .74s ease backwards;}
-.wcard .wc-icon{
-  width:38px;height:38px;border-radius:8px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:.9rem;
-}
-.wcard .wc-text h4{font-family:'Inter',sans-serif;font-size:.82rem;font-weight:700;color:var(--white);}
-.wcard .wc-text p{font-size:.7rem;color:var(--muted);margin-top:2px;}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ══ SLIDE 9 — BAKRIE TOWER ══
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.s9{background:var(--ink);overflow:hidden;}
-
-/* Building silhouette bg */
-.s9-silhouette{
-  position:absolute;right:0;bottom:0;
-  width:380px;height:100%;
-  display:flex;align-items:flex-end;justify-content:center;
-  gap:8px;padding-bottom:0;
-  
-}
-.anim-run .s9-silhouette{animation:fade .8s .2s ease backwards;}
-.sil-b{
-  border-radius:3px 3px 0 0;
-  background:rgba(255,255,255,.02);
-  border:1px solid rgba(255,255,255,.04);
-  border-bottom:none;
-}
-.sil-b.main{
-  width:100px;height:80%;
-  background:rgba(200,169,74,.04);
-  border-color:rgba(200,169,74,.08);
-}
-.sil-b.l1{width:70px;height:55%;}
-.sil-b.l2{width:55px;height:42%;}
-.sil-b.r1{width:65px;height:48%;}
-
-.s9-wrap{width:60%;max-width:700px;position:relative;z-index:2;}
-.s9-h{font-size:2.8rem;font-weight:800;color:var(--white);}
-.anim-run .s9-h{animation:up .6s .1s ease backwards;}
+/* ━━━ SLIDE 9 ━━━ */
+#s9{background:var(--ink);overflow:hidden;}
+.sil{position:absolute;right:0;bottom:0;display:flex;align-items:flex-end;gap:8px;padding:0 40px;height:100%;pointer-events:none;}
+.sil-b{border-radius:3px 3px 0 0;border:1px solid rgba(255,255,255,.04);border-bottom:none;}
+.sil-b.mn{width:100px;height:78%;background:rgba(200,169,74,.04);border-color:rgba(200,169,74,.08);}
+.sil-b.l1{width:70px;height:55%;background:rgba(255,255,255,.02);}
+.sil-b.l2{width:55px;height:42%;background:rgba(255,255,255,.015);}
+.sil-b.r1{width:65px;height:48%;background:rgba(255,255,255,.02);}
+.s9-wrap{width:58%;max-width:680px;position:relative;z-index:2;}
+.s9-h{font-family:'Syne',sans-serif;font-size:2.6rem;font-weight:800;color:var(--white);}
 .s9-h em{color:var(--gold);font-style:normal;}
-
-.s9-sub{font-size:.9rem;color:var(--muted);margin-top:12px;max-width:480px;line-height:1.65;}
-.anim-run .s9-sub{animation:up .5s .28s ease backwards;}
-
-.s9-cl{display:flex;flex-direction:column;gap:7px;margin-top:26px;}
-.s9-cli{
-  display:flex;align-items:center;gap:12px;
-  font-size:.8rem;color:rgba(255,255,255,.78);
-  padding:9px 14px;border-radius:5px;
-  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
-  transition:all .3s ease;cursor:default;
-}
-.s9-cli:hover{background:rgba(200,169,74,.07);border-color:rgba(200,169,74,.2);}
-.s9-cli i{color:var(--gold);font-size:.78rem;flex-shrink:0;}
-
-.anim-run .s9-cli:nth-child(1){animation:left .4s .38s ease backwards;}
-.anim-run .s9-cli:nth-child(2){animation:left .4s .46s ease backwards;}
-.anim-run .s9-cli:nth-child(3){animation:left .4s .54s ease backwards;}
-.anim-run .s9-cli:nth-child(4){animation:left .4s .62s ease backwards;}
-.anim-run .s9-cli:nth-child(5){animation:left .4s .70s ease backwards;}
-.anim-run .s9-cli:nth-child(6){animation:left .4s .78s ease backwards;}
-.anim-run .s9-cli:nth-child(7){animation:left .4s .86s ease backwards;}
-.anim-run .s9-cli:nth-child(8){animation:left .4s .94s ease backwards;}
-.anim-run .s9-cli:nth-child(9){animation:left .4s 1.02s ease backwards;}
-
-/* Milestone badge floating right */
-.s9-badge{
-  position:absolute;right:30%;top:50%;transform:translateY(-50%);
-  z-index:3;display:flex;flex-direction:column;align-items:center;gap:16px;
-  
-}
-.anim-run .s9-badge{animation:scl .7s .5s ease backwards;}
-.s9-circle{
-  width:170px;height:170px;border-radius:50%;
-  border:2px solid var(--gold);
-  background:rgba(200,169,74,.06);
-  box-shadow:0 0 0 14px rgba(200,169,74,.05),0 0 50px rgba(200,169,74,.12);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:20px;
-  animation:pulse 3s ease-in-out infinite;
-}
+.s9-sub{font-size:.9rem;color:var(--muted);margin-top:10px;max-width:460px;line-height:1.65;}
+.cl{display:flex;flex-direction:column;gap:7px;margin-top:22px;}
+.cli{display:flex;align-items:center;gap:11px;font-size:.8rem;color:rgba(255,255,255,.78);padding:9px 13px;border-radius:5px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);}
+.cli i{color:var(--gold);font-size:.78rem;flex-shrink:0;}
+.s9-badge{position:absolute;right:28%;top:50%;transform:translateY(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:16px;}
+.s9-circle{width:170px;height:170px;border-radius:50%;border:2px solid var(--gold);background:rgba(200,169,74,.06);box-shadow:0 0 0 14px rgba(200,169,74,.05),0 0 50px rgba(200,169,74,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;animation:pulse 3s ease-in-out infinite;}
 .s9-circle i{font-size:2rem;color:var(--gold);margin-bottom:8px;}
 .s9-circle .sc-l{font-size:.54rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);opacity:.75;margin-bottom:4px;}
 .s9-circle .sc-t{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--white);line-height:1.2;}
+.s9-q{font-size:.72rem;color:var(--gold-l);font-style:italic;text-align:center;max-width:200px;line-height:1.6;opacity:.88;}
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ══ SLIDE 10 — CLOSING ══
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.s10{background:var(--ink);position:relative;overflow:hidden;}
-
-/* Animated bg */
-.s10-glow1{
-  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  width:900px;height:900px;border-radius:50%;
-  background:radial-gradient(circle,rgba(200,169,74,.06) 0%,transparent 60%);
-  animation:glow 5s ease-in-out infinite;pointer-events:none;
-}
-.s10-ring{
-  position:absolute;border-radius:50%;border:1px solid rgba(200,169,74,.05);
-  pointer-events:none;
-}
+/* ━━━ SLIDE 10 ━━━ */
+#s10{background:var(--ink);}
+.s10-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:900px;height:900px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(200,169,74,.07) 0%,transparent 60%);animation:glow 5s ease-in-out infinite;}
+.s10-r1,.s10-r2{position:absolute;border-radius:50%;border:1px solid rgba(200,169,74,.05);pointer-events:none;}
 .s10-r1{width:500px;height:500px;top:50%;left:50%;margin:-250px 0 0 -250px;animation:spin 28s linear infinite;}
 .s10-r2{width:720px;height:720px;top:50%;left:50%;margin:-360px 0 0 -360px;animation:spin 40s linear infinite reverse;}
-
-.s10-content{
-  position:relative;z-index:2;
-  width:100%;max-width:1000px;
-  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
-}
-
-.s10-left{}
-.s10-hl{
-  font-size:3.8rem;font-weight:800;color:var(--white);
-  line-height:1.05;margin-bottom:20px;
-}
+.s10-content{position:relative;z-index:2;width:100%;max-width:1020px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.s10-hl{font-family:'Syne',sans-serif;font-size:3.6rem;font-weight:800;color:var(--white);line-height:1.05;margin-bottom:18px;}
 .s10-hl em{color:var(--gold);font-style:normal;}
-.anim-run .s10-hl{animation:up .7s .1s ease backwards;}
-
-.s10-msg{
-  font-size:.9rem;color:var(--muted);line-height:1.75;
-  max-width:440px;margin-bottom:32px;
-}
-.anim-run .s10-msg{animation:up .6s .3s ease backwards;}
-
-.s10-pillars{display:flex;flex-direction:column;gap:8px;}
-.s10-pill{
-  display:flex;align-items:center;gap:12px;
-  border-left:2px solid var(--gold);padding-left:14px;
-  
-}
-.anim-run .s10-pill:nth-child(1){animation:left .4s .48s ease backwards;}
-.anim-run .s10-pill:nth-child(2){animation:left .4s .58s ease backwards;}
-.anim-run .s10-pill:nth-child(3){animation:left .4s .68s ease backwards;}
-.anim-run .s10-pill:nth-child(4){animation:left .4s .78s ease backwards;}
+.s10-msg{font-size:.9rem;color:var(--muted);line-height:1.75;max-width:440px;margin-bottom:28px;}
+.s10-pills{display:flex;flex-direction:column;gap:8px;}
+.s10-pill{display:flex;align-items:center;gap:12px;border-left:2px solid var(--gold);padding-left:14px;}
 .s10-pill i{color:var(--gold);font-size:.85rem;width:18px;text-align:center;}
 .s10-pill span{font-size:.85rem;font-weight:700;color:var(--white);}
-
-/* Right stats */
-.s10-right{display:flex;flex-direction:column;gap:14px;}
-
-.s10-stat{
-  border-radius:10px;padding:20px 22px;
-  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
-  display:flex;align-items:center;gap:18px;
-  transition:all .35s ease;cursor:default;
-}
-.s10-stat:hover{background:rgba(200,169,74,.07);border-color:rgba(200,169,74,.25);transform:translateX(6px);}
-.anim-run .s10-stat:nth-child(1){animation:right .5s .4s ease backwards;}
-.anim-run .s10-stat:nth-child(2){animation:right .5s .53s ease backwards;}
-.anim-run .s10-stat:nth-child(3){animation:right .5s .66s ease backwards;}
-.anim-run .s10-stat:nth-child(4){animation:right .5s .79s ease backwards;}
-
-.s10-stat-num{
-  font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;
-  color:var(--gold);line-height:1;flex-shrink:0;min-width:72px;
-}
-.s10-stat-text h4{font-family:'Inter',sans-serif;font-size:.82rem;font-weight:700;color:var(--white);margin-bottom:2px;}
-.s10-stat-text p{font-size:.7rem;color:var(--muted);}
-
-.s10-footer{
-  position:absolute;bottom:24px;left:72px;right:72px;
-  display:flex;justify-content:space-between;align-items:center;
-  border-top:1px solid rgba(255,255,255,.07);padding-top:16px;
-  z-index:2;
-}
-.anim-run .s10-footer{animation:fade .6s 1s ease backwards;}
-.s10-footer-left{font-size:.65rem;color:rgba(255,255,255,.3);letter-spacing:.14em;text-transform:uppercase;}
-.s10-footer-right{font-size:.65rem;color:var(--gold);letter-spacing:.08em;opacity:.65;}
+.s10-stats{display:flex;flex-direction:column;gap:12px;}
+.s10-stat{border-radius:10px;padding:18px 20px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:18px;}
+.s10-num{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;color:var(--gold);line-height:1;flex-shrink:0;min-width:70px;}
+.s10-txt h4{font-size:.82rem;font-weight:700;color:var(--white);margin-bottom:2px;}
+.s10-txt p{font-size:.7rem;color:var(--muted);}
+.s10-footer{position:absolute;bottom:20px;left:72px;right:72px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.07);padding-top:14px;z-index:2;}
+.s10-fl{font-size:.62rem;color:rgba(255,255,255,.28);letter-spacing:.14em;text-transform:uppercase;}
+.s10-fr{font-size:.62rem;color:var(--gold);letter-spacing:.08em;opacity:.6;}
 </style>
 </head>
 <body>
-<div class="reveal">
-<div class="slides">
+<div id="deck">
 
-<!-- ══════════════════════════
-  SLIDE 1 — OPENING
-══════════════════════════ -->
-<section class="s1" data-background-color="#07111F">
-  <div class="s1-noise"></div>
-  <div class="s1-split"></div>
+<!-- SLIDE 1 — OPENING -->
+<div class="slide" id="s1">
   <div class="s1-grid"></div>
-  <div class="s1-radial"></div>
-
+  <div class="s1-split"></div>
+  <div class="s1-glow"></div>
   <div class="s1-wrap">
-    <div class="s1-company">Provices Group · IT Division</div>
-    <h1 class="s1-h">
-      I Build the System<br>
-      That Runs <em>Property<br>Operations.</em>
-    </h1>
-    <div class="s1-rule au d3"></div>
-    <p class="s1-desc">
-      Dari pengembangan sistem, implementasi di lapangan,<br>
-      hingga maintenance dan inovasi berkelanjutan —<br>
-      semuanya ada di bawah kendali satu peran.
-    </p>
-    <div class="s1-tags">
+    <div class="s1-co a-lft d1">Provices Group · IT Division</div>
+    <h1 class="s1-h a-up d2">I Build the System<br>That Runs <em>Property<br>Operations.</em></h1>
+    <div class="s1-rule a-gx d45"></div>
+    <p class="s1-desc a-up d5">Dari pengembangan sistem, implementasi di lapangan,<br>hingga maintenance dan inovasi berkelanjutan —<br>semuanya ada di bawah kendali satu peran.</p>
+    <div class="s1-tags a-up d7">
       <span class="s1-tag">Developer</span>
       <span class="s1-tag">Implementator</span>
       <span class="s1-tag">System Maintainer</span>
       <span class="s1-tag">Innovator</span>
     </div>
   </div>
+  <div class="s1-icon a-scl d3"><i class="fa-solid fa-server"></i></div>
+</div>
 
-  <div class="s1-right">
-    <div class="s1-icon-big">
-      <i class="fa-solid fa-server"></i>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════════
-  SLIDE 2 — THE SYSTEM
-══════════════════════════ -->
-<section class="s2" data-background-color="#0C1A2E">
-  <div class="s2-wrap">
-    <div class="eyebrow">Property Management System</div>
-    <h2 class="s2-h">Satu sistem terintegrasi — front office sampai back office.</h2>
-    <div class="bar-gold d2"></div>
+<!-- SLIDE 2 — THE SYSTEM -->
+<div class="slide" id="s2">
+  <div class="wrap">
+    <div class="eyebrow a-lft d1">Property Management System</div>
+    <h2 class="s2-h a-up d2">Satu sistem terintegrasi —<br>front office sampai back office.</h2>
+    <div class="bar a-gx d3"></div>
     <div class="s2-body">
-      <div>
-        <div class="s2-points">
-          <div class="s2-pt">
-            <div class="s2-pt-icon"><i class="fa-solid fa-puzzle-piece"></i></div>
-            <div class="s2-pt-text">
-              <h4>Terintegrasi End-to-End</h4>
-              <p>Satu platform yang menghubungkan seluruh proses operasional properti dari hulu ke hilir.</p>
-            </div>
-          </div>
-          <div class="s2-pt">
-            <div class="s2-pt-icon"><i class="fa-solid fa-users-gear"></i></div>
-            <div class="s2-pt-text">
-              <h4>Dibangun untuk Multi-Site</h4>
-              <p>Satu sistem, banyak unit — standar operasi yang konsisten di seluruh Provices Group.</p>
-            </div>
-          </div>
-          <div class="s2-pt">
-            <div class="s2-pt-icon"><i class="fa-solid fa-shield-halved"></i></div>
-            <div class="s2-pt-text">
-              <h4>Dikembangkan In-House</h4>
-              <p>Sistem dikembangkan, dikonfigurasi, dan dijaga sendiri — tidak bergantung vendor eksternal.</p>
-            </div>
-          </div>
-          <div class="s2-pt">
-            <div class="s2-pt-icon"><i class="fa-solid fa-chart-line"></i></div>
-            <div class="s2-pt-text">
-              <h4>Terus Berkembang</h4>
-              <p>Selalu diperbarui sesuai kebutuhan operasional unit dan perkembangan teknologi.</p>
-            </div>
-          </div>
+      <div class="s2-pts">
+        <div class="s2-pt a-lft d3">
+          <div class="s2-ico"><i class="fa-solid fa-puzzle-piece"></i></div>
+          <div><h4>Terintegrasi End-to-End</h4><p>Satu platform menghubungkan seluruh proses operasional properti dari hulu ke hilir.</p></div>
+        </div>
+        <div class="s2-pt a-lft d4">
+          <div class="s2-ico"><i class="fa-solid fa-users-gear"></i></div>
+          <div><h4>Dibangun untuk Multi-Site</h4><p>Satu sistem, banyak unit — standar operasi yang konsisten di seluruh Provices Group.</p></div>
+        </div>
+        <div class="s2-pt a-lft d5">
+          <div class="s2-ico"><i class="fa-solid fa-shield-halved"></i></div>
+          <div><h4>Dikembangkan In-House</h4><p>Sistem dikembangkan dan dijaga sendiri — tidak bergantung vendor eksternal.</p></div>
+        </div>
+        <div class="s2-pt a-lft d6">
+          <div class="s2-ico"><i class="fa-solid fa-chart-line"></i></div>
+          <div><h4>Terus Berkembang</h4><p>Selalu diperbarui sesuai kebutuhan operasional dan perkembangan teknologi.</p></div>
         </div>
       </div>
-
-      <!-- Architecture diagram -->
-      <div class="sys-arch">
-        <div class="sv-label">System Architecture</div>
+      <div class="arch a-rgt d3">
         <div class="arch-row">
-          <div class="arch-box highlight">
-            <div class="ab-dot"></div>
-            <div class="ab-label">Front Office</div>
-            <div class="ab-title">Tenant & Owner Management</div>
-          </div>
-          <div class="arch-box highlight">
-            <div class="ab-dot"></div>
-            <div class="ab-label">Operations</div>
-            <div class="ab-title">Utility & CS</div>
-          </div>
+          <div class="ab hl"><div class="dot"></div><div class="lbl">Front Office</div><div class="ttl">Tenant & Owner Mgmt</div></div>
+          <div class="ab hl"><div class="dot"></div><div class="lbl">Operations</div><div class="ttl">Utility & CS</div></div>
         </div>
-        <div class="arch-arrow"><i class="fa-solid fa-arrows-up-down" style="color:rgba(200,169,74,.4)"></i></div>
+        <div class="arch-arr"><i class="fa-solid fa-arrows-up-down"></i></div>
         <div class="arch-row">
-          <div class="arch-box" style="border-color:rgba(200,169,74,.2)">
-            <div class="ab-dot"></div>
-            <div class="ab-label">Finance</div>
-            <div class="ab-title">AR · AP · Cash & Bank</div>
-          </div>
-          <div class="arch-box" style="border-color:rgba(200,169,74,.2)">
-            <div class="ab-dot"></div>
-            <div class="ab-label">Accounting</div>
-            <div class="ab-title">General Ledger</div>
-          </div>
+          <div class="ab"><div class="dot"></div><div class="lbl">Finance</div><div class="ttl">AR · AP · Cash & Bank</div></div>
+          <div class="ab"><div class="dot"></div><div class="lbl">Accounting</div><div class="ttl">General Ledger</div></div>
         </div>
-        <div class="arch-arrow"><i class="fa-solid fa-arrows-up-down" style="color:rgba(200,169,74,.4)"></i></div>
+        <div class="arch-arr"><i class="fa-solid fa-arrows-up-down"></i></div>
         <div class="arch-row">
-          <div class="arch-box">
-            <div class="ab-dot"></div>
-            <div class="ab-label">Back Office</div>
-            <div class="ab-title">Inventory & Purchasing</div>
-          </div>
-          <div class="arch-box">
-            <div class="ab-dot"></div>
-            <div class="ab-label">Admin</div>
-            <div class="ab-title">User Management</div>
-          </div>
+          <div class="ab"><div class="dot"></div><div class="lbl">Back Office</div><div class="ttl">Inventory & Purchasing</div></div>
+          <div class="ab"><div class="dot"></div><div class="lbl">Admin</div><div class="ttl">User Management</div></div>
         </div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- ══════════════════════════
-  SLIDE 3 — MODULES
-══════════════════════════ -->
-<section class="s3" data-background-color="#07111F">
-  <div class="s3-wrap">
-    <div class="eyebrow">System Modules</div>
-    <h2 class="s3-h">11 modul. Satu ekosistem yang saling terhubung.</h2>
-    <div class="bar-gold d2"></div>
-    <div class="module-grid">
-
-      <!-- Front Office -->
-      <div class="mod fo">
-        <div class="mod-icon"><i class="fa-solid fa-user-tie"></i></div>
-        <div><div class="mod-name">Tenant Management</div><div class="mod-cat">Front Office</div></div>
-      </div>
-      <div class="mod fo">
-        <div class="mod-icon"><i class="fa-solid fa-building-user"></i></div>
-        <div><div class="mod-name">Owner Management</div><div class="mod-cat">Front Office</div></div>
-      </div>
-      <div class="mod fo">
-        <div class="mod-icon"><i class="fa-solid fa-bolt"></i></div>
-        <div><div class="mod-name">Utility Management</div><div class="mod-cat">Front Office</div></div>
-      </div>
-      <div class="mod fo">
-        <div class="mod-icon"><i class="fa-solid fa-headset"></i></div>
-        <div><div class="mod-name">User Management</div><div class="mod-cat">Admin</div></div>
-      </div>
-
-      <!-- Finance -->
-      <div class="mod fi">
-        <div class="mod-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
-        <div><div class="mod-name">AR Management</div><div class="mod-cat">Finance</div></div>
-      </div>
-      <div class="mod fi">
-        <div class="mod-icon"><i class="fa-solid fa-receipt"></i></div>
-        <div><div class="mod-name">AP Management</div><div class="mod-cat">Finance</div></div>
-      </div>
-      <div class="mod fi">
-        <div class="mod-icon"><i class="fa-solid fa-wallet"></i></div>
-        <div><div class="mod-name">Cash & Bank</div><div class="mod-cat">Finance</div></div>
-      </div>
-      <div class="mod fi">
-        <div class="mod-icon"><i class="fa-solid fa-book-open"></i></div>
-        <div><div class="mod-name">General Ledger</div><div class="mod-cat">Accounting</div></div>
-      </div>
-
-      <!-- Back Office -->
-      <div class="mod op">
-        <div class="mod-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
-        <div><div class="mod-name">Inventory</div><div class="mod-cat">Back Office</div></div>
-      </div>
-      <div class="mod op">
-        <div class="mod-icon"><i class="fa-solid fa-cart-shopping"></i></div>
-        <div><div class="mod-name">Purchasing</div><div class="mod-cat">Back Office</div></div>
-      </div>
-
-      <!-- Support -->
-      <div class="mod ad wide">
-        <div class="mod-icon"><i class="fa-solid fa-comments"></i></div>
-        <div><div class="mod-name">PVI Support Chat — Internal Ticketing System</div><div class="mod-cat">Support · Developed In-House</div></div>
-      </div>
-
+<!-- SLIDE 3 — MODULES -->
+<div class="slide" id="s3">
+  <div class="wrap">
+    <div class="eyebrow a-lft d1">System Modules</div>
+    <h2 class="s3-h a-up d2">11 modul. Satu ekosistem yang saling terhubung.</h2>
+    <div class="bar a-gx d3"></div>
+    <div class="mod-grid">
+      <div class="mod fo a-scl d2"><div class="m-ico"><i class="fa-solid fa-user-tie"></i></div><div><div class="m-name">Tenant Management</div><div class="m-cat">Front Office</div></div></div>
+      <div class="mod fo a-scl d25"><div class="m-ico"><i class="fa-solid fa-building-user"></i></div><div><div class="m-name">Owner Management</div><div class="m-cat">Front Office</div></div></div>
+      <div class="mod fo a-scl d3"><div class="m-ico"><i class="fa-solid fa-bolt"></i></div><div><div class="m-name">Utility Management</div><div class="m-cat">Front Office</div></div></div>
+      <div class="mod ad a-scl d35"><div class="m-ico"><i class="fa-solid fa-users-cog"></i></div><div><div class="m-name">User Management</div><div class="m-cat">Admin</div></div></div>
+      <div class="mod fi a-scl d4"><div class="m-ico"><i class="fa-solid fa-file-invoice-dollar"></i></div><div><div class="m-name">AR Management</div><div class="m-cat">Finance</div></div></div>
+      <div class="mod fi a-scl d45"><div class="m-ico"><i class="fa-solid fa-receipt"></i></div><div><div class="m-name">AP Management</div><div class="m-cat">Finance</div></div></div>
+      <div class="mod fi a-scl d5"><div class="m-ico"><i class="fa-solid fa-wallet"></i></div><div><div class="m-name">Cash & Bank</div><div class="m-cat">Finance</div></div></div>
+      <div class="mod fi a-scl d55"><div class="m-ico"><i class="fa-solid fa-book-open"></i></div><div><div class="m-name">General Ledger</div><div class="m-cat">Accounting</div></div></div>
+      <div class="mod op a-scl d6"><div class="m-ico"><i class="fa-solid fa-boxes-stacked"></i></div><div><div class="m-name">Inventory</div><div class="m-cat">Back Office</div></div></div>
+      <div class="mod op a-scl d65"><div class="m-ico"><i class="fa-solid fa-cart-shopping"></i></div><div><div class="m-name">Purchasing</div><div class="m-cat">Back Office</div></div></div>
+      <div class="mod ad wide a-scl d7"><div class="m-ico"><i class="fa-solid fa-comments"></i></div><div><div class="m-name">PVI Support Chat — Internal Ticketing System</div><div class="m-cat">Support · Developed In-House</div></div></div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- ══════════════════════════
-  SLIDE 4 — COVERAGE
-══════════════════════════ -->
-<section class="s4" data-background-color="#0C1A2E">
-  <div class="s4-wrap">
-    <div class="eyebrow">Implementation Coverage</div>
-    <h2 class="s4-h">13 unit sudah live. 1 sedang menunggu giliran.</h2>
-    <div class="bar-gold au d2"></div>
-    <div class="s4-stats">
-      <div class="s4-stat">
-        <span class="num">13</span>
-        <span class="lbl">Units Live</span>
-      </div>
-      <div class="s4-divv"></div>
-      <div class="s4-stat">
-        <span class="num">11</span>
-        <span class="lbl">Modules Deployed</span>
-      </div>
-      <div class="s4-divv"></div>
-      <div class="s4-stat">
-        <span class="num">1</span>
-        <span class="lbl">Next Target</span>
-      </div>
+<!-- SLIDE 4 — COVERAGE -->
+<div class="slide" id="s4">
+  <div class="wrap">
+    <div class="eyebrow a-lft d1">Implementation Coverage</div>
+    <h2 class="s4-h a-up d2">13 unit sudah live. 1 sedang menunggu giliran.</h2>
+    <div class="s4-stats a-up d3">
+      <div class="s4-stat"><div class="n">13</div><div class="l">Units Live</div></div>
+      <div class="s4-div"></div>
+      <div class="s4-stat"><div class="n">11</div><div class="l">Modules Deployed</div></div>
+      <div class="s4-div"></div>
+      <div class="s4-stat"><div class="n">1</div><div class="l">Next Target</div></div>
     </div>
-    <div class="site-grid">
+    <div class="site-grid a-up d4">
       <div class="site"><i class="fa-solid fa-building"></i><span class="sn">WB1</span><span class="ss">Wisma Barito</span></div>
       <div class="site"><i class="fa-solid fa-building"></i><span class="sn">WB2</span><span class="ss">Wisma Barito</span></div>
       <div class="site"><i class="fa-solid fa-building"></i><span class="sn">ROP</span><span class="ss">Rasuna</span></div>
@@ -1167,517 +435,261 @@ body,.reveal,.reveal .slide-background{background:#07111F!important;}
       <div class="site"><i class="fa-solid fa-star"></i><span class="sn">Empyreal</span><span class="ss">Empyreal</span></div>
       <div class="site"><i class="fa-solid fa-building-columns"></i><span class="sn">HO</span><span class="ss">Head Office</span></div>
     </div>
-    <div class="site-next-row">
-      <div class="site-next">
-        <i class="fa-solid fa-tower-observation"></i>
-        <span class="sn">Bakrie Tower</span>
-        <div class="snb">Up Next →</div>
-      </div>
+    <div class="next-row a-up d55">
+      <div class="site-next"><i class="fa-solid fa-tower-observation"></i><span class="sn">Bakrie Tower</span><div class="nb">Up Next →</div></div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- ══════════════════════════
-  SLIDE 5 — HOW I WORK
-══════════════════════════ -->
-<section class="s5" data-background-color="#07111F">
-  <div class="s5-wrap">
-    <div class="eyebrow">Scope of Work</div>
-    <h2 class="s5-h">Dari analisis kebutuhan, sampai sistem berjalan dan terus membaik.</h2>
-    <div class="bar-gold au d2"></div>
+<!-- SLIDE 5 — HOW I WORK -->
+<div class="slide" id="s5">
+  <div class="wrap">
+    <div class="eyebrow a-lft d1">Scope of Work</div>
+    <h2 class="s5-h a-up d2">Dari analisis kebutuhan, sampai sistem berjalan dan terus membaik.</h2>
+    <div class="bar a-gx d3"></div>
     <div class="s5-body">
-      <!-- Phase flow -->
       <div>
-        <div class="phase-flow">
-          <div class="phase">
-            <div class="phase-spine">
-              <div class="phase-dot"><i class="fa-solid fa-comments"></i></div>
-              <div class="phase-line"></div>
-            </div>
-            <div class="phase-body">
-              <h4>Analisis Kebutuhan</h4>
-              <p>Memahami proses bisnis dan kebutuhan operasional setiap unit.</p>
-            </div>
-          </div>
-          <div class="phase">
-            <div class="phase-spine">
-              <div class="phase-dot"><i class="fa-solid fa-code"></i></div>
-              <div class="phase-line"></div>
-            </div>
-            <div class="phase-body">
-              <h4>Development & Konfigurasi</h4>
-              <p>Membangun fitur, menyesuaikan flow sistem sesuai kebutuhan unit.</p>
-            </div>
-          </div>
-          <div class="phase">
-            <div class="phase-spine">
-              <div class="phase-dot active"><i class="fa-solid fa-rocket"></i></div>
-              <div class="phase-line"></div>
-            </div>
-            <div class="phase-body">
-              <h4>Implementasi & Go-Live</h4>
-              <p>Setup entity, user, master data, testing, dan pendampingan go-live.</p>
-            </div>
-          </div>
-          <div class="phase">
-            <div class="phase-spine">
-              <div class="phase-dot"><i class="fa-solid fa-headset"></i></div>
-              <div class="phase-line"></div>
-            </div>
-            <div class="phase-body">
-              <h4>Support & Monitoring</h4>
-              <p>Handling kendala harian, validasi data, dan monitoring sistem.</p>
-            </div>
-          </div>
-          <div class="phase">
-            <div class="phase-spine">
-              <div class="phase-dot"><i class="fa-solid fa-arrow-trend-up"></i></div>
-              <div class="phase-line" style="background:transparent"></div>
-            </div>
-            <div class="phase-body">
-              <h4>Improvement Berkelanjutan</h4>
-              <p>Pengembangan fitur baru, penyesuaian laporan, upgrade teknologi.</p>
-            </div>
-          </div>
-        </div>
+        <div class="phase a-lft d3"><div class="ph-spine"><div class="ph-dot"><i class="fa-solid fa-comments"></i></div><div class="ph-line"></div></div><div class="ph-body"><h4>Analisis Kebutuhan</h4><p>Memahami proses bisnis dan kebutuhan operasional setiap unit.</p></div></div>
+        <div class="phase a-lft d4"><div class="ph-spine"><div class="ph-dot"><i class="fa-solid fa-code"></i></div><div class="ph-line"></div></div><div class="ph-body"><h4>Development & Konfigurasi</h4><p>Membangun fitur, menyesuaikan flow sistem sesuai kebutuhan unit.</p></div></div>
+        <div class="phase a-lft d5"><div class="ph-spine"><div class="ph-dot act"><i class="fa-solid fa-rocket"></i></div><div class="ph-line"></div></div><div class="ph-body"><h4>Implementasi & Go-Live</h4><p>Setup entity, user, master data, testing, dan pendampingan go-live.</p></div></div>
+        <div class="phase a-lft d6"><div class="ph-spine"><div class="ph-dot"><i class="fa-solid fa-headset"></i></div><div class="ph-line"></div></div><div class="ph-body"><h4>Support & Monitoring</h4><p>Handling kendala harian, validasi data, dan monitoring sistem.</p></div></div>
+        <div class="phase a-lft d7"><div class="ph-spine"><div class="ph-dot"><i class="fa-solid fa-arrow-trend-up"></i></div></div><div class="ph-body"><h4>Improvement Berkelanjutan</h4><p>Pengembangan fitur baru, penyesuaian laporan, upgrade teknologi.</p></div></div>
       </div>
-
-      <!-- Impact cards -->
       <div>
-        <div style="font-size:.62rem;font-weight:700;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:14px;">Apa yang ini berarti untuk Provices</div>
+        <div style="font-size:.62rem;font-weight:700;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:14px;" class="a-rgt d3">Apa yang ini berarti untuk Provices</div>
         <div class="impact-cards">
-          <div class="icard">
-            <div class="icard-icon blue"><i class="fa-solid fa-building"></i></div>
-            <div class="icard-text">
-              <h4>Operasi Unit Tetap Berjalan</h4>
-              <p>Sistem selalu tersedia untuk mendukung aktivitas harian seluruh unit.</p>
-            </div>
-          </div>
-          <div class="icard">
-            <div class="icard-icon gold"><i class="fa-solid fa-file-invoice"></i></div>
-            <div class="icard-text">
-              <h4>Data & Laporan Akurat</h4>
-              <p>Validasi data dan output laporan yang sesuai kebutuhan manajemen.</p>
-            </div>
-          </div>
-          <div class="icard">
-            <div class="icard-icon teal"><i class="fa-solid fa-sliders"></i></div>
-            <div class="icard-text">
-              <h4>Standar yang Konsisten</h4>
-              <p>Proses kerja yang seragam di seluruh unit Provices Group.</p>
-            </div>
-          </div>
-          <div class="icard">
-            <div class="icard-icon purple"><i class="fa-solid fa-rocket"></i></div>
-            <div class="icard-text">
-              <h4>Siap untuk Pertumbuhan</h4>
-              <p>Model implementasi yang bisa direplikasi ke unit baru dengan cepat.</p>
-            </div>
-          </div>
+          <div class="icard a-rgt d35"><div class="icard-ico bl"><i class="fa-solid fa-building"></i></div><div><h4>Operasi Unit Tetap Berjalan</h4><p>Sistem selalu tersedia mendukung aktivitas harian seluruh unit.</p></div></div>
+          <div class="icard a-rgt d45"><div class="icard-ico go"><i class="fa-solid fa-file-invoice"></i></div><div><h4>Data & Laporan Akurat</h4><p>Validasi data dan output laporan sesuai kebutuhan manajemen.</p></div></div>
+          <div class="icard a-rgt d55"><div class="icard-ico te"><i class="fa-solid fa-sliders"></i></div><div><h4>Standar yang Konsisten</h4><p>Proses kerja yang seragam di seluruh unit Provices Group.</p></div></div>
+          <div class="icard a-rgt d65"><div class="icard-ico pu"><i class="fa-solid fa-rocket"></i></div><div><h4>Siap untuk Pertumbuhan</h4><p>Model implementasi yang bisa direplikasi ke unit baru dengan cepat.</p></div></div>
         </div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- ══════════════════════════
-  SLIDE 6 — PVI CHAT
-══════════════════════════ -->
-<section class="s6" data-background-color="#0C1A2E">
-  <div class="s6-wrap">
-    <div class="eyebrow">Internal Innovation</div>
-    <h2 class="s6-h">Support sistem yang lebih terstruktur, tercatat, dan terpantau.</h2>
-    <div class="bar-gold au d2"></div>
+<!-- SLIDE 6 — PVI CHAT -->
+<div class="slide" id="s6">
+  <div class="wrap">
+    <div class="eyebrow a-lft d1">Internal Innovation</div>
+    <h2 class="s6-h a-up d2">Support sistem yang lebih terstruktur, tercatat, dan terpantau.</h2>
+    <div class="bar a-gx d3"></div>
     <div class="s6-body">
-
-      <!-- Chat UI Mockup -->
-      <div class="chat-mock">
-        <div class="chat-topbar">
+      <div class="chat-mock a-lft d3">
+        <div class="chat-top">
           <div class="ct-dot"></div>
           <div class="ct-title">PVI Support Chat</div>
           <div class="ct-badge">3 Open Tickets</div>
         </div>
         <div class="chat-body">
-          <div class="chat-ticket t1">
-            <div class="ct-header">
-              <span class="ct-id">#TKT-0241</span>
-              <span class="ct-status open">Open</span>
-            </div>
-            <div class="ct-title-text">Tagihan air tidak muncul di invoice</div>
-            <div class="ct-meta">Bug / Error · WB1 · 2 hours ago</div>
-          </div>
-          <div class="chat-ticket t2">
-            <div class="ct-header">
-              <span class="ct-id">#TKT-0238</span>
-              <span class="ct-status progress">In Progress</span>
-            </div>
-            <div class="ct-title-text">Penyesuaian format laporan AR bulan ini</div>
-            <div class="ct-meta">Enhancement · GIC · 5 hours ago</div>
-          </div>
-          <div class="chat-ticket t3">
-            <div class="ct-header">
-              <span class="ct-id">#TKT-0235</span>
-              <span class="ct-status done">Resolved</span>
-            </div>
-            <div class="ct-title-text">Unpost transaksi jurnal salah input</div>
-            <div class="ct-meta">Unpost Transaction · ROP · Yesterday</div>
-          </div>
+          <div class="ctkt t1"><div class="cth"><span class="cid">#TKT-0241</span><span class="cst op">Open</span></div><div class="ctt">Tagihan air tidak muncul di invoice</div><div class="ctm">Bug / Error · WB1 · 2 hours ago</div></div>
+          <div class="ctkt t2"><div class="cth"><span class="cid">#TKT-0238</span><span class="cst pr">In Progress</span></div><div class="ctt">Penyesuaian format laporan AR bulan ini</div><div class="ctm">Enhancement · GIC · 5 hours ago</div></div>
+          <div class="ctkt t3"><div class="cth"><span class="cid">#TKT-0235</span><span class="cst dn">Resolved</span></div><div class="ctt">Unpost transaksi jurnal salah input</div><div class="ctm">Unpost Transaction · ROP · Yesterday</div></div>
         </div>
-        <div class="chat-input">
-          <span>Tulis pesan atau upload file...</span>
-          <i class="fa-solid fa-paper-plane"></i>
-        </div>
+        <div class="chat-inp"><span>Tulis pesan atau upload file...</span><i class="fa-solid fa-paper-plane"></i></div>
       </div>
-
-      <!-- Benefits -->
       <div>
-        <div style="font-size:.62rem;font-weight:700;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;">Apa yang berubah</div>
+        <div style="font-size:.62rem;font-weight:700;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:14px;" class="a-rgt d3">Apa yang berubah</div>
         <div class="benefits">
-          <div class="bitem">
-            <div class="bitem-icon"><i class="fa-solid fa-ticket"></i></div>
-            <div class="bitem-text"><h4>Nomor Tiket per Kendala</h4><p>Setiap masalah punya ID unik — mudah dilacak dan di-follow-up.</p></div>
-          </div>
-          <div class="bitem">
-            <div class="bitem-icon"><i class="fa-solid fa-tag"></i></div>
-            <div class="bitem-text"><h4>Kategori & Status Jelas</h4><p>Bug, enhancement, data correction, support — langsung terklasifikasi.</p></div>
-          </div>
-          <div class="bitem">
-            <div class="bitem-icon"><i class="fa-solid fa-bell"></i></div>
-            <div class="bitem-text"><h4>Notifikasi WhatsApp Otomatis</h4><p>User langsung dapat update status tiket via WhatsApp.</p></div>
-          </div>
-          <div class="bitem">
-            <div class="bitem-icon"><i class="fa-solid fa-paperclip"></i></div>
-            <div class="bitem-text"><h4>Attachment & Riwayat</h4><p>Semua percakapan dan lampiran tersimpan — tidak ada yang terlewat.</p></div>
-          </div>
-          <div class="bitem">
-            <div class="bitem-icon"><i class="fa-solid fa-circle-check"></i></div>
-            <div class="bitem-text"><h4>Konfirmasi Penyelesaian</h4><p>Tiket baru ditutup setelah user mengkonfirmasi masalah selesai.</p></div>
-          </div>
+          <div class="bi a-rgt d3"><div class="bi-ico"><i class="fa-solid fa-ticket"></i></div><div><h4>Nomor Tiket per Kendala</h4><p>Setiap masalah punya ID unik — mudah dilacak dan di-follow-up.</p></div></div>
+          <div class="bi a-rgt d4"><div class="bi-ico"><i class="fa-solid fa-tag"></i></div><div><h4>Kategori & Status Jelas</h4><p>Bug, enhancement, data correction — langsung terklasifikasi.</p></div></div>
+          <div class="bi a-rgt d5"><div class="bi-ico"><i class="fa-solid fa-bell"></i></div><div><h4>Notifikasi WhatsApp Otomatis</h4><p>User langsung dapat update status tiket via WhatsApp.</p></div></div>
+          <div class="bi a-rgt d6"><div class="bi-ico"><i class="fa-solid fa-paperclip"></i></div><div><h4>Attachment & Riwayat</h4><p>Semua percakapan dan lampiran tersimpan — tidak ada yang terlewat.</p></div></div>
+          <div class="bi a-rgt d7"><div class="bi-ico"><i class="fa-solid fa-circle-check"></i></div><div><h4>Konfirmasi Penyelesaian</h4><p>Tiket ditutup setelah user mengkonfirmasi masalah selesai.</p></div></div>
         </div>
-
-        <div class="cat-row">
-          <div class="cat-p bug">Bug / Error</div>
-          <div class="cat-p data">Data Correction</div>
-          <div class="cat-p enh">Enhancement</div>
-          <div class="cat-p supp">Support</div>
-          <div class="cat-p unpost">Unpost Transaction</div>
+        <div class="cat-row a-up d8">
+          <div class="cp bug">Bug / Error</div>
+          <div class="cp dat">Data Correction</div>
+          <div class="cp enh">Enhancement</div>
+          <div class="cp sup">Support</div>
+          <div class="cp unp">Unpost Transaction</div>
         </div>
       </div>
-
     </div>
   </div>
-</section>
+</div>
 
-<!-- ══════════════════════════
-  SLIDE 7 — INFRA & SERVER
-══════════════════════════ -->
-<section class="s7" data-background-color="#07111F">
-  <div class="s7-wrap">
-    <div class="eyebrow">Infrastructure & Maintenance</div>
-    <h2 class="s7-h">Server yang saya kelola adalah fondasi ketersediaan sistem.</h2>
-    <div class="bar-gold au d2"></div>
-    <div class="infra-body">
-
-      <!-- Server visual -->
-      <div>
-        <div class="server-vis">
-          <div class="sv-label">VPS Server Status</div>
-
-          <div class="sv-bar">
-            <div class="sb-icon" style="background:rgba(66,133,244,.12);color:var(--blue)"><i class="fa-solid fa-microchip"></i></div>
-            <div class="sb-info">
-              <h5>CPU Usage</h5>
-              <div class="sb-progress"><div class="fill" style="--w:42%;width:42%;background:var(--blue);animation-delay:.4s"></div></div>
-            </div>
-            <span class="sb-val">42%</span>
-          </div>
-
-          <div class="sv-bar">
-            <div class="sb-icon" style="background:rgba(200,169,74,.12);color:var(--gold)"><i class="fa-solid fa-memory"></i></div>
-            <div class="sb-info">
-              <h5>Memory Usage</h5>
-              <div class="sb-progress"><div class="fill" style="--w:61%;width:61%;background:var(--gold);animation-delay:.55s"></div></div>
-            </div>
-            <span class="sb-val">61%</span>
-          </div>
-
-          <div class="sv-bar">
-            <div class="sb-icon" style="background:rgba(14,165,160,.12);color:var(--teal)"><i class="fa-solid fa-hard-drive"></i></div>
-            <div class="sb-info">
-              <h5>Disk Usage</h5>
-              <div class="sb-progress"><div class="fill" style="--w:55%;width:55%;background:var(--teal);animation-delay:.7s"></div></div>
-            </div>
-            <span class="sb-val">55%</span>
-          </div>
-
-          <div class="uptime-wrap" style="margin-top:18px;">
-            <div class="uptime-ring">
-              <svg width="80" height="80" viewBox="0 0 80 80">
-                <circle class="bg" cx="40" cy="40" r="32"/>
-                <circle class="fg" cx="40" cy="40" r="32" stroke-dasharray="201" stroke-dashoffset="4"/>
-              </svg>
-              <div class="pct">99%</div>
-            </div>
-            <div class="uptime-text">
-              <h4>Uptime Target</h4>
-              <p>Server tersedia untuk seluruh unit operasional setiap hari.</p>
-            </div>
-          </div>
+<!-- SLIDE 7 — INFRA -->
+<div class="slide" id="s7">
+  <div class="wrap">
+    <div class="eyebrow a-lft d1">Infrastructure & Maintenance</div>
+    <h2 class="s7-h a-up d2">Server yang saya kelola adalah fondasi ketersediaan sistem.</h2>
+    <div class="bar a-gx d3"></div>
+    <div class="s7-body">
+      <div class="a-lft d3">
+        <div class="sv-lbl">VPS Server Status</div>
+        <div class="sv-bar">
+          <div class="sb-ico" style="background:rgba(66,133,244,.12);color:var(--blue)"><i class="fa-solid fa-microchip"></i></div>
+          <div class="sb-info"><h5>CPU Usage</h5><div class="sb-prog"><div class="sb-fill d4" style="width:42%;background:var(--blue)"></div></div></div>
+          <span class="sb-val">42%</span>
+        </div>
+        <div class="sv-bar">
+          <div class="sb-ico" style="background:rgba(200,169,74,.12);color:var(--gold)"><i class="fa-solid fa-memory"></i></div>
+          <div class="sb-info"><h5>Memory Usage</h5><div class="sb-prog"><div class="sb-fill d55" style="width:61%;background:var(--gold)"></div></div></div>
+          <span class="sb-val">61%</span>
+        </div>
+        <div class="sv-bar">
+          <div class="sb-ico" style="background:rgba(14,165,160,.12);color:var(--teal)"><i class="fa-solid fa-hard-drive"></i></div>
+          <div class="sb-info"><h5>Disk Usage</h5><div class="sb-prog"><div class="sb-fill d7" style="width:55%;background:var(--teal)"></div></div></div>
+          <span class="sb-val">55%</span>
+        </div>
+        <div class="upt">
+          <div class="upt-ring"><svg width="80" height="80" viewBox="0 0 80 80"><circle class="bg" cx="40" cy="40" r="32"/><circle class="fg" cx="40" cy="40" r="32"/></svg><div class="pct">99%</div></div>
+          <div class="upt-txt"><h4>Uptime Target</h4><p>Server tersedia untuk seluruh unit operasional setiap hari.</p></div>
         </div>
       </div>
-
-      <!-- Tasks -->
       <div>
-        <div style="font-size:.62rem;font-weight:700;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:14px;">Yang saya tangani</div>
-        <div class="infra-tasks">
-          <div class="itask">
-            <div class="it-icon" style="background:rgba(66,133,244,.12);color:var(--blue)"><i class="fa-solid fa-cloud"></i></div>
-            <div class="it-text"><h4>VPS Cloud Server</h4><p>Provisioning, konfigurasi, dan maintenance server</p></div>
-            <span class="it-badge active">Active</span>
-          </div>
-          <div class="itask">
-            <div class="it-icon" style="background:rgba(200,169,74,.12);color:var(--gold)"><i class="fa-solid fa-database"></i></div>
-            <div class="it-text"><h4>Database Management</h4><p>Monitoring performa, integrity, dan optimasi query</p></div>
-            <span class="it-badge ok">Healthy</span>
-          </div>
-          <div class="itask">
-            <div class="it-icon" style="background:rgba(34,197,94,.12);color:var(--green)"><i class="fa-solid fa-hard-drive"></i></div>
-            <div class="it-text"><h4>Backup & Recovery</h4><p>Backup terjadwal dan prosedur pemulihan data</p></div>
-            <span class="it-badge ok">Running</span>
-          </div>
-          <div class="itask">
-            <div class="it-icon" style="background:rgba(139,92,246,.12);color:var(--purple)"><i class="fa-solid fa-lock"></i></div>
-            <div class="it-text"><h4>Security & Access</h4><p>Manajemen akses, firewall, dan patch keamanan</p></div>
-            <span class="it-badge active">Active</span>
-          </div>
-          <div class="itask">
-            <div class="it-icon" style="background:rgba(14,165,160,.12);color:var(--teal)"><i class="fa-solid fa-chart-bar"></i></div>
-            <div class="it-text"><h4>Application Deployment</h4><p>Update, rollout fitur baru, dan version management</p></div>
-            <span class="it-badge active">Active</span>
-          </div>
+        <div style="font-size:.62rem;font-weight:700;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:12px;" class="a-rgt d3">Yang saya tangani</div>
+        <div class="itasks">
+          <div class="itask a-rgt d3"><div class="it-ico" style="background:rgba(66,133,244,.12);color:var(--blue)"><i class="fa-solid fa-cloud"></i></div><div class="it-text"><h4>VPS Cloud Server</h4><p>Provisioning, konfigurasi, dan maintenance server</p></div><span class="it-badge ac">Active</span></div>
+          <div class="itask a-rgt d4"><div class="it-ico" style="background:rgba(200,169,74,.12);color:var(--gold)"><i class="fa-solid fa-database"></i></div><div class="it-text"><h4>Database Management</h4><p>Monitoring performa, integrity, dan optimasi query</p></div><span class="it-badge ok">Healthy</span></div>
+          <div class="itask a-rgt d5"><div class="it-ico" style="background:rgba(34,197,94,.12);color:var(--green)"><i class="fa-solid fa-hard-drive"></i></div><div class="it-text"><h4>Backup & Recovery</h4><p>Backup terjadwal dan prosedur pemulihan data</p></div><span class="it-badge ok">Running</span></div>
+          <div class="itask a-rgt d6"><div class="it-ico" style="background:rgba(139,92,246,.12);color:var(--purple)"><i class="fa-solid fa-lock"></i></div><div class="it-text"><h4>Security & Access</h4><p>Manajemen akses, firewall, dan patch keamanan</p></div><span class="it-badge ac">Active</span></div>
+          <div class="itask a-rgt d7"><div class="it-ico" style="background:rgba(14,165,160,.12);color:var(--teal)"><i class="fa-solid fa-chart-bar"></i></div><div class="it-text"><h4>Application Deployment</h4><p>Update, rollout fitur baru, dan version management</p></div><span class="it-badge ac">Active</span></div>
         </div>
       </div>
-
     </div>
   </div>
-</section>
+</div>
 
-<!-- ══════════════════════════
-  SLIDE 8 — TECH UPGRADE
-══════════════════════════ -->
-<section class="s8" data-background-color="#0C1A2E">
-  <div class="s8-wrap">
-    <div class="eyebrow">Technology Modernization</div>
-    <h2 class="s8-h">Sistem tidak diam. Kami upgrade agar tetap aman dan relevan.</h2>
-    <div class="bar-gold au d2"></div>
-    <p class="s8-sub">Mengikuti perkembangan teknologi bukan pilihan — ini kewajiban agar data perusahaan aman dan sistem tidak tertinggal.</p>
+<!-- SLIDE 8 — TECH UPGRADE -->
+<div class="slide" id="s8">
+  <div class="wrap">
+    <div class="eyebrow a-lft d1">Technology Modernization</div>
+    <h2 class="s8-h a-up d2">Sistem tidak diam. Kami upgrade agar tetap aman dan relevan.</h2>
+    <p class="s8-sub a-up d3">Mengikuti perkembangan teknologi bukan pilihan — ini kewajiban agar data perusahaan aman dan sistem tidak tertinggal.</p>
     <div class="s8-body">
-
-      <!-- Timeline -->
-      <div class="upgrade-timeline">
-        <div class="ut-item">
-          <div class="ut-spine">
-            <div class="ut-dot done"><i class="fa-solid fa-check"></i></div>
-            <div class="ut-vline"></div>
-          </div>
-          <div class="ut-body">
-            <span class="ut-status done">Completed</span>
-            <h4>Migrasi ke VPS Cloud</h4>
-            <p>Sistem dipindahkan ke cloud server yang lebih stabil dan skalabel.</p>
-          </div>
-        </div>
-        <div class="ut-item">
-          <div class="ut-spine">
-            <div class="ut-dot done"><i class="fa-solid fa-check"></i></div>
-            <div class="ut-vline"></div>
-          </div>
-          <div class="ut-body">
-            <span class="ut-status done">Completed</span>
-            <h4>PVI Support Chat</h4>
-            <p>Sistem support internal berbasis tiket berhasil dikembangkan dan dijalankan.</p>
-          </div>
-        </div>
-        <div class="ut-item">
-          <div class="ut-spine">
-            <div class="ut-dot ongoing"><i class="fa-solid fa-arrows-rotate"></i></div>
-            <div class="ut-vline"></div>
-          </div>
-          <div class="ut-body">
-            <span class="ut-status ongoing">On Going</span>
-            <h4>Upgrade ke Stack Teknologi Terbaru</h4>
-            <p>Modernisasi framework dan dependensi sistem untuk keamanan dan performa yang lebih baik.</p>
-          </div>
-        </div>
-        <div class="ut-item">
-          <div class="ut-spine">
-            <div class="ut-dot next"><i class="fa-solid fa-clock"></i></div>
-            <div class="ut-vline" style="background:transparent"></div>
-          </div>
-          <div class="ut-body">
-            <span class="ut-status next">Planned</span>
-            <h4>Peningkatan UI/UX & Mobile Responsif</h4>
-            <p>Tampilan sistem yang lebih modern dan mudah digunakan di berbagai perangkat.</p>
-          </div>
-        </div>
+      <div class="a-lft d3">
+        <div class="ut-item"><div class="ut-spine"><div class="ut-dot done"><i class="fa-solid fa-check"></i></div><div class="ut-vl"></div></div><div class="ut-body"><span class="ut-st done">Completed</span><h4>Migrasi ke VPS Cloud</h4><p>Sistem dipindahkan ke cloud server yang lebih stabil dan skalabel.</p></div></div>
+        <div class="ut-item"><div class="ut-spine"><div class="ut-dot done"><i class="fa-solid fa-check"></i></div><div class="ut-vl"></div></div><div class="ut-body"><span class="ut-st done">Completed</span><h4>PVI Support Chat</h4><p>Sistem support internal berbasis tiket berhasil dikembangkan dan dijalankan.</p></div></div>
+        <div class="ut-item"><div class="ut-spine"><div class="ut-dot ong"><i class="fa-solid fa-arrows-rotate"></i></div><div class="ut-vl"></div></div><div class="ut-body"><span class="ut-st ong">On Going</span><h4>Upgrade ke Stack Teknologi Terbaru</h4><p>Modernisasi framework untuk keamanan dan performa yang lebih baik.</p></div></div>
+        <div class="ut-item"><div class="ut-spine"><div class="ut-dot nxt"><i class="fa-solid fa-clock"></i></div></div><div class="ut-body"><span class="ut-st nxt">Planned</span><h4>Peningkatan UI/UX & Mobile Responsif</h4><p>Tampilan yang lebih modern dan mudah digunakan di berbagai perangkat.</p></div></div>
       </div>
-
-      <!-- Why cards -->
       <div>
-        <div style="font-size:.62rem;font-weight:700;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:14px;">Mengapa ini penting</div>
-        <div class="why-cards">
-          <div class="wcard">
-            <div class="wc-icon" style="background:rgba(239,68,68,.12);color:var(--red)"><i class="fa-solid fa-shield-halved"></i></div>
-            <div class="wc-text"><h4>Keamanan Data</h4><p>Teknologi lama rentan terhadap celah keamanan yang terus berkembang.</p></div>
-          </div>
-          <div class="wcard">
-            <div class="wc-icon" style="background:rgba(200,169,74,.12);color:var(--gold)"><i class="fa-solid fa-bolt"></i></div>
-            <div class="wc-text"><h4>Performa Lebih Baik</h4><p>Stack terbaru memberikan respon sistem yang lebih cepat dan efisien.</p></div>
-          </div>
-          <div class="wcard">
-            <div class="wc-icon" style="background:rgba(66,133,244,.12);color:var(--blue)"><i class="fa-solid fa-screwdriver-wrench"></i></div>
-            <div class="wc-text"><h4>Lebih Mudah Dimaintain</h4><p>Kode modern lebih mudah dikelola, dikembangkan, dan di-debug.</p></div>
-          </div>
-          <div class="wcard">
-            <div class="wc-icon" style="background:rgba(14,165,160,.12);color:var(--teal)"><i class="fa-solid fa-arrow-up-right-dots"></i></div>
-            <div class="wc-text"><h4>Siap Skalasi</h4><p>Sistem yang modern lebih mudah dikembangkan seiring pertumbuhan Provices.</p></div>
-          </div>
+        <div style="font-size:.62rem;font-weight:700;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:12px;" class="a-rgt d3">Mengapa ini penting</div>
+        <div class="wcards">
+          <div class="wcard a-rgt d3"><div class="wc-ico" style="background:rgba(239,68,68,.12);color:var(--red)"><i class="fa-solid fa-shield-halved"></i></div><div class="wc-txt"><h4>Keamanan Data</h4><p>Teknologi lama rentan terhadap celah keamanan yang terus berkembang.</p></div></div>
+          <div class="wcard a-rgt d4"><div class="wc-ico" style="background:rgba(200,169,74,.12);color:var(--gold)"><i class="fa-solid fa-bolt"></i></div><div class="wc-txt"><h4>Performa Lebih Baik</h4><p>Stack terbaru memberikan respon sistem yang lebih cepat dan efisien.</p></div></div>
+          <div class="wcard a-rgt d5"><div class="wc-ico" style="background:rgba(66,133,244,.12);color:var(--blue)"><i class="fa-solid fa-screwdriver-wrench"></i></div><div class="wc-txt"><h4>Lebih Mudah Dimaintain</h4><p>Kode modern lebih mudah dikelola, dikembangkan, dan di-debug.</p></div></div>
+          <div class="wcard a-rgt d6"><div class="wc-ico" style="background:rgba(14,165,160,.12);color:var(--teal)"><i class="fa-solid fa-arrow-up-right-dots"></i></div><div class="wc-txt"><h4>Siap Skalasi</h4><p>Sistem yang modern lebih mudah dikembangkan seiring pertumbuhan Provices.</p></div></div>
         </div>
       </div>
-
     </div>
   </div>
-</section>
+</div>
 
-<!-- ══════════════════════════
-  SLIDE 9 — BAKRIE TOWER
-══════════════════════════ -->
-<section class="s9" data-background-color="#07111F">
-  <!-- Silhouette buildings -->
-  <div class="s9-silhouette">
+<!-- SLIDE 9 — BAKRIE TOWER -->
+<div class="slide" id="s9">
+  <div class="sil">
     <div class="sil-b l2"></div>
     <div class="sil-b l1"></div>
-    <div class="sil-b main"></div>
+    <div class="sil-b mn"></div>
     <div class="sil-b r1"></div>
     <div class="sil-b l2" style="height:35%"></div>
   </div>
-
   <div class="s9-wrap">
-    <div class="eyebrow">Next Milestone</div>
-    <h2 class="s9-h">Bakrie Tower —<br><em>implementasi berikutnya.</em></h2>
-    <div class="bar-gold au d2"></div>
-    <p class="s9-sub">Dengan pengalaman 13 unit sebelumnya, implementasi Bakrie Tower akan lebih terstruktur, terdokumentasi, dan lebih cepat dari sebelumnya.</p>
-    <div class="s9-cl">
-      <div class="s9-cli"><i class="fa-solid fa-circle-check"></i> Validasi master data & entitas</div>
-      <div class="s9-cli"><i class="fa-solid fa-circle-check"></i> Setup project, entity, dan konfigurasi sistem</div>
-      <div class="s9-cli"><i class="fa-solid fa-circle-check"></i> Setup user & hak akses</div>
-      <div class="s9-cli"><i class="fa-solid fa-circle-check"></i> Testing billing, invoice, dan payment</div>
-      <div class="s9-cli"><i class="fa-solid fa-circle-check"></i> Pengecekan laporan & print out</div>
-      <div class="s9-cli"><i class="fa-solid fa-circle-check"></i> Training user</div>
-      <div class="s9-cli"><i class="fa-solid fa-circle-check"></i> Pendampingan go-live</div>
-      <div class="s9-cli"><i class="fa-solid fa-circle-check"></i> Monitoring post go-live</div>
-      <div class="s9-cli"><i class="fa-solid fa-circle-check"></i> Dokumentasi implementasi</div>
+    <div class="eyebrow a-lft d1">Next Milestone</div>
+    <h2 class="s9-h a-up d2">Bakrie Tower —<br><em>implementasi berikutnya.</em></h2>
+    <div class="bar a-gx d3"></div>
+    <p class="s9-sub a-up d35">Dengan pengalaman 13 unit sebelumnya, implementasi Bakrie Tower akan lebih terstruktur, terdokumentasi, dan lebih cepat.</p>
+    <div class="cl">
+      <div class="cli a-lft d4"><i class="fa-solid fa-circle-check"></i> Validasi master data & entitas</div>
+      <div class="cli a-lft d45"><i class="fa-solid fa-circle-check"></i> Setup project, entity, dan konfigurasi sistem</div>
+      <div class="cli a-lft d5"><i class="fa-solid fa-circle-check"></i> Setup user & hak akses</div>
+      <div class="cli a-lft d55"><i class="fa-solid fa-circle-check"></i> Testing billing, invoice, dan payment</div>
+      <div class="cli a-lft d6"><i class="fa-solid fa-circle-check"></i> Pengecekan laporan & print out</div>
+      <div class="cli a-lft d65"><i class="fa-solid fa-circle-check"></i> Training user</div>
+      <div class="cli a-lft d7"><i class="fa-solid fa-circle-check"></i> Pendampingan go-live</div>
+      <div class="cli a-lft d75"><i class="fa-solid fa-circle-check"></i> Monitoring post go-live</div>
+      <div class="cli a-lft d8"><i class="fa-solid fa-circle-check"></i> Dokumentasi implementasi</div>
     </div>
   </div>
-
-  <!-- Floating badge -->
-  <div class="s9-badge">
-    <div class="s9-circle">
-      <i class="fa-solid fa-tower-observation"></i>
-      <div class="sc-l">Next Implementation</div>
-      <div class="sc-t">Bakrie Tower</div>
-    </div>
-    <div style="font-size:.72rem;color:var(--gold-l);font-style:italic;text-align:center;max-width:200px;line-height:1.6;opacity:.85">
-      "Lebih siap, lebih terdokumentasi, lebih cepat."
-    </div>
+  <div class="s9-badge a-scl d5">
+    <div class="s9-circle"><i class="fa-solid fa-tower-observation"></i><div class="sc-l">Next Implementation</div><div class="sc-t">Bakrie Tower</div></div>
+    <p class="s9-q">"Lebih siap, lebih terdokumentasi, lebih cepat."</p>
   </div>
-</section>
+</div>
 
-<!-- ══════════════════════════
-  SLIDE 10 — CLOSING
-══════════════════════════ -->
-<section class="s10" data-background-color="#07111F">
-  <div class="s10-glow1"></div>
-  <div class="s10-ring s10-r1"></div>
-  <div class="s10-ring s10-r2"></div>
-
+<!-- SLIDE 10 — CLOSING -->
+<div class="slide center" id="s10">
+  <div class="s10-glow"></div>
+  <div class="s10-r1"></div>
+  <div class="s10-r2"></div>
   <div class="s10-content">
-    <div class="s10-left">
-      <div class="eyebrow">Penutup</div>
-      <h2 class="s10-hl">Bangun.<br>Pasang.<br>Jaga.<br><em>Tingkatkan.</em></h2>
-      <p class="s10-msg">
-        Itulah yang saya lakukan setiap harinya — memastikan PMS Provices Group tetap berjalan, akurat, aman, dan siap mendukung pertumbuhan selanjutnya.
-      </p>
-      <div class="s10-pillars">
-        <div class="s10-pill"><i class="fa-solid fa-code"></i><span>Develop & Build</span></div>
-        <div class="s10-pill"><i class="fa-solid fa-rocket"></i><span>Implement at Scale</span></div>
-        <div class="s10-pill"><i class="fa-solid fa-server"></i><span>Maintain & Secure</span></div>
-        <div class="s10-pill"><i class="fa-solid fa-arrow-trend-up"></i><span>Improve & Innovate</span></div>
+    <div>
+      <div class="eyebrow a-lft d1" style="justify-content:flex-start">Penutup</div>
+      <h2 class="s10-hl a-up d2">Bangun.<br>Pasang.<br>Jaga.<br><em>Tingkatkan.</em></h2>
+      <p class="s10-msg a-up d35">Itulah yang saya lakukan setiap harinya — memastikan PMS Provices Group tetap berjalan, akurat, aman, dan siap mendukung pertumbuhan selanjutnya.</p>
+      <div class="s10-pills">
+        <div class="s10-pill a-lft d5"><i class="fa-solid fa-code"></i><span>Develop & Build</span></div>
+        <div class="s10-pill a-lft d6"><i class="fa-solid fa-rocket"></i><span>Implement at Scale</span></div>
+        <div class="s10-pill a-lft d7"><i class="fa-solid fa-server"></i><span>Maintain & Secure</span></div>
+        <div class="s10-pill a-lft d8"><i class="fa-solid fa-arrow-trend-up"></i><span>Improve & Innovate</span></div>
       </div>
     </div>
-
-    <div class="s10-right">
-      <div class="s10-stat">
-        <div class="s10-stat-num">13</div>
-        <div class="s10-stat-text"><h4>Units Successfully Implemented</h4><p>Dari WB1 sampai Empyreal — semua live.</p></div>
-      </div>
-      <div class="s10-stat">
-        <div class="s10-stat-num">11</div>
-        <div class="s10-stat-text"><h4>Integrated Modules</h4><p>Front office hingga general ledger terhubung.</p></div>
-      </div>
-      <div class="s10-stat">
-        <div class="s10-stat-num">1</div>
-        <div class="s10-stat-text"><h4>In-House Innovation</h4><p>PVI Support Chat — ticketing yang dibangun sendiri.</p></div>
-      </div>
-      <div class="s10-stat">
-        <div class="s10-stat-num">∞</div>
-        <div class="s10-stat-text"><h4>Continuous Improvement</h4><p>Tidak berhenti di sini — selalu ada yang bisa ditingkatkan.</p></div>
-      </div>
+    <div class="s10-stats">
+      <div class="s10-stat a-rgt d3"><div class="s10-num">13</div><div class="s10-txt"><h4>Units Successfully Implemented</h4><p>Dari WB1 sampai Empyreal — semua live.</p></div></div>
+      <div class="s10-stat a-rgt d45"><div class="s10-num">11</div><div class="s10-txt"><h4>Integrated Modules</h4><p>Front office hingga general ledger terhubung.</p></div></div>
+      <div class="s10-stat a-rgt d6"><div class="s10-num">1</div><div class="s10-txt"><h4>In-House Innovation</h4><p>PVI Support Chat — ticketing yang dibangun sendiri.</p></div></div>
+      <div class="s10-stat a-rgt d75"><div class="s10-num">∞</div><div class="s10-txt"><h4>Continuous Improvement</h4><p>Tidak berhenti di sini — selalu ada yang bisa ditingkatkan.</p></div></div>
     </div>
   </div>
-
   <div class="s10-footer">
-    <span class="s10-footer-left">Provices Group · IT Division · Property Management System</span>
-    <span class="s10-footer-right">2025</span>
+    <span class="s10-fl">Provices Group · IT Division · Property Management System</span>
+    <span class="s10-fr">2025</span>
   </div>
-</section>
-
-</div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+</div><!-- #deck -->
+
+<div id="progress"></div>
+<div id="counter">1 / 10</div>
+<button id="nav-prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
+<button id="nav-next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+
 <script>
-Reveal.initialize({
-  hash: true,
-  slideNumber: 'c/t',
-  progress: true,
-  controls: true,
-  controlsTutorial: false,
-  transition: 'fade',
-  transitionSpeed: 'default',
-  backgroundTransition: 'fade',
-  center: false,
-  width: 1280,
-  height: 720,
-  margin: 0,
-  minScale: 0.2,
-  maxScale: 2.0,
-  keyboard: true,
-  overview: true,
-  touch: true,
-});
+(function(){
+  var slides = Array.from(document.querySelectorAll('.slide'));
+  var total  = slides.length;
+  var cur    = 0;
 
-function runSlideAnims(slide) {
-  if (!slide) return;
-  slide.classList.remove('anim-run');
-  void slide.offsetWidth; // force reflow — restarts CSS animations
-  slide.classList.add('anim-run');
-}
+  function go(n){
+    if(n < 0 || n >= total) return;
+    // Remove active from current
+    slides[cur].classList.remove('active');
+    cur = n;
+    // Force reflow so animations restart
+    var s = slides[cur];
+    void s.offsetWidth;
+    s.classList.add('active');
+    // Update HUD
+    document.getElementById('progress').style.width = ((cur+1)/total*100)+'%';
+    document.getElementById('counter').textContent  = (cur+1)+' / '+total;
+  }
 
-Reveal.on('ready', function(e) { runSlideAnims(e.currentSlide); });
-Reveal.on('slidechanged', function(e) {
-  if (e.previousSlide) e.previousSlide.classList.remove('anim-run');
-  runSlideAnims(e.currentSlide);
-});
+  // Keyboard
+  document.addEventListener('keydown', function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '){e.preventDefault();go(cur+1);}
+    if(e.key==='ArrowLeft' ||e.key==='ArrowUp')               {e.preventDefault();go(cur-1);}
+    if(e.key==='Home'){go(0);}
+    if(e.key==='End') {go(total-1);}
+  });
+
+  // Buttons
+  document.getElementById('nav-prev').onclick = function(){ go(cur-1); };
+  document.getElementById('nav-next').onclick = function(){ go(cur+1); };
+
+  // Touch / swipe
+  var tx = 0;
+  document.addEventListener('touchstart', function(e){ tx = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend',   function(e){
+    var dx = tx - e.changedTouches[0].clientX;
+    if(Math.abs(dx) > 50) go(dx > 0 ? cur+1 : cur-1);
+  }, {passive:true});
+
+  // Start on slide 0
+  go(0);
+})();
 </script>
 </body>
 </html>
